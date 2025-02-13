@@ -1,0 +1,5 @@
+{
+  "exit": true,
+  "extension": ["ts", "js"],
+  "node-option": ["import=tsx"]
+}

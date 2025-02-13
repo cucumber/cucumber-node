@@ -1,0 +1,5 @@
+_site
+lib
+node_modules
+tmp
+tsdoc-metadata.json

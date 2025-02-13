@@ -1,0 +1,64 @@
+{
+  "name": "@cucumber/node",
+  "version": "0.0.1",
+  "author": "David Goss (https://github.com/davidjgoss)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js",
+    "./bootstrap": "./lib/bootstrap/index.js",
+    "./reporters/*": "./lib/reporters/builtin/*.js",
+    "./runner": "./lib/runner/index.js"
+  },
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "docs": "typedoc",
+    "exports:check": "api-extractor run --verbose",
+    "exports:update": "api-extractor run --verbose --local",
+    "fix": "eslint --max-warnings 0 src --fix src && prettier --write src",
+    "lint": "eslint --max-warnings 0 src && prettier --check src",
+    "test": "npm run test:unit && npm run test:cck",
+    "test:cck": "tsc && mocha test/cck/cck.spec.ts",
+    "test:unit": "mocha 'src/**/*.spec.ts'"
+  },
+  "dependencies": {
+    "@cucumber/ci-environment": "10.0.1",
+    "@cucumber/cucumber-expressions": "18.0.1",
+    "@cucumber/gherkin": "30.0.4",
+    "@cucumber/html-formatter": "21.8.0",
+    "@cucumber/messages": "27.0.2",
+    "@cucumber/tag-expressions": "6.1.1",
+    "stack-utils": "2.0.6",
+    "type-fest": "^4.33.0"
+  },
+  "devDependencies": {
+    "@cucumber/compatibility-kit": "^17.0.0",
+    "@eslint/compat": "^1.2.5",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@microsoft/api-extractor": "7.39.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.10.5",
+    "@types/stack-utils": "^2.0.3",
+    "@typescript-eslint/eslint-plugin": "8.18.2",
+    "@typescript-eslint/parser": "8.18.2",
+    "chai": "^5.1.2",
+    "chai-exclude": "^3.0.0",
+    "eslint": "9.17.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-n": "17.15.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "globals": "^15.14.0",
+    "mocha": "^11.0.1",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typedoc": "^0.27.7",
+    "typedoc-plugin-extras": "^4.0.0",
+    "typescript": "^5.7.3"
+  }
+}

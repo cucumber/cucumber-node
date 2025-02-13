@@ -1,0 +1,11 @@
+{
+  "customTitle": "cucumber-node",
+  "entryPoints": ["src/index.ts"],
+  "footerLastModified": true,
+  "navigationLinks": {
+    "GitHub": "https://github.com/cucumber/cucumber-node"
+  },
+  "out": "./_site",
+  "plugin": ["typedoc-plugin-extras"],
+  "readme": "none"
+}
