@@ -4,7 +4,12 @@ import { Envelope } from '@cucumber/messages'
 
 export const PROTOCOL_PREFIX = '@cucumber/messages:'
 
-export class MessagesRouter {
+export interface MessagesCollector {
+  connect(nodeTestContext: TestContext): void
+  push(...envelopes: ReadonlyArray<Envelope>): void
+}
+
+export class DiagnosticMessagesCollector implements MessagesCollector {
   private queue: Array<Envelope> = []
   private context: TestContext | undefined
 
@@ -28,4 +33,9 @@ export class MessagesRouter {
       this.queue.push(...envelopes)
     }
   }
+}
+
+export class NoopMessagesCollector implements MessagesCollector {
+  connect() {}
+  push() {}
 }
