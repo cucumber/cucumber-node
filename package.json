@@ -31,6 +31,7 @@
     "@cucumber/html-formatter": "21.8.0",
     "@cucumber/messages": "27.0.2",
     "@cucumber/tag-expressions": "6.1.1",
+    "chalk": "^5.4.1",
     "stack-utils": "2.0.6",
     "type-fest": "^4.33.0"
   },
