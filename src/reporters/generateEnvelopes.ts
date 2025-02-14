@@ -4,7 +4,7 @@ import { Envelope, TestRunStarted, TestStepFinished } from '@cucumber/messages'
 
 import { makeId } from '../makeId.js'
 import { makeTimestamp } from '../makeTimestamp.js'
-import { PROTOCOL_PREFIX } from '../runner/MessagesRouter.js'
+import { PROTOCOL_PREFIX } from '../runner/MessagesCollector.js'
 import { mapTestStepResult } from './mapTestStepResult.js'
 import { meta } from './meta.js'
 

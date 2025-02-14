@@ -1,12 +1,14 @@
-import { glob } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
+
+import { globby } from 'globby'
 
 import { builder } from './state.js'
 import { SupportCodeLibrary } from './SupportCodeLibrary.js'
 
 export async function loadSupport(): Promise<SupportCodeLibrary> {
-  for await (const file of glob('features/**/*.{cjs,js,mjs}')) {
-    await import(pathToFileURL(file).toString())
+  const paths = await globby('features/**/*.{cjs,js,mjs}')
+  for (const path of paths) {
+    await import(pathToFileURL(path).toString())
   }
   return builder.build()
 }

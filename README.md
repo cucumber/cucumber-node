@@ -65,7 +65,7 @@ Then('I should have heard {string}', (t, expectedResponse) => {
 Finally, run `node --test` with some special arguments:
 
 ```shell
-node --import @cucumber/node/bootstrap --test-reporter=dot --test 'features/**/*.feature'
+node --import @cucumber/node/bootstrap --test 'features/**/*.feature'
 ```
 
 ## Running tests
@@ -94,5 +94,5 @@ Full API documentation is at https://cucumber.github.io/cucumber-node/ and inclu
 
 Some Cucumber formatters are included as Node.js test reporters:
 
-- HTML - `--test-reporter=@cucumber/node/reporters/html --test-reporter-destinaton=./report.html`
-- Message - `--test-reporter=@cucumber/node/reporters/message --test-reporter-destinaton=./messages.ndjson`
+- HTML `--test-reporter=@cucumber/node/reporters/html --test-reporter-destination=./report.html`
+- Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`

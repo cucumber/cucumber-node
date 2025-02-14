@@ -20,8 +20,8 @@
     "exports:update": "api-extractor run --verbose --local",
     "fix": "eslint --max-warnings 0 src --fix src && prettier --write src",
     "lint": "eslint --max-warnings 0 src && prettier --check src",
-    "test": "npm run test:unit && npm run test:cck",
-    "test:cck": "tsc && mocha test/cck/cck.spec.ts",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:integration": "tsc && mocha test/**/*.spec.ts",
     "test:unit": "mocha 'src/**/*.spec.ts'"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "@cucumber/html-formatter": "21.8.0",
     "@cucumber/messages": "27.0.2",
     "@cucumber/tag-expressions": "6.1.1",
+    "globby": "^14.1.0",
     "stack-utils": "2.0.6",
     "type-fest": "^4.33.0"
   },
