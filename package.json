@@ -21,7 +21,7 @@
     "fix": "eslint --max-warnings 0 src --fix src && prettier --write src",
     "lint": "eslint --max-warnings 0 src && prettier --check src",
     "test": "npm run test:unit && npm run test:cck",
-    "test:cck": "tsc && mocha test/cck/cck.spec.ts",
+    "test:integration": "tsc && mocha test/**/*.spec.ts",
     "test:unit": "mocha 'src/**/*.spec.ts'"
   },
   "dependencies": {

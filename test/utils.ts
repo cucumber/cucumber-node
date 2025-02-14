@@ -1,4 +1,4 @@
-import { copyFile, cp, mkdir, mkdtemp, symlink } from 'node:fs/promises'
+import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { tmpdir } from 'node:os'
 import { exec } from 'node:child_process'
@@ -24,6 +24,13 @@ class TestHarness {
     ))
   }
 
+  async writeFile(target: string, content: string) {
+    await writeFile(path.join(
+      this.tempDir,
+      target
+    ), content, {encoding: 'utf-8'})
+  }
+
   async run(reporter = 'spec', ...extraArgs: string[]): Promise<readonly [string, string, unknown]> {
     return new Promise((resolve) => {
       exec([
@@ -32,8 +39,6 @@ class TestHarness {
         `@cucumber/node/bootstrap`,
         `--test-reporter=${reporter}`,
         `--test-reporter-destination=stdout`,
-        `--test-reporter=spec`,
-        `--test-reporter-destination=stderr`,
         ...extraArgs,
         `--test`,
         `'features/**/*.feature'`,
