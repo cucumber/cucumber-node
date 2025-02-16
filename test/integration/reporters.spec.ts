@@ -2,29 +2,57 @@ import { stripVTControlCharacters } from 'node:util'
 import { expect } from 'chai'
 import { makeTestHarness } from '../utils.js'
 
-describe('reporters', () => {
+describe('Reporters', () => {
   it('does not emit messages as diagnostics if no cucumber reporters', async () => {
     const harness = await makeTestHarness('reporters')
-    await harness.writeFile('features/first.feature', `Feature:
+    await harness.writeFile(
+      'features/first.feature',
+      `Feature:
   Scenario:
-    Given a step that passes
-    And a step that passes
-    And a step that passes
-    
-  Scenario:
-    Given a step that passes
-    And a step that fails
-    `)
-    await harness.writeFile('features/steps.js', `import { Given } from '@cucumber/node'
-  
-  Given('a step that passes', () => {})
-  
-  Given('a step that fails', () => {
-    throw new Error('whoops')
-  })
-    `)
+    Given a step
+    `
+    )
+    await harness.writeFile(
+      'features/steps.js',
+      `import { Given } from '@cucumber/node'
+  Given('a step', () => {})
+    `
+    )
     const [output] = await harness.run('spec')
-    const sanitised =  stripVTControlCharacters(output.trim())
+    const sanitised = stripVTControlCharacters(output.trim())
     expect(sanitised).not.to.include('@cucumber/messages:')
-})
+  })
+
+  it('provides a useful error for an ambiguous step', async () => {
+    const harness = await makeTestHarness('reporters')
+    await harness.writeFile(
+      'features/first.feature',
+      `Feature:
+  Scenario:
+    Given a step`)
+    await harness.writeFile(
+      'features/steps.js',
+      `import { Given } from '@cucumber/node'
+Given('a step', () => {})
+Given('a step', () => {})`)
+    const [output] = await harness.run('spec')
+    const sanitised = stripVTControlCharacters(output.trim())
+    expect(sanitised).to.include(`Multiple matching step definitions found for text "a step":
+  1) features/steps.js:2:1
+  2) features/steps.js:3:1`)
+  })
+
+  it('provides a useful error for an undefined step', async () => {
+    const harness = await makeTestHarness('reporters')
+    await harness.writeFile(
+      'features/first.feature',
+      `Feature:
+  Scenario:
+    Given a step
+    `
+    )
+    const [output] = await harness.run('spec')
+    const sanitised = stripVTControlCharacters(output.trim())
+    expect(sanitised).to.include('No matching step definitions found for text "a step"')
+  })
 })

@@ -125,9 +125,12 @@ function fromPickleSteps(
       always: false,
       prepare() {
         if (matched.length < 1) {
-          throw new UndefinedError()
+          throw new UndefinedError(pickleStep.text)
         } else if (matched.length > 1) {
-          throw new AmbiguousError()
+          throw new AmbiguousError(
+            pickleStep.text,
+            matched.map(({ def }) => def.sourceReference)
+          )
         } else {
           const { def, args } = matched[0]
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

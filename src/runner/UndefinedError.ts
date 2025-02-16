@@ -1,5 +1,5 @@
 export class UndefinedError extends Error {
-  constructor() {
-    super('No matching step definitions found')
+  constructor(text: string) {
+    super(`No matching step definitions found for text "${text}"`)
   }
 }
