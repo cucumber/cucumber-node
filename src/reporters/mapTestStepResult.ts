@@ -18,9 +18,9 @@ export function mapTestStepResult(testEvent: TestFail | TestPass | undefined): T
     status = TestStepResultStatus.PENDING
   } else if ('error' in testEvent.details) {
     const error = testEvent.details.error
-    if (error.cause.message === 'No matching step definitions found') {
+    if (error.cause.message.startsWith('No matching step definitions found')) {
       status = TestStepResultStatus.UNDEFINED
-    } else if (error.cause.message === 'Multiple matching step definitions found') {
+    } else if (error.cause.message.startsWith('Multiple matching step definitions found')) {
       status = TestStepResultStatus.AMBIGUOUS
     } else {
       status = TestStepResultStatus.FAILED
