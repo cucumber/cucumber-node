@@ -41,8 +41,8 @@ class TestHarness {
         `--test-reporter-destination=stdout`,
         ...extraArgs,
         `--test`,
-        `'features/**/*.feature'`,
-        `'features/**/*.feature.md'`,
+        `"features/**/*.feature"`,
+        `"features/**/*.feature.md"`,
       ].join(' '), {
         cwd: this.tempDir,
       }, (error, stdout, stderr) => {
