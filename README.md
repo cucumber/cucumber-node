@@ -65,7 +65,7 @@ Then('I should have heard {string}', (t, expectedResponse) => {
 Finally, run `node --test` with some special arguments:
 
 ```shell
-node --import @cucumber/node/bootstrap --test 'features/**/*.feature'
+node --import @cucumber/node/bootstrap --test "features/**/*.feature"
 ```
 
 ## Running tests
