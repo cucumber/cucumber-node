@@ -16,6 +16,8 @@ export class ContextTracker {
 
   makeContext(nodeTestContext: TestContext, testStepId: string): TestCaseContext {
     return {
+      assert: nodeTestContext.assert,
+      mock: nodeTestContext.mock,
       skip: () => {
         nodeTestContext.skip()
         this.outcomeKnown = true
