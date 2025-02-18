@@ -1,4 +1,5 @@
 import { Readable } from 'node:stream'
+import { TestContext } from 'node:test'
 
 import { Promisable } from 'type-fest'
 
@@ -26,6 +27,17 @@ export type AttachmentOptions = {
  * @public
  */
 export type TestCaseContext = {
+  /**
+   * The `assert` object as provided by the test runner, including the normal methods from
+   * `node:assert` plus extras for dealing with snapshots.
+   * @see https://nodejs.org/api/test.html#contextassert
+   */
+  assert: TestContext['assert']
+  /**
+   * The `mock` object as provided by the test runner.
+   * @see https://nodejs.org/api/test.html#class-mocktracker
+   */
+  mock: TestContext['mock']
   /**
    * Mark this test step as skipped. This will cause all subsequent steps to be skipped,
    * except `After` hooks.
