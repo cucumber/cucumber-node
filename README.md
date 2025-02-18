@@ -84,11 +84,26 @@ Since cucumber-node augments the standard Node.js test runner, you can use many 
 
 ## Writing steps
 
-Full API documentation is at https://cucumber.github.io/cucumber-node/ and includes:
+Full API documentation is at https://cucumber.github.io/cucumber-node and includes:
 
 - `Before` and `After` for hooks
 - `Given`, `When` and `Then` for steps
 - `ParameterType` for custom parameter types
+- `DataTable` for working with data tables
+
+### Test context
+
+When you write a step or hook function, the first argument will always be a [`TestCaseContext`](https://cucumber.github.io/cucumber-node/types/TestCaseContext.html) object, similar to the one that `node --test` gives you when writing tests in JavaScript and with many of the same properties, plus the "world" where you can keep your state, and methods for attaching content.
+
+### Finding your code
+
+Discovery of your code is based on the following glob (relative to the working directory):
+
+```
+features/**/*.{cjs,js,mjs}
+```
+
+This isn't configurable ([yet](https://github.com/cucumber/cucumber-node/issues/10)).
 
 ## Reporters
 
@@ -96,3 +111,30 @@ Some Cucumber formatters are included as Node.js test reporters:
 
 - HTML `--test-reporter=@cucumber/node/reporters/html --test-reporter-destination=./report.html`
 - Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`
+
+## Limitations
+
+It's early days, and there are some rough edges here, which we'll smooth out as soon as possible:
+
+- **You can't mix Cucumber tests with other tests** so if you have non-Cucumber tests to run with `node --test`, you should do that in a separate run.
+- **The `spec` reporter gets noisy if you also use a Cucumber reporter** because we're kind of abusing the `diagnostic` channel to send messages to the reporter. We'd recommend the `dot` reporter in the meantime.
+
+There are also some pretty standard Cucumber features that are conspicuous by their absence (again, not for long):
+
+- [Filtering by tag expression](https://github.com/cucumber/cucumber-node/issues/9)
+- [BeforeAll/AfterAll hooks](https://github.com/cucumber/cucumber-node/issues/8)
+- [Regular expression steps](https://github.com/cucumber/cucumber-node/issues/6)
+
+## What's different?
+
+Some behaviour differs from that of `cucumber-js` in meaningful ways.
+
+### Arrow functions
+
+`cucumber-node` doesn't set `this` to anything for the scope of your step/hook functions. Instead, a context object is passed as the first argument. This means there's no need to avoid arrow functions.
+
+### Concurrency
+
+`node --test` by default runs each test file in a separate process, and runs them concurrently as much as possible within the constraints of the system. This is different from `cucumber-js` which by default runs everything in-process and in serial.
+
+The way work is divided up to run concurrently is also worth calling out. `node --test` does so at the file level, meaning many feature files can be executed concurrently, but scenarios within a feature file will always run in the defined order and in the same process. This is more predictable than `cucumber-js` which just makes a single pool of all scenarios and assigns them to worker processes as they become idle.
