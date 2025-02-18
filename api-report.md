@@ -6,6 +6,7 @@
 
 import { Promisable } from 'type-fest';
 import { Readable } from 'node:stream';
+import { TestContext } from 'node:test';
 
 // @public
 export function After(fn: HookFunction): void;
@@ -63,6 +64,8 @@ export type StepFunction = (context: TestCaseContext, ...args: any) => Promisabl
 
 // @public
 export type TestCaseContext = {
+    assert: TestContext['assert'];
+    mock: TestContext['mock'];
     skip(): void;
     todo(): void;
     attach(data: Readable | Buffer | string, options: AttachmentOptions): Promise<void>;
