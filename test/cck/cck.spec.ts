@@ -57,7 +57,7 @@ describe('Cucumber Compatibility Kit',  () => {
         return this.skip()
       }
 
-      const harness = await makeTestHarness('cck')
+      const harness = await makeTestHarness()
 
       await harness.copyDir(path.join(
         process.cwd(),

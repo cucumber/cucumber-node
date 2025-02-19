@@ -52,9 +52,9 @@ class TestHarness {
   }
 }
 
-export async function makeTestHarness(prefix: string) {
+export async function makeTestHarness() {
   // create temporary directory
-  const tempDir = await mkdtemp(path.join(tmpdir(), `cucumber-node-${prefix}-`))
+  const tempDir = await mkdtemp(path.join(tmpdir(), `cucumber-node-integration-`))
 
   // symlink @cucumber/node package into node_modules
   await mkdir(path.join(tempDir, 'features'))

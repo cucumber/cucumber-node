@@ -5,7 +5,7 @@ import path from 'node:path'
 
 describe('Reporters', () => {
   it('does not emit messages as diagnostics if no cucumber reporters', async () => {
-    const harness = await makeTestHarness('reporters')
+    const harness = await makeTestHarness()
     await harness.writeFile(
       'features/first.feature',
       `Feature:
@@ -25,7 +25,7 @@ describe('Reporters', () => {
   })
 
   it('provides a useful error for an ambiguous step', async () => {
-    const harness = await makeTestHarness('reporters')
+    const harness = await makeTestHarness()
     await harness.writeFile(
       'features/first.feature',
       `Feature:
@@ -44,7 +44,7 @@ Given('a step', () => {})`)
   })
 
   it('provides a useful error for an undefined step', async () => {
-    const harness = await makeTestHarness('reporters')
+    const harness = await makeTestHarness()
     await harness.writeFile(
       'features/first.feature',
       `Feature:
