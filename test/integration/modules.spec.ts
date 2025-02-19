@@ -21,7 +21,7 @@ Given('a step', (t: TestCaseContext) => {
 })
     `
     )
-    const [output] = await harness.run('spec')
+    const [output] = await harness.run('spec', '--experimental-strip-types')
     const sanitised = stripVTControlCharacters(output.trim())
     expect(sanitised).to.include('ℹ pass 2')
   })
