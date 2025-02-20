@@ -7,6 +7,11 @@
   <b>Automated tests in plain language, for the Node.js test runner</b>
 </p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/@cucumber/node" style="text-decoration: none"><img src="https://img.shields.io/npm/v/@cucumber/node?style=flat&color=dark-green" alt="Latest version on npm"></a>
+  <a href="https://github.com/cucumber/cucumber-node/actions" style="text-decoration: none"><img src="https://github.com/cucumber/cucumber-node/actions/workflows/test.yaml/badge.svg" alt="Build status"></a>
+</p>
+
 [Cucumber](https://github.com/cucumber) is a tool for running automated tests written in plain language. Because they're
 written in plain language, they can be read by anyone on your team. Because they can be
 read by anyone, you can use them to help improve communication, collaboration and trust on
