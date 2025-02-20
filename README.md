@@ -105,6 +105,8 @@ features/**/*.{cjs,js,mjs,cts,mts,ts}
 
 This isn't configurable ([yet](https://github.com/cucumber/cucumber-node/issues/10)).
 
+Both ESM (e.g. `import { Given } from '@cucumber/node'`) and CommonJS (e.g. `const { Given } = require('@cucumber/node')`) module formats are supported.
+
 ### TypeScript
 
 You can write your code in TypeScript. Depending on your project, you might either:
