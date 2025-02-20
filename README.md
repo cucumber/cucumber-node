@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img alt="" width="75" src="./logo.svg"/>
+  <img alt="" width="75" src="https://github.com/cucumber.png"/>
   <br>
   cucumber-node
 </h1>
