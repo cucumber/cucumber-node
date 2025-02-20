@@ -6,7 +6,7 @@
     "enabled": true,
     "reportFolder": "<projectFolder>",
     "reportTempFolder": "<projectFolder>/tmp",
-    "reportFileName": "api-report.md"
+    "reportFileName": "cucumber-node"
   },
   "docModel": {
     "enabled": false
