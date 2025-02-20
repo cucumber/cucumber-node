@@ -100,10 +100,19 @@ When you write a step or hook function, the first argument will always be a [`Te
 Discovery of your code is based on the following glob (relative to the working directory):
 
 ```
-features/**/*.{cjs,js,mjs}
+features/**/*.{cjs,js,mjs,cts,mts,ts}
 ```
 
 This isn't configurable ([yet](https://github.com/cucumber/cucumber-node/issues/10)).
+
+### TypeScript
+
+You can write your code in TypeScript. Depending on your project, you might either:
+
+1. Just rely on Node.js built-in type stripping without any other dependencies or configuration
+2. Use [tsx](https://www.npmjs.com/package/tsx) to transpile by adding `--import tsx` to your test command
+
+See https://nodejs.org/api/typescript.html for more details.
 
 ## Reporters
 
