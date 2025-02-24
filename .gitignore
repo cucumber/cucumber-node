@@ -1,4 +1,5 @@
 _site
+coverage
 lib
 node_modules
 tmp
