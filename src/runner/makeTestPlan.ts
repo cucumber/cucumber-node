@@ -165,7 +165,7 @@ function fromPickleSteps(
                     group: mapArgumentGroup(arg.group),
                     parameterTypeName: arg.parameterType.name,
                   }
-                }) ?? [],
+                }),
             }
           }),
         }
