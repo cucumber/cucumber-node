@@ -1,6 +1,6 @@
 import {Before,After,When} from '@cucumber/node'
 
-Before(() => {
+Before({ name: 'A named before hook' }, () => {
   // no-op
 })
 
@@ -8,10 +8,6 @@ When('a step passes', () => {
   // no-op
 })
 
-When('a step fails', () => {
-  throw new Error('Exception in step')
-})
-
-After(() => {
+After({ name: 'A named after hook' }, () => {
   // no-op
 })
