@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "coverage": "c8 --100 npm test",
+    "coverage:check": "c8 --100 npm test",
+    "coverage:report": "c8 --reporter html npm test",
     "docs": "typedoc",
     "exports:check": "api-extractor run --verbose",
     "exports:update": "api-extractor run --verbose --local",
