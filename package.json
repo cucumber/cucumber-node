@@ -31,6 +31,7 @@
     "@cucumber/cucumber-expressions": "18.0.1",
     "@cucumber/gherkin": "30.0.4",
     "@cucumber/html-formatter": "21.9.0",
+    "@cucumber/junit-xml-formatter": "0.7.1",
     "@cucumber/messages": "27.2.0",
     "@cucumber/tag-expressions": "6.1.2",
     "globby": "^14.1.0",
