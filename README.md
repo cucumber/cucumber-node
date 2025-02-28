@@ -17,7 +17,9 @@ written in plain language, they can be read by anyone on your team. Because they
 read by anyone, you can use them to help improve communication, collaboration and trust on
 your team.
 
-⚠️ This is a new implementation of Cucumber built around the [Node.js test runner](https://nodejs.org/api/test.html). It's still in the pre-1.0.0 phase, so APIs and behaviour might change. The stable canonical implementation of Cucumber for JavaScript continues to be [@cucumber/cucumber](https://github.com/cucumber/cucumber-js) for now. ⚠️
+⚠️⚠️⚠️  
+This is a new implementation of Cucumber built around the [Node.js test runner](https://nodejs.org/api/test.html). It's still in the pre-1.0.0 phase, so APIs and behaviour might change. The stable canonical implementation of Cucumber for JavaScript continues to be [@cucumber/cucumber](https://github.com/cucumber/cucumber-js) for now.  
+⚠️⚠️⚠️
 
 ## Install
 
@@ -60,11 +62,11 @@ import { Greeter } from '../../lib/Greeter.js'
 
 When('the greeter says hello', (t) => {
   t.world.whatIHeard = new Greeter().sayHello()
-});
+})
 
 Then('I should have heard {string}', (t, expectedResponse) => {
   assert.equal(t.world.whatIHeard, expectedResponse)
-});
+})
 ```
 
 Finally, run `node --test` with some special arguments:
@@ -91,8 +93,8 @@ Since cucumber-node augments the standard Node.js test runner, you can use many 
 
 Full API documentation is at https://cucumber.github.io/cucumber-node and includes:
 
-- `Before` and `After` for hooks
 - `Given`, `When` and `Then` for steps
+- `Before` and `After` for hooks
 - `ParameterType` for custom parameter types
 - `DataTable` for working with data tables
 
@@ -110,16 +112,34 @@ features/**/*.{cjs,js,mjs,cts,mts,ts}
 
 This isn't configurable ([yet](https://github.com/cucumber/cucumber-node/issues/10)).
 
-Both ESM (e.g. `import { Given } from '@cucumber/node'`) and CommonJS (e.g. `const { Given } = require('@cucumber/node')`) module formats are supported.
+### ESM and CommonJS
+
+cucumber-node is an ESM package, but you can write your code in either format:
+
+- ESM - e.g. `import { Given } from '@cucumber/node'`
+- CommonJS - e.g. `const { Given } = require('@cucumber/node')`
 
 ### TypeScript
 
-You can write your code in TypeScript. Depending on your project, you might either:
+You also can write your code in TypeScript.
 
-1. Just rely on Node.js built-in type stripping without any other dependencies or configuration
-2. Use [tsx](https://www.npmjs.com/package/tsx) to transpile by adding `--import tsx` to your test command
+We recommend bringing in [`tsx`](https://www.npmjs.com/package/tsx) to handle the transpilation, plus the Node.js types:
 
-See https://nodejs.org/api/typescript.html for more details.
+```shell
+npm install --save-dev tsx @types/node
+```
+
+Then, add `tsx` as another import when you run:
+
+```shell
+node --import @cucumber/node/bootstrap --import tsx --test "features/**/*.feature"
+```
+
+Remember to add a [`tsconfig.json`](https://www.typescriptlang.org/tsconfig/) to your project. If you're not sure what you need, [`@tsconfig/node22`](https://www.npmjs.com/package/@tsconfig/node22) is a good place to start.
+
+#### Without dependencies
+
+You might even be able to go without any extra dependencies and instead lean on [Node.js built-in TypeScript support](https://nodejs.org/api/typescript.html), although this is still very new and has several limitations.
 
 ## Reporters
 
@@ -128,29 +148,31 @@ Some Cucumber formatters are included as Node.js test reporters:
 - HTML `--test-reporter=@cucumber/node/reporters/html --test-reporter-destination=./report.html`
 - Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`
 
+There are some caveats that apply when using these reporters (but not otherwise):
+
+- *Don't mix Cucumber tests with other tests* - if you have non-Cucumber tests to run with `node --test`, you should do that in a separate run.
+- *Don't use the `spec` reporter at the same time* - because we're abusing the `diagnostic` channel to send messages to the reporter, it makes the `spec` output very noisy - we recommend the `dot` reporter instead.
+
 ## Limitations
 
-It's early days, and there are some rough edges here, which we'll smooth out as soon as possible:
-
-- **You can't mix Cucumber tests with other tests** so if you have non-Cucumber tests to run with `node --test`, you should do that in a separate run.
-- **The `spec` reporter gets noisy if you also use a Cucumber reporter** because we're kind of abusing the `diagnostic` channel to send messages to the reporter. We'd recommend the `dot` reporter in the meantime.
-
-There are also some pretty standard Cucumber features that are conspicuous by their absence (again, not for long):
+There are some pretty standard Cucumber features that are missing (but not for long):
 
 - [Filtering by tag expression](https://github.com/cucumber/cucumber-node/issues/9)
 - [BeforeAll/AfterAll hooks](https://github.com/cucumber/cucumber-node/issues/8)
 - [Regular expression steps](https://github.com/cucumber/cucumber-node/issues/6)
+- [Customise World creation and type](https://github.com/cucumber/cucumber-node/issues/7)
+- [Snippets](https://github.com/cucumber/cucumber-node/issues/36)
 
 ## What's different?
 
-Some behaviour differs from that of `cucumber-js` in meaningful ways.
+Some behaviour of cucumber-node is different - and better - than in cucumber-js:
+
+### Concurrency by default
+
+`node --test` by default runs each test file in a separate process, and runs them concurrently as much as possible within the constraints of the system. This is markedly different to cucumber-js which is single-process and serial by default. This is also a good thing, helping you identify and fix unintentional dependencies between scenarios.
 
 ### Arrow functions
 
-`cucumber-node` doesn't set `this` to anything for the scope of your step/hook functions. Instead, a context object is passed as the first argument. This means there's no need to avoid arrow functions.
+There's no reliance on `this` in your step and hook functions to access state, since we pass a context object as the first argument to all functions. This means you're free to use arrow functions as you normally would in JavaScript.
 
-### Concurrency
 
-`node --test` by default runs each test file in a separate process, and runs them concurrently as much as possible within the constraints of the system. This is different from `cucumber-js` which by default runs everything in-process and in serial.
-
-The way work is divided up to run concurrently is also worth calling out. `node --test` does so at the file level, meaning many feature files can be executed concurrently, but scenarios within a feature file will always run in the defined order and in the same process. This is more predictable than `cucumber-js` which just makes a single pool of all scenarios and assigns them to worker processes as they become idle.
