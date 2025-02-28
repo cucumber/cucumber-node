@@ -18,6 +18,6 @@ Then('I should have {int} cucumbers', (t, expectedCount) => {
 })
 
 Then('each person can eat {int} cucumbers', (t, expectedShare) => {
-  const share = Math.floor(t.world.count / (1 + t.world.friends));
+  const share = Math.floor(t.world.count / (1 + t.world.friends))
   assert.strictEqual(share, expectedShare)
 })

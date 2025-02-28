@@ -3,7 +3,7 @@ import { PassThrough } from 'node:stream'
 import { AttachmentContentEncoding } from '@cucumber/messages'
 import { expect } from 'chai'
 
-import { makeAttachment } from './makeAttachment.js'
+import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
 
 describe('makeAttachment', () => {
   const original = 'foo bar'
@@ -28,5 +28,20 @@ describe('makeAttachment', () => {
     const result = await makeAttachment(stream, { mediaType: 'text/plain' })
     expect(result.body).to.eq(base64)
     expect(result.contentEncoding).to.eq(AttachmentContentEncoding.BASE64)
+  })
+
+  it('makes the correct attachment for a log', async () => {
+    const result = await makeLog('a thing happened')
+    expect(result.body).to.eq('a thing happened')
+    expect(result.contentEncoding).to.eq(AttachmentContentEncoding.IDENTITY)
+    expect(result.mediaType).to.eq('text/x.cucumber.log+plain')
+  })
+
+  it('makes the correct attachment for a link', async () => {
+    const result = await makeLink('https://cucumber.io', 'Cucumber')
+    expect(result.body).to.eq('https://cucumber.io')
+    expect(result.fileName).to.eq('Cucumber')
+    expect(result.contentEncoding).to.eq(AttachmentContentEncoding.IDENTITY)
+    expect(result.mediaType).to.eq('text/uri-list')
   })
 })

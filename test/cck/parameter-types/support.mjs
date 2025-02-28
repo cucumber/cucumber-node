@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import {Given,ParameterType} from '@cucumber/node'
+import { Given, ParameterType } from '@cucumber/node'
 
 class Flight {
   from

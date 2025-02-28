@@ -159,13 +159,12 @@ function fromPickleSteps(
           stepDefinitionIds: matched.map(({ def }) => def.id),
           stepMatchArgumentsLists: matched.map(({ args }) => {
             return {
-              stepMatchArguments:
-                args.map((arg) => {
-                  return {
-                    group: mapArgumentGroup(arg.group),
-                    parameterTypeName: arg.parameterType.name,
-                  }
-                }) ?? [],
+              stepMatchArguments: args.map((arg) => {
+                return {
+                  group: mapArgumentGroup(arg.group),
+                  parameterTypeName: arg.parameterType.name,
+                }
+              }),
             }
           }),
         }

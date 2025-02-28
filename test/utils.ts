@@ -4,50 +4,46 @@ import { tmpdir } from 'node:os'
 import { exec } from 'node:child_process'
 
 class TestHarness {
-  constructor(private readonly tempDir: string) {
-  }
+  constructor(private readonly tempDir: string) {}
 
   async copyDir(source: string, target: string) {
-    await cp(source, path.join(
-        this.tempDir,
-        target
-      ), {
-        recursive: true,
-      },
-    )
+    await cp(source, path.join(this.tempDir, target), {
+      recursive: true,
+    })
   }
 
   async copyFile(source: string, target: string) {
-    await copyFile(source, path.join(
-      this.tempDir,
-      target
-    ))
+    await copyFile(source, path.join(this.tempDir, target))
   }
 
   async writeFile(target: string, content: string) {
-    await writeFile(path.join(
-      this.tempDir,
-      target
-    ), content, {encoding: 'utf-8'})
+    await writeFile(path.join(this.tempDir, target), content, { encoding: 'utf-8' })
   }
 
-  async run(reporter = 'spec', ...extraArgs: string[]): Promise<readonly [string, string, unknown]> {
+  async run(
+    reporter = 'spec',
+    ...extraArgs: string[]
+  ): Promise<readonly [string, string, unknown]> {
     return new Promise((resolve) => {
-      exec([
-        'node',
-        `--import`,
-        `@cucumber/node/bootstrap`,
-        `--test-reporter=${reporter}`,
-        `--test-reporter-destination=stdout`,
-        ...extraArgs,
-        `--test`,
-        `"features/**/*.feature"`,
-        `"features/**/*.feature.md"`,
-      ].join(' '), {
-        cwd: this.tempDir,
-      }, (error, stdout, stderr) => {
-        resolve([stdout, stderr, error])
-      })
+      exec(
+        [
+          'node',
+          `--import`,
+          `@cucumber/node/bootstrap`,
+          `--test-reporter=${reporter}`,
+          `--test-reporter-destination=stdout`,
+          ...extraArgs,
+          `--test`,
+          `"features/**/*.feature"`,
+          `"features/**/*.feature.md"`,
+        ].join(' '),
+        {
+          cwd: this.tempDir,
+        },
+        (error, stdout, stderr) => {
+          resolve([stdout, stderr, error])
+        }
+      )
     })
   }
 }
@@ -60,15 +56,7 @@ export async function makeTestHarness() {
   await mkdir(path.join(tempDir, 'features'))
   await mkdir(path.join(tempDir, 'node_modules'))
   await mkdir(path.join(tempDir, 'node_modules', '@cucumber'))
-  await symlink(
-    process.cwd(),
-    path.join(
-      tempDir,
-      'node_modules',
-      '@cucumber',
-      'node',
-    ),
-  )
+  await symlink(process.cwd(), path.join(tempDir, 'node_modules', '@cucumber', 'node'))
 
   return new TestHarness(tempDir)
 }

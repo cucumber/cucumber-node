@@ -30,12 +30,14 @@ describe('Reporters', () => {
       'features/first.feature',
       `Feature:
   Scenario:
-    Given a step`)
+    Given a step`
+    )
     await harness.writeFile(
       'features/steps.js',
       `import { Given } from '@cucumber/node'
 Given('a step', () => {})
-Given('a step', () => {})`)
+Given('a step', () => {})`
+    )
     const [output] = await harness.run('spec')
     const sanitised = stripVTControlCharacters(output.trim())
     expect(sanitised).to.include(`Multiple matching step definitions found for text "a step":
