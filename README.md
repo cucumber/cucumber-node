@@ -146,6 +146,7 @@ You might even be able to go without any extra dependencies and instead lean on 
 Some Cucumber formatters are included as Node.js test reporters:
 
 - HTML `--test-reporter=@cucumber/node/reporters/html --test-reporter-destination=./report.html`
+- JUnit `--test-reporter=@cucumber/node/reporters/junit --test-reporter-destination=./TEST-cucumber.xml`
 - Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`
 
 There are some caveats that apply when using these reporters (but not otherwise):
