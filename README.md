@@ -33,43 +33,51 @@ You'll need Node.js 22 or 23.
 
 ## Get started
 
-Say we have this small class:
+Say we're building software for a bank, and need to deal with customers withdrawing cash.
 
-```js
-export class Greeter {
-  sayHello() {
-    return 'hello'
-  }
-}
-```
-
-Let's write a feature file specifying how it should work, in `features/greeting.feature`:
+Let's write a feature file specifying how it should work, in `features/withdrawing-cash.feature`:
 
 ```gherkin
-Feature: Greeting
+Feature: Withdrawing cash
 
-  Scenario: Say hello
-    When the greeter says hello
-    Then I should have heard "hello"
+  Rule: Customers cannot withdraw more than their balance
+
+    Scenario: Successful withdrawal within balance
+      Given Alice has 234.56 in their account
+      When Alice tries to withdraw 200.00
+      Then the withdrawal is successful
+
+    Scenario: Declined withdrawal in excess of balance
+      Given Hamza has 198.76 in their account
+      When Hamza tries to withdraw 200.00
+      Then the withdrawal is declined
 ```
 
-Next, we need to provide automation to turn that spec into tests, in `features/support/steps.js`:
+Learn more about this syntax in the [Gherkin reference](https://cucumber.io/docs/gherkin/reference). You might want to try [Example Mapping](https://cucumber.io/docs/bdd/example-mapping/) with your team to help formulate these scenarios.
+
+Next, we need to provide automation to turn that spec into tests. We can scaffold the step definitions in `features/support/steps.js`:
 
 ```js
-import assert from 'node:assert'
-import { When, Then } from '@cucumber/node'
-import { Greeter } from '../../lib/Greeter.js'
+import { Given, When, Then } from '@cucumber/node'
 
-When('the greeter says hello', (t) => {
-  t.world.whatIHeard = new Greeter().sayHello()
+Given('{word} has {float} in their account', async (t, customer, balance) => {
+  t.todo()
 })
 
-Then('I should have heard {string}', (t, expectedResponse) => {
-  assert.equal(t.world.whatIHeard, expectedResponse)
+When('{word} tries to withdraw {float}', async (t, customer, amount) => {
+  t.todo()
+})
+
+Then('the withdrawal is successful', async (t) => {
+  t.todo()
+})
+
+Then('the withdrawal is declined', async (t) => {
+  t.todo()
 })
 ```
 
-Finally, run `node --test` with some special arguments:
+And then run `node --test` with some special arguments to make sure it all hangs together:
 
 ```shell
 node --import @cucumber/node/bootstrap --test "features/**/*.feature"
@@ -97,6 +105,8 @@ Full API documentation is at https://cucumber.github.io/cucumber-node and includ
 - `Before` and `After` for hooks
 - `ParameterType` for custom parameter types
 - `DataTable` for working with data tables
+
+
 
 ### Test context
 
