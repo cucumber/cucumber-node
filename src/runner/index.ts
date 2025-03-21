@@ -2,11 +2,11 @@ import { suite, test } from 'node:test'
 
 import { GherkinDocument, Pickle, Source, TestStepResult } from '@cucumber/messages'
 
+import { makeTestPlan } from '../core/makeTestPlan.js'
 import { makeId } from '../makeId.js'
 import { makeTimestamp } from '../makeTimestamp.js'
 import { ContextTracker } from './ContextTracker.js'
 import { loadSupport } from './loadSupport.js'
-import { makeTestPlan } from './makeTestPlan.js'
 import { messages } from './state.js'
 
 interface CompiledGherkin {
@@ -24,7 +24,7 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
     const library = await loadSupport()
     messages.push(...library.toEnvelopes())
 
-    const plan = makeTestPlan(pickles, library)
+    const plan = makeTestPlan(makeId, pickles, library)
     messages.push(...plan.toEnvelopes())
 
     for (const item of plan.testCases) {

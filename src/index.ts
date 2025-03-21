@@ -2,7 +2,7 @@ import { makeSourceReference } from './makeSourceReference.js'
 import { builder } from './runner/state.js'
 import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction } from './types.js'
 
-export * from './DataTable.js'
+export * from './core/DataTable.js'
 export * from './types.js'
 
 /**
@@ -18,7 +18,10 @@ export * from './types.js'
  * \})
  */
 export function ParameterType(options: ParameterTypeOptions) {
-  builder.registerParameterType(options, makeSourceReference())
+  builder.registerParameterType({
+    ...options,
+    sourceReference: makeSourceReference(),
+  })
 }
 
 /**
@@ -43,7 +46,11 @@ export function Before(options: HookOptions, fn: HookFunction): void
 export function Before(arg1: HookFunction | HookOptions, arg2?: HookFunction) {
   const options = typeof arg1 === 'object' ? arg1 : {}
   const fn = arg2 ?? (arg1 as HookFunction)
-  builder.registerBeforeHook(options, fn, makeSourceReference())
+  builder.registerBeforeHook({
+    ...options,
+    fn,
+    sourceReference: makeSourceReference(),
+  })
 }
 
 /**
@@ -68,7 +75,11 @@ export function After(options: HookOptions, fn: HookFunction): void
 export function After(arg1: HookFunction | HookOptions, arg2?: HookFunction) {
   const options = typeof arg1 === 'object' ? arg1 : {}
   const fn = arg2 ?? (arg1 as HookFunction)
-  builder.registerAfterHook(options, fn, makeSourceReference())
+  builder.registerAfterHook({
+    ...options,
+    fn,
+    sourceReference: makeSourceReference(),
+  })
 }
 
 /**

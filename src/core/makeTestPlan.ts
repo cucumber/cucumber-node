@@ -1,17 +1,15 @@
 import { Group as ExpressionsGroup } from '@cucumber/cucumber-expressions'
 import { Envelope, Group as MessagesGroup, Pickle, TestCase, TestStep } from '@cucumber/messages'
 
-import { DataTable } from '../DataTable.js'
-import { makeId } from '../makeId.js'
-import { StepFunction } from '../types.js'
 import { AmbiguousError } from './AmbiguousError.js'
+import { DataTable } from './DataTable.js'
 import { SupportCodeLibrary } from './SupportCodeLibrary.js'
+import { SupportCodeFunction } from './types.js'
 import { UndefinedError } from './UndefinedError.js'
 
 export type Runnable = {
-  fn: StepFunction
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args: ReadonlyArray<any>
+  fn: SupportCodeFunction
+  args: ReadonlyArray<unknown>
 }
 
 export interface AssembledTestPlan {
@@ -35,18 +33,19 @@ export interface AssembledStep {
 }
 
 export function makeTestPlan(
+  newId: () => string,
   pickles: ReadonlyArray<Pickle>,
   library: SupportCodeLibrary
 ): AssembledTestPlan {
   return {
     testCases: pickles.map((pickle) => {
       return {
-        id: makeId(),
+        id: newId(),
         name: pickle.name,
         steps: [
-          ...fromBeforeHooks(pickle, library),
-          ...fromPickleSteps(pickle, library),
-          ...fromAfterHooks(pickle, library),
+          ...fromBeforeHooks(newId, pickle, library),
+          ...fromPickleSteps(newId, pickle, library),
+          ...fromAfterHooks(newId, pickle, library),
         ],
         toMessage() {
           return {
@@ -64,12 +63,13 @@ export function makeTestPlan(
 }
 
 function fromBeforeHooks(
+  newId: () => string,
   pickle: Pickle,
   library: SupportCodeLibrary
 ): ReadonlyArray<AssembledStep> {
   return library.findAllBeforeHooksBy(pickle.tags.map((tag) => tag.name)).map((def) => {
     return {
-      id: makeId(),
+      id: newId(),
       name: def.name ?? '',
       always: false,
       prepare() {
@@ -88,13 +88,17 @@ function fromBeforeHooks(
   })
 }
 
-function fromAfterHooks(pickle: Pickle, library: SupportCodeLibrary): ReadonlyArray<AssembledStep> {
+function fromAfterHooks(
+  newId: () => string,
+  pickle: Pickle,
+  library: SupportCodeLibrary
+): ReadonlyArray<AssembledStep> {
   return library
     .findAllAfterHooksBy(pickle.tags.map((tag) => tag.name))
     .toReversed()
     .map((def) => {
       return {
-        id: makeId(),
+        id: newId(),
         name: def.name ?? '',
         always: true,
         prepare() {
@@ -114,13 +118,14 @@ function fromAfterHooks(pickle: Pickle, library: SupportCodeLibrary): ReadonlyAr
 }
 
 function fromPickleSteps(
+  newId: () => string,
   pickle: Pickle,
   library: SupportCodeLibrary
 ): ReadonlyArray<AssembledStep> {
   return pickle.steps.map((pickleStep) => {
     const matched = library.findAllStepsBy(pickleStep.text)
     return {
-      id: makeId(),
+      id: newId(),
       name: pickleStep.text,
       always: false,
       prepare() {

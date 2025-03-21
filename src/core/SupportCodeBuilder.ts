@@ -6,8 +6,6 @@ import {
 import { SourceReference } from '@cucumber/messages'
 import parse from '@cucumber/tag-expressions'
 
-import { makeId } from '../makeId.js'
-import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction } from '../types.js'
 import {
   DefinedHook,
   DefinedParameterType,
@@ -15,22 +13,30 @@ import {
   SupportCodeLibrary,
   UndefinedParameterType,
 } from './SupportCodeLibrary.js'
+import { SupportCodeFunction } from './types.js'
 
-interface RegisteredParameterType extends ParameterTypeOptions {
+interface RegisteredParameterType {
   id: string
+  name: string
+  regexp: RegExp | string | readonly RegExp[] | readonly string[]
+  transformer?: (...match: string[]) => unknown
+  useForSnippets?: boolean
+  preferForRegexpMatch?: boolean
   sourceReference: SourceReference
 }
 
-interface RegisteredHook extends HookOptions {
+interface RegisteredHook {
   id: string
-  fn: HookFunction
+  name?: string
+  tagFilter?: string
+  fn: SupportCodeFunction
   sourceReference: SourceReference
 }
 
 interface RegisteredStep {
   id: string
   text: string
-  fn: StepFunction
+  fn: SupportCodeFunction
   sourceReference: SourceReference
 }
 
@@ -42,53 +48,39 @@ export class SupportCodeBuilder {
   private readonly beforeHooks: Array<RegisteredHook> = []
   private readonly afterHooks: Array<RegisteredHook> = []
 
-  registerParameterType(
-    options: ParameterTypeOptions,
-    sourceReference: SourceReference
-  ): SupportCodeBuilder {
+  constructor(private readonly newId: () => string) {}
+
+  registerParameterType(options: Omit<RegisteredParameterType, 'id'>): SupportCodeBuilder {
     this.parameterTypes.push({
-      id: makeId(),
+      id: this.newId(),
       ...options,
-      sourceReference,
     })
     return this
   }
 
-  registerBeforeHook(
-    options: HookOptions,
-    fn: HookFunction,
-    sourceReference: SourceReference
-  ): SupportCodeBuilder {
+  registerBeforeHook(options: Omit<RegisteredHook, 'id'>): SupportCodeBuilder {
     this.beforeHooks.push({
-      id: makeId(),
+      id: this.newId(),
       ...options,
-      fn,
-      sourceReference,
     })
     return this
   }
 
-  registerAfterHook(
-    options: HookOptions,
-    fn: HookFunction,
-    sourceReference: SourceReference
-  ): SupportCodeBuilder {
+  registerAfterHook(options: Omit<RegisteredHook, 'id'>): SupportCodeBuilder {
     this.afterHooks.push({
-      id: makeId(),
+      id: this.newId(),
       ...options,
-      fn,
-      sourceReference,
     })
     return this
   }
 
   registerStep(
     text: string,
-    fn: StepFunction,
+    fn: SupportCodeFunction,
     sourceReference: SourceReference
   ): SupportCodeBuilder {
     this.steps.push({
-      id: makeId(),
+      id: this.newId(),
       text,
       fn,
       sourceReference,

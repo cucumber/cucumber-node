@@ -2,7 +2,7 @@ import { Argument, CucumberExpression } from '@cucumber/cucumber-expressions'
 import { Envelope, HookType, SourceReference, StepDefinitionPatternType } from '@cucumber/messages'
 import parse from '@cucumber/tag-expressions'
 
-import { HookFunction, StepFunction } from '../types.js'
+import { SupportCodeFunction } from './types.js'
 
 export type UndefinedParameterType = {
   name: string
@@ -23,7 +23,7 @@ export type DefinedHook = {
   name?: string
   rawTagExpression?: string
   tagExpression?: ReturnType<typeof parse>
-  fn: HookFunction
+  fn: SupportCodeFunction
   sourceReference: SourceReference
 }
 
@@ -31,7 +31,7 @@ export type DefinedStep = {
   id: string
   rawExpression: string
   expression: CucumberExpression
-  fn: StepFunction
+  fn: SupportCodeFunction
   sourceReference: SourceReference
 }
 
@@ -63,7 +63,7 @@ export class SupportCodeLibrary {
     return results
   }
 
-  findAllBeforeHooksBy(tags: ReadonlyArray<string>) {
+  findAllBeforeHooksBy(tags: ReadonlyArray<string>): ReadonlyArray<DefinedHook> {
     return this.beforeHooks.filter((def) => {
       if (def.tagExpression) {
         return def.tagExpression.evaluate(tags as string[])
@@ -72,7 +72,7 @@ export class SupportCodeLibrary {
     })
   }
 
-  findAllAfterHooksBy(tags: ReadonlyArray<string>) {
+  findAllAfterHooksBy(tags: ReadonlyArray<string>): ReadonlyArray<DefinedHook> {
     return this.afterHooks.filter((def) => {
       if (def.tagExpression) {
         return def.tagExpression.evaluate(tags as string[])
