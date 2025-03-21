@@ -50,9 +50,7 @@ export class SupportCodeBuilder {
 
   constructor(private readonly newId: () => string) {}
 
-  registerParameterType(
-    options: Omit<RegisteredParameterType, 'id'>
-  ): SupportCodeBuilder {
+  registerParameterType(options: Omit<RegisteredParameterType, 'id'>): SupportCodeBuilder {
     this.parameterTypes.push({
       id: this.newId(),
       ...options,
@@ -60,9 +58,7 @@ export class SupportCodeBuilder {
     return this
   }
 
-  registerBeforeHook(
-    options: Omit<RegisteredHook, 'id'>
-  ): SupportCodeBuilder {
+  registerBeforeHook(options: Omit<RegisteredHook, 'id'>): SupportCodeBuilder {
     this.beforeHooks.push({
       id: this.newId(),
       ...options,
@@ -70,9 +66,7 @@ export class SupportCodeBuilder {
     return this
   }
 
-  registerAfterHook(
-    options: Omit<RegisteredHook, 'id'>
-  ): SupportCodeBuilder {
+  registerAfterHook(options: Omit<RegisteredHook, 'id'>): SupportCodeBuilder {
     this.afterHooks.push({
       id: this.newId(),
       ...options,
