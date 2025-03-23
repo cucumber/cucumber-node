@@ -179,7 +179,7 @@ export class SupportCodeBuilder {
     })
   }
 
-  build(): SupportCodeLibrary {
+  toLibrary(): SupportCodeLibrary {
     return new SupportCodeLibrary(
       this.buildParameterTypes(),
       this.buildSteps(),

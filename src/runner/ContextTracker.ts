@@ -2,7 +2,7 @@ import { TestContext } from 'node:test'
 
 import { Envelope } from '@cucumber/messages'
 
-import { TestCaseContext } from '../types.js'
+import { TestCaseContext, World } from '../types.js'
 import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
 
 export class ContextTracker {
@@ -10,7 +10,7 @@ export class ContextTracker {
 
   constructor(
     private readonly testCaseStartedId: string,
-    private readonly world: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    private readonly world: World,
     private readonly onMessage: (envelope: Envelope) => void
   ) {}
 

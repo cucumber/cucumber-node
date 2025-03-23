@@ -1,8 +1,7 @@
-import { SupportCodeBuilder } from '../core/SupportCodeBuilder.js'
-import { makeId } from '../makeId.js'
+import { ExtendedSupportCodeBuilder } from './ExtendedSupportCodeBuilder.js'
 import { DiagnosticMessagesCollector, NoopMessagesCollector } from './MessagesCollector.js'
 
-export const builder = new SupportCodeBuilder(makeId)
+export const builder = new ExtendedSupportCodeBuilder()
 
 /*
 If no reporter is listening for messages, we provide

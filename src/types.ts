@@ -4,6 +4,12 @@ import { TestContext } from 'node:test'
 import { Promisable } from 'type-fest'
 
 /**
+ * An object for sharing state between test steps.
+ * @public
+ */
+export type World = any // eslint-disable-line @typescript-eslint/no-explicit-any
+
+/**
  * Options for {@link TestCaseContext.attach}
  * @public
  */
@@ -78,8 +84,7 @@ export type TestCaseContext = {
    * An object scoped only to this test case, that can be used to share state between
    * test steps.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  world: any
+  world: World
 }
 
 /**

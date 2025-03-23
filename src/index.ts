@@ -1,9 +1,34 @@
+import { Promisable } from 'type-fest'
+
 import { makeSourceReference } from './makeSourceReference.js'
 import { builder } from './runner/state.js'
-import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction } from './types.js'
+import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction, World } from './types.js'
 
 export * from './core/DataTable.js'
 export * from './types.js'
+
+/**
+ * Define a custom world creator and (optional) destroyer. These will be use to create and
+ * destroy each World instance. Both functions can either return a value, or promise that resolves
+ * to a value.
+ * @public
+ * @param creator - A function that creates and returns a custom World object
+ * @param destroyer - An optional function to clean up the World object after each test case
+ * @example CustomWorld(async () => \{
+ *   return \{ myCustomProperty: 'value' \}
+ * \}, async (world) => \{
+ *   // cleanup resources
+ * \})
+ */
+export function CustomWorld(
+  creator: () => Promisable<World>,
+  destroyer?: (world: World) => Promisable<void>
+) {
+  builder.registerWorldCreator(creator)
+  if (destroyer) {
+    builder.registerWorldDestroyer(destroyer)
+  }
+}
 
 /**
  * Define a custom parameter type for use in steps.

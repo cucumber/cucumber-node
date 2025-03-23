@@ -21,7 +21,7 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
     messages.push({ gherkinDocument })
     messages.push(...pickles.map((pickle) => ({ pickle })))
 
-    const library = await loadSupport()
+    const { library, worldFactory } = await loadSupport()
     messages.push(...library.toEnvelopes())
 
     const plan = makeTestPlan(makeId, pickles, library)
@@ -41,7 +41,7 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
           },
         })
 
-        const world = {}
+        const world = await worldFactory.create()
         const tracker = new ContextTracker(testCaseStartedId, world, (e) => messages.push(e))
 
         for (const step of item.steps) {
@@ -79,6 +79,8 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
             },
           })
         }
+
+        await worldFactory.destroy(world)
 
         messages.push({
           testCaseFinished: {

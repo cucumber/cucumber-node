@@ -27,6 +27,9 @@ export function Before(fn: HookFunction): void;
 export function Before(options: HookOptions, fn: HookFunction): void;
 
 // @public
+export function CustomWorld(creator: () => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
+
+// @public
 export class DataTable {
     constructor(cells: ReadonlyArray<ReadonlyArray<string>>);
     hashes(): ReadonlyArray<Record<string, string>>;
@@ -71,7 +74,7 @@ export type TestCaseContext = {
     attach(data: Readable | Buffer | string, options: AttachmentOptions): Promise<void>;
     log(text: string): Promise<void>;
     link(url: string, title?: string): Promise<void>;
-    world: any;
+    world: World;
 };
 
 // @public
@@ -79,6 +82,9 @@ export function Then(text: string, fn: StepFunction): void;
 
 // @public
 export function When(text: string, fn: StepFunction): void;
+
+// @public
+export type World = any;
 
 // (No @packageDocumentation comment for this package)
 
