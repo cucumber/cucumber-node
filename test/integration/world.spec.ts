@@ -88,8 +88,8 @@ Given('a step', () => {})
     )
     await harness.writeFile(
       'features/support.js',
-      `import { CustomWorld } from '@cucumber/node'
-CustomWorld(async () => {
+      `import { WorldCreator } from '@cucumber/node'
+WorldCreator(async () => {
   console.log('Ran custom world creator!')
   return {}
 }, async (world) => {

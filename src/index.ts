@@ -20,7 +20,7 @@ export * from './types.js'
  *   // cleanup resources
  * \})
  */
-export function CustomWorld(
+export function WorldCreator(
   creator: () => Promisable<World>,
   destroyer?: (world: World) => Promisable<void>
 ) {

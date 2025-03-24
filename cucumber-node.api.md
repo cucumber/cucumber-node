@@ -27,9 +27,6 @@ export function Before(fn: HookFunction): void;
 export function Before(options: HookOptions, fn: HookFunction): void;
 
 // @public
-export function CustomWorld(creator: () => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
-
-// @public
 export class DataTable {
     constructor(cells: ReadonlyArray<ReadonlyArray<string>>);
     hashes(): ReadonlyArray<Record<string, string>>;
@@ -85,6 +82,9 @@ export function When(text: string, fn: StepFunction): void;
 
 // @public
 export type World = any;
+
+// @public
+export function WorldCreator(creator: () => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
 
 // (No @packageDocumentation comment for this package)
 
