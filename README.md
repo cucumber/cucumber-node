@@ -161,7 +161,6 @@ There are some pretty standard Cucumber features that are missing (but not for l
 - [Filtering by tag expression](https://github.com/cucumber/cucumber-node/issues/9)
 - [BeforeAll/AfterAll hooks](https://github.com/cucumber/cucumber-node/issues/8)
 - [Regular expression steps](https://github.com/cucumber/cucumber-node/issues/6)
-- [Customise World creation and type](https://github.com/cucumber/cucumber-node/issues/7)
 - [Snippets](https://github.com/cucumber/cucumber-node/issues/36)
 
 ## What's different?
@@ -174,6 +173,6 @@ Some behaviour of cucumber-node is different - and better - than in cucumber-js:
 
 ### Arrow functions
 
-There's no reliance on `this` in your step and hook functions to access state, since we pass a context object as the first argument to all functions. This means you're free to use arrow functions as you normally would in JavaScript.
+There's no reliance on `this` in your step and hook functions to access state, since we pass a context object as the first argument to those functions. This means you're free to use arrow functions as you normally would in JavaScript.
 
 
