@@ -59,7 +59,7 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
             async (ctx2) => {
               let success = false
               try {
-                const { fn, args } = step.prepare()
+                const { fn, args } = step.prepare(world)
                 await fn(tracker.makeContext(ctx2, step.id), ...args)
                 success = true
               } finally {
