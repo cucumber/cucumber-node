@@ -39,7 +39,7 @@ export class DataTable {
 export function Given(text: string, fn: StepFunction): void;
 
 // @public
-export type HookFunction = (context: TestCaseContext) => Promisable<void>;
+export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>;
 
 // @public
 export type HookOptions = {
@@ -54,13 +54,13 @@ export function ParameterType(options: ParameterTypeOptions): void;
 export type ParameterTypeOptions = {
     name: string;
     regexp: RegExp | string | readonly RegExp[] | readonly string[];
-    transformer?: (...match: string[]) => unknown;
+    transformer?: (this: World, ...match: string[]) => unknown;
     useForSnippets?: boolean;
     preferForRegexpMatch?: boolean;
 };
 
 // @public
-export type StepFunction = (context: TestCaseContext, ...args: any) => Promisable<void>;
+export type StepFunction = (this: World, context: TestCaseContext, ...args: any) => Promisable<void>;
 
 // @public
 export type TestCaseContext = {
