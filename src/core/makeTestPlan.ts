@@ -28,7 +28,7 @@ export interface AssembledStep {
   id: string
   name: string
   always: boolean
-  prepare(): Runnable
+  prepare(thisArg?: unknown): Runnable
   toMessage(): TestStep
 }
 
@@ -72,9 +72,9 @@ function fromBeforeHooks(
       id: newId(),
       name: def.name ?? '',
       always: false,
-      prepare() {
+      prepare(thisArg) {
         return {
-          fn: def.fn,
+          fn: def.fn.bind(thisArg),
           args: [],
         }
       },
@@ -101,9 +101,9 @@ function fromAfterHooks(
         id: newId(),
         name: def.name ?? '',
         always: true,
-        prepare() {
+        prepare(thisArg) {
           return {
-            fn: def.fn,
+            fn: def.fn.bind(thisArg),
             args: [],
           }
         },
@@ -128,7 +128,7 @@ function fromPickleSteps(
       id: newId(),
       name: pickleStep.text,
       always: false,
-      prepare() {
+      prepare(thisArg) {
         if (matched.length < 1) {
           throw new UndefinedError(pickleStep.text)
         } else if (matched.length > 1) {
@@ -139,7 +139,7 @@ function fromPickleSteps(
         } else {
           const { def, args } = matched[0]
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const allArgs: Array<any> = args.map((arg) => arg.getValue(undefined))
+          const allArgs: Array<any> = args.map((arg) => arg.getValue(thisArg))
           if (pickleStep.argument?.docString) {
             allArgs.push(pickleStep.argument.docString.content)
           } else if (pickleStep.argument?.dataTable) {
@@ -152,7 +152,7 @@ function fromPickleSteps(
             )
           }
           return {
-            fn: def.fn,
+            fn: def.fn.bind(thisArg),
             args: allArgs,
           }
         }

@@ -4,6 +4,12 @@ import { TestContext } from 'node:test'
 import { Promisable } from 'type-fest'
 
 /**
+ * An object for sharing state between test steps.
+ * @public
+ */
+export type World = any // eslint-disable-line @typescript-eslint/no-explicit-any
+
+/**
  * Options for {@link TestCaseContext.attach}
  * @public
  */
@@ -78,8 +84,7 @@ export type TestCaseContext = {
    * An object scoped only to this test case, that can be used to share state between
    * test steps.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  world: any
+  world: World
 }
 
 /**
@@ -102,7 +107,7 @@ export type ParameterTypeOptions = {
    * @remarks
    * If not provided, the raw matched value(s) will be passed to the step function.
    */
-  transformer?: (...match: string[]) => unknown
+  transformer?: (this: World, ...match: string[]) => unknown
   /**
    * Whether this parameter type should be used when suggesting snippets for missing step
    * definitions.
@@ -140,7 +145,7 @@ export type HookOptions = {
  * Can optionally return a promise, which will duly be awaited. The actual returned/resolved value
  * is not read.
  */
-export type HookFunction = (context: TestCaseContext) => Promisable<void>
+export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>
 
 /**
  * A function to be executed as a step.
@@ -150,4 +155,4 @@ export type HookFunction = (context: TestCaseContext) => Promisable<void>
  * is not read.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type StepFunction = (context: TestCaseContext, ...args: any) => Promisable<void>
+export type StepFunction = (this: World, context: TestCaseContext, ...args: any) => Promisable<void>

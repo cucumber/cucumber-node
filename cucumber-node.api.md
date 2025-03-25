@@ -39,7 +39,7 @@ export class DataTable {
 export function Given(text: string, fn: StepFunction): void;
 
 // @public
-export type HookFunction = (context: TestCaseContext) => Promisable<void>;
+export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>;
 
 // @public
 export type HookOptions = {
@@ -54,13 +54,13 @@ export function ParameterType(options: ParameterTypeOptions): void;
 export type ParameterTypeOptions = {
     name: string;
     regexp: RegExp | string | readonly RegExp[] | readonly string[];
-    transformer?: (...match: string[]) => unknown;
+    transformer?: (this: World, ...match: string[]) => unknown;
     useForSnippets?: boolean;
     preferForRegexpMatch?: boolean;
 };
 
 // @public
-export type StepFunction = (context: TestCaseContext, ...args: any) => Promisable<void>;
+export type StepFunction = (this: World, context: TestCaseContext, ...args: any) => Promisable<void>;
 
 // @public
 export type TestCaseContext = {
@@ -71,7 +71,7 @@ export type TestCaseContext = {
     attach(data: Readable | Buffer | string, options: AttachmentOptions): Promise<void>;
     log(text: string): Promise<void>;
     link(url: string, title?: string): Promise<void>;
-    world: any;
+    world: World;
 };
 
 // @public
@@ -79,6 +79,12 @@ export function Then(text: string, fn: StepFunction): void;
 
 // @public
 export function When(text: string, fn: StepFunction): void;
+
+// @public
+export type World = any;
+
+// @public
+export function WorldCreator(creator: () => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
 
 // (No @packageDocumentation comment for this package)
 

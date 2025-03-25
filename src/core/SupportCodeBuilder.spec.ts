@@ -7,7 +7,7 @@ describe('SupportCodeBuilder', () => {
     const builder = new SupportCodeBuilder(() => crypto.randomUUID())
     builder.registerStep('a {thing} happens', () => {}, {})
 
-    const library = builder.build()
+    const library = builder.toLibrary()
 
     expect(library.toEnvelopes().find((envelope) => envelope.undefinedParameterType)).to.deep.eq({
       undefinedParameterType: {
@@ -22,6 +22,6 @@ describe('SupportCodeBuilder', () => {
     // @ts-expect-error passing incorrect type to yield an error
     builder.registerStep(null, () => {}, {})
 
-    expect(() => builder.build()).to.throw()
+    expect(() => builder.toLibrary()).to.throw()
   })
 })
