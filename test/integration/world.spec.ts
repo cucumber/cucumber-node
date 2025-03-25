@@ -29,8 +29,9 @@ Given('another step', (t) => {
 })
   `
     )
-    const [, , exitCode] = await harness.run('spec')
-    expect(exitCode).to.eq(0)
+    const [output] = await harness.run('spec')
+    const sanitised = stripVTControlCharacters(output.trim())
+    expect(sanitised).to.include('ℹ pass 6')
   })
 
   it('uses the world as `this` for user code functions', async () => {

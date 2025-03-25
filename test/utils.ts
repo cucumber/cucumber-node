@@ -20,7 +20,10 @@ class TestHarness {
     await writeFile(path.join(this.tempDir, target), content, { encoding: 'utf-8' })
   }
 
-  async run(reporter = 'spec', ...extraArgs: string[]): Promise<readonly [string, string, number]> {
+  async run(
+    reporter = 'spec',
+    ...extraArgs: string[]
+  ): Promise<readonly [string, string, unknown]> {
     return new Promise((resolve) => {
       exec(
         [
@@ -38,7 +41,7 @@ class TestHarness {
           cwd: this.tempDir,
         },
         (error, stdout, stderr) => {
-          resolve([stdout, stderr, error?.code ?? 0])
+          resolve([stdout, stderr, error])
         }
       )
     })
