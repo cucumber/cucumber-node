@@ -1,6 +1,6 @@
 {
   "name": "@cucumber/node",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "David Goss (https://github.com/davidjgoss)",
   "license": "MIT",
   "type": "module",
