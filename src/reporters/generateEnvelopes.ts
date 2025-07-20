@@ -15,8 +15,8 @@ export async function* generateEnvelopes(
   yield { meta }
 
   const testRunEnvelopes: Array<Envelope> = []
-  const testStepFinishedOrder: Array<TestStepFinished> = []
-  const testStepFinishEvents: Array<TestFail | TestPass> = []
+  const testStepFinishedMessages: Array<TestStepFinished> = []
+  const failOrPassEvents: Array<TestFail | TestPass> = []
 
   let success: boolean = false
   const testRunStarted: TestRunStarted = {
@@ -29,7 +29,7 @@ export async function* generateEnvelopes(
       case 'test:fail':
       case 'test:pass':
         if (isFromHere(event.data) && event.data.nesting === 2) {
-          testStepFinishEvents.push(event.data)
+          failOrPassEvents.push(event.data)
         }
         break
       case 'test:summary':
@@ -53,9 +53,9 @@ export async function* generateEnvelopes(
               case 'testStepFinished':
                 {
                   const testStepFinished = envelope.testStepFinished!
-                  testStepFinishedOrder.push(testStepFinished)
+                  testStepFinishedMessages.push(testStepFinished)
                   testStepFinished.testStepResult = mapTestStepResult(
-                    testStepFinishEvents.at(testStepFinishedOrder.indexOf(testStepFinished))
+                    failOrPassEvents.at(testStepFinishedMessages.indexOf(testStepFinished))
                   )
                   testRunEnvelopes.push(envelope)
                 }
