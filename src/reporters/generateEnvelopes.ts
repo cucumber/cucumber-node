@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { TestEvent } from 'node:test/reporters'
 
 import { Envelope, TestRunStarted, TestStepFinished } from '@cucumber/messages'
@@ -27,7 +28,7 @@ export async function* generateEnvelopes(
     switch (event.type) {
       case 'test:fail':
       case 'test:pass':
-        if (event.data.nesting === 2) {
+        if (isFromHere(event.data) && event.data.nesting === 2) {
           testStepFinishEvents.push(event.data)
         }
         break
@@ -35,7 +36,7 @@ export async function* generateEnvelopes(
         success = event.data.success
         break
       case 'test:diagnostic':
-        if (isEnvelope(event.data.message)) {
+        if (isFromHere(event.data) && isEnvelope(event.data.message)) {
           const envelope = fromPrefixed(event.data.message)
           for (const key of Object.keys(envelope) as ReadonlyArray<keyof Envelope>) {
             switch (key) {
@@ -82,6 +83,10 @@ export async function* generateEnvelopes(
     yield envelope
   }
   yield { testRunFinished }
+}
+
+function isFromHere(testLocationInfo: TestLocationInfo) {
+  return testLocationInfo.file?.startsWith(path.join(import.meta.dirname, '..'))
 }
 
 function isEnvelope(data: string) {
