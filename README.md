@@ -29,7 +29,7 @@ cucumber-node is [available on npm](https://www.npmjs.com/package/@cucumber/node
 npm install --save-dev @cucumber/node
 ```
 
-You'll need Node.js 22 or 23.
+You'll need Node.js 22 or 24.
 
 ## Get started
 

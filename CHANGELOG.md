@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Support Node.js 24 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
+
+### Removed
+- Drop support for Node.js 23 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
 
 ## [0.4.0] - 2025-03-25
 ### Added
