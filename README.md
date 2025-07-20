@@ -151,6 +151,10 @@ Some Cucumber formatters are included as Node.js test reporters:
 
 For now, avoid using the `spec` reporter at the same time as one of the above reporters - because we're abusing the `diagnostic` channel to send messages to the reporter, it makes the `spec` output very noisy - we recommend the `dot` reporter instead.
 
+## Mixing tests
+
+You can execute Cucumber tests and normal JavaScript tests in the same test run - cucumber-node won't interfere with the other tests. But the reporters mentioned above will only report on the Cucumber tests in your run.
+
 ## Limitations
 
 There are some pretty standard Cucumber features that are missing (but not for long):
