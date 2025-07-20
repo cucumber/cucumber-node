@@ -2,6 +2,7 @@ import { stripVTControlCharacters } from 'node:util'
 import { expect } from 'chai'
 import { makeTestHarness } from '../utils.js'
 import path from 'node:path'
+import { TestStepResultStatus } from '@cucumber/messages'
 
 describe('Reporters', () => {
   describe('spec', () => {
@@ -58,6 +59,47 @@ Given('a step', () => {})`
       const [output] = await harness.run('spec')
       const sanitised = stripVTControlCharacters(output.trim())
       expect(sanitised).to.include('No matching step definitions found for text "a step"')
+    })
+  })
+
+  describe('message', () => {
+    it('only factors cucumber tests into results', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/first.feature',
+        `Feature:
+  Scenario:
+    Given a step
+`
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+Given('a step', () => {})
+`
+      )
+      await harness.writeFile(
+        'example.test.mjs',
+        `import test from 'node:test'
+test('top level', (t) => {
+    test('next level', (t1) => {
+        t1.test('failing test', (t2) => {
+            t2.assert.strictEqual(1, 2)
+        })
+    })
+})
+`
+      )
+
+      const query = await harness.collectMessages()
+
+      expect(query.findAllTestCaseStarted().length).to.eq(1)
+      expect(
+        query
+          .findAllTestCaseStarted()
+          .map((testCaseStarted) => query.findMostSevereTestStepResultBy(testCaseStarted)?.status)
+      ).to.deep.eq([TestStepResultStatus.PASSED])
+      expect(query.findTestRunFinished()?.success).to.be.true
     })
   })
 

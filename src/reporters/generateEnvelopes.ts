@@ -1,6 +1,13 @@
+import path from 'node:path'
 import { TestEvent } from 'node:test/reporters'
 
-import { Envelope, TestRunStarted, TestStepFinished } from '@cucumber/messages'
+import {
+  Envelope,
+  TestRunStarted,
+  TestStepFinished,
+  TestStepResult,
+  TestStepResultStatus,
+} from '@cucumber/messages'
 
 import { makeId } from '../makeId.js'
 import { makeTimestamp } from '../makeTimestamp.js'
@@ -13,11 +20,11 @@ export async function* generateEnvelopes(
 ): AsyncGenerator<Envelope> {
   yield { meta }
 
+  const nodeFailOrPassEvents: Array<TestFail | TestPass> = []
+  const testStepFinishedMessages: Array<TestStepFinished> = []
+  const nonSuccessTestCaseStartedIds: Array<string> = []
   const testRunEnvelopes: Array<Envelope> = []
-  const testStepFinishedOrder: Array<TestStepFinished> = []
-  const testStepFinishEvents: Array<TestFail | TestPass> = []
 
-  let success: boolean = false
   const testRunStarted: TestRunStarted = {
     id: makeId(),
     timestamp: makeTimestamp(),
@@ -27,15 +34,12 @@ export async function* generateEnvelopes(
     switch (event.type) {
       case 'test:fail':
       case 'test:pass':
-        if (event.data.nesting === 2) {
-          testStepFinishEvents.push(event.data)
+        if (isFromHere(event.data) && event.data.nesting === 2) {
+          nodeFailOrPassEvents.push(event.data)
         }
         break
-      case 'test:summary':
-        success = event.data.success
-        break
       case 'test:diagnostic':
-        if (isEnvelope(event.data.message)) {
+        if (isFromHere(event.data) && isEnvelope(event.data.message)) {
           const envelope = fromPrefixed(event.data.message)
           for (const key of Object.keys(envelope) as ReadonlyArray<keyof Envelope>) {
             switch (key) {
@@ -52,10 +56,13 @@ export async function* generateEnvelopes(
               case 'testStepFinished':
                 {
                   const testStepFinished = envelope.testStepFinished!
-                  testStepFinishedOrder.push(testStepFinished)
+                  testStepFinishedMessages.push(testStepFinished)
                   testStepFinished.testStepResult = mapTestStepResult(
-                    testStepFinishEvents.at(testStepFinishedOrder.indexOf(testStepFinished))
+                    nodeFailOrPassEvents.at(testStepFinishedMessages.indexOf(testStepFinished))
                   )
+                  if (isNonSuccess(testStepFinished.testStepResult)) {
+                    nonSuccessTestCaseStartedIds.push(testStepFinished.testCaseStartedId)
+                  }
                   testRunEnvelopes.push(envelope)
                 }
                 break
@@ -74,7 +81,7 @@ export async function* generateEnvelopes(
   const testRunFinished = {
     testRunStartedId: testRunStarted.id,
     timestamp: makeTimestamp(),
-    success,
+    success: nonSuccessTestCaseStartedIds.length === 0,
   }
 
   yield { testRunStarted }
@@ -84,10 +91,22 @@ export async function* generateEnvelopes(
   yield { testRunFinished }
 }
 
+function isFromHere(testLocationInfo: TestLocationInfo) {
+  return testLocationInfo.file?.startsWith(path.join(import.meta.dirname, '..'))
+}
+
 function isEnvelope(data: string) {
   return data.startsWith(PROTOCOL_PREFIX)
 }
 
 function fromPrefixed(data: string): Envelope {
   return JSON.parse(data.substring(PROTOCOL_PREFIX.length))
+}
+
+function isNonSuccess(testStepResult: TestStepResult) {
+  return ![
+    TestStepResultStatus.UNKNOWN,
+    TestStepResultStatus.PASSED,
+    TestStepResultStatus.SKIPPED,
+  ].includes(testStepResult.status)
 }

@@ -2,6 +2,8 @@ import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promis
 import path from 'node:path'
 import { tmpdir } from 'node:os'
 import { exec } from 'node:child_process'
+import { Query } from '@cucumber/query'
+import { Envelope } from '@cucumber/messages'
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}
@@ -34,6 +36,7 @@ class TestHarness {
           `--test-reporter-destination=stdout`,
           ...extraArgs,
           `--test`,
+          `"*.test.mjs"`,
           `"features/**/*.feature"`,
           `"features/**/*.feature.md"`,
         ].join(' '),
@@ -45,6 +48,17 @@ class TestHarness {
         }
       )
     })
+  }
+
+  async collectMessages(): Promise<Query> {
+    const query = new Query()
+    const [output] = await this.run('@cucumber/node/reporters/message')
+    output
+      .trim()
+      .split('\n')
+      .map((line) => JSON.parse(line) as Envelope)
+      .forEach((envelope) => query.update(envelope))
+    return query
   }
 }
 
