@@ -4,6 +4,7 @@
 
 ```ts
 
+import { DataTable } from '@cucumber/core';
 import { Promisable } from 'type-fest';
 import { Readable } from 'node:stream';
 import { TestContext } from 'node:test';
@@ -26,17 +27,10 @@ export function Before(fn: HookFunction): void;
 // @public
 export function Before(options: HookOptions, fn: HookFunction): void;
 
-// @public
-export class DataTable {
-    constructor(cells: ReadonlyArray<ReadonlyArray<string>>);
-    hashes(): ReadonlyArray<Record<string, string>>;
-    list(): ReadonlyArray<string>;
-    raw(): ReadonlyArray<ReadonlyArray<string>>;
-    transpose(): DataTable;
-}
+export { DataTable }
 
 // @public
-export function Given(text: string, fn: StepFunction): void;
+export function Given(pattern: string, fn: StepFunction): void;
 
 // @public
 export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>;
@@ -44,7 +38,7 @@ export type HookFunction = (this: World, context: TestCaseContext) => Promisable
 // @public
 export type HookOptions = {
     name?: string;
-    tagFilter?: string;
+    tags?: string;
 };
 
 // @public
@@ -75,10 +69,10 @@ export type TestCaseContext = {
 };
 
 // @public
-export function Then(text: string, fn: StepFunction): void;
+export function Then(pattern: string, fn: StepFunction): void;
 
 // @public
-export function When(text: string, fn: StepFunction): void;
+export function When(pattern: string, fn: StepFunction): void;
 
 // @public
 export type World = any;

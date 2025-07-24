@@ -1,6 +1,6 @@
 import { Before, Given } from '@cucumber/node'
 
-Before({ tagFilter: '@skip' }, (t) => t.skip())
+Before({ tags: '@skip' }, (t) => t.skip())
 
 Given('a step that does not skip', () => {
   // no-op

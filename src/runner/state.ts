@@ -1,7 +1,10 @@
-import { ExtendedSupportCodeBuilder } from './ExtendedSupportCodeBuilder.js'
+import { buildSupportCode } from '@cucumber/core'
+
+import { ExtraSupportCodeBuilder } from './ExtendedSupportCodeBuilder.js'
 import { DiagnosticMessagesCollector, NoopMessagesCollector } from './MessagesCollector.js'
 
-export const builder = new ExtendedSupportCodeBuilder()
+export const coreBuilder = buildSupportCode()
+export const extraBuilder = new ExtraSupportCodeBuilder()
 
 /*
 If no reporter is listening for messages, we provide

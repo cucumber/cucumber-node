@@ -1,11 +1,11 @@
 import { Promisable } from 'type-fest'
 
 import { makeSourceReference } from './makeSourceReference.js'
-import { builder } from './runner/state.js'
+import { coreBuilder, extraBuilder } from './runner/state.js'
 import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction, World } from './types.js'
 
-export * from './core/DataTable.js'
 export * from './types.js'
+export { DataTable } from '@cucumber/core'
 
 /**
  * Define a custom world creator and (optional) destroyer. These will be use to create and
@@ -24,9 +24,9 @@ export function WorldCreator(
   creator: () => Promisable<World>,
   destroyer?: (world: World) => Promisable<void>
 ) {
-  builder.registerWorldCreator(creator)
+  extraBuilder.worldCreator(creator)
   if (destroyer) {
-    builder.registerWorldDestroyer(destroyer)
+    extraBuilder.worldDestroyer(destroyer)
   }
 }
 
@@ -43,7 +43,7 @@ export function WorldCreator(
  * \})
  */
 export function ParameterType(options: ParameterTypeOptions) {
-  builder.registerParameterType({
+  coreBuilder.parameterType({
     ...options,
     sourceReference: makeSourceReference(),
   })
@@ -71,7 +71,7 @@ export function Before(options: HookOptions, fn: HookFunction): void
 export function Before(arg1: HookFunction | HookOptions, arg2?: HookFunction) {
   const options = typeof arg1 === 'object' ? arg1 : {}
   const fn = arg2 ?? (arg1 as HookFunction)
-  builder.registerBeforeHook({
+  coreBuilder.beforeHook({
     ...options,
     fn,
     sourceReference: makeSourceReference(),
@@ -100,7 +100,7 @@ export function After(options: HookOptions, fn: HookFunction): void
 export function After(arg1: HookFunction | HookOptions, arg2?: HookFunction) {
   const options = typeof arg1 === 'object' ? arg1 : {}
   const fn = arg2 ?? (arg1 as HookFunction)
-  builder.registerAfterHook({
+  coreBuilder.afterHook({
     ...options,
     fn,
     sourceReference: makeSourceReference(),
@@ -110,38 +110,38 @@ export function After(arg1: HookFunction | HookOptions, arg2?: HookFunction) {
 /**
  * Define a step to be used with the "Given" keyword
  * @public
- * @param text - a Cucumber Expression used to match the step with steps from Gherkin
+ * @param pattern - a Cucumber Expression used to match the step with steps from Gherkin
  * @param fn - the function to be executed
  * @example Given('I have \{int\} cukes in my belly', async (t, count) => \{
  *   // do stuff here
  * \})
  */
-export function Given(text: string, fn: StepFunction) {
-  builder.registerStep(text, fn, makeSourceReference())
+export function Given(pattern: string, fn: StepFunction) {
+  coreBuilder.step({ pattern, fn, sourceReference: makeSourceReference() })
 }
 
 /**
  * Define a step to be used with the "When" keyword
  * @public
- * @param text - a Cucumber Expression used to match the step with steps from Gherkin
+ * @param pattern - a Cucumber Expression used to match the step with steps from Gherkin
  * @param fn - the function to be executed
  * @example When('I have \{int\} cukes in my belly', async (t, count) => \{
  *   // do stuff here
  * \})
  */
-export function When(text: string, fn: StepFunction) {
-  builder.registerStep(text, fn, makeSourceReference())
+export function When(pattern: string, fn: StepFunction) {
+  coreBuilder.step({ pattern, fn, sourceReference: makeSourceReference() })
 }
 
 /**
  * Define a step to be used with the "Then" keyword
  * @public
- * @param text - a Cucumber Expression used to match the step with steps from Gherkin
+ * @param pattern - a Cucumber Expression used to match the step with steps from Gherkin
  * @param fn - the function to be executed
  * @example Then('I have \{int\} cukes in my belly', async (t, count) => \{
  *   // do stuff here
  * \})
  */
-export function Then(text: string, fn: StepFunction) {
-  builder.registerStep(text, fn, makeSourceReference())
+export function Then(pattern: string, fn: StepFunction) {
+  coreBuilder.step({ pattern, fn, sourceReference: makeSourceReference() })
 }

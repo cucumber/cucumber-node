@@ -12,7 +12,7 @@ import {
 } from '@cucumber/gherkin'
 import { Source, SourceMediaType } from '@cucumber/messages'
 
-import { makeId } from '../makeId.js'
+import { newId } from '../newId.js'
 
 export const load: LoadHook = async (url, context, nextLoad) => {
   if (url.endsWith('.feature.md') || url.endsWith('.feature')) {
@@ -22,7 +22,7 @@ export const load: LoadHook = async (url, context, nextLoad) => {
       path.extname(uri) === '.md'
         ? SourceMediaType.TEXT_X_CUCUMBER_GHERKIN_MARKDOWN
         : SourceMediaType.TEXT_X_CUCUMBER_GHERKIN_PLAIN
-    const builder = new AstBuilder(makeId)
+    const builder = new AstBuilder(newId)
     const matcher =
       mediaType === SourceMediaType.TEXT_X_CUCUMBER_GHERKIN_MARKDOWN
         ? new GherkinInMarkdownTokenMatcher()
@@ -37,7 +37,7 @@ export const load: LoadHook = async (url, context, nextLoad) => {
       uri,
       ...parser.parse(data),
     }
-    const pickles = compile(gherkinDocument, uri, makeId)
+    const pickles = compile(gherkinDocument, uri, newId)
     return {
       format: 'module',
       shortCircuit: true,
