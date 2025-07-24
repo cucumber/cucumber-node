@@ -11,6 +11,6 @@ export async function loadSupport() {
   }
   return {
     supportCodeLibrary: coreBuilder.build(),
-    worldFactory: extraBuilder.build()
+    worldFactory: extraBuilder.build(),
   }
 }
