@@ -46,21 +46,21 @@ export type TestCaseContext = {
   mock: TestContext['mock']
   /**
    * Mark this test step as skipped. This will cause all subsequent steps to be skipped,
-   * except `After` hooks.
+   * except `After` hooks
    * @remarks
    * Results in a Cucumber status of "skipped" for the scenario.
    */
   skip(): void
   /**
    * Mark this test step as pending. This will cause all subsequent steps to be skipped,
-   * except `After` hooks.
+   * except `After` hooks
    * @remarks
    * Results in a Cucumber status of "pending" for the scenario.
    */
   todo(): void
   /**
    * Capture an attachment of some content that should be associated with this test step,
-   * and might be accessed later in a report.
+   * and might be accessed later in a report
    * @param data - the content to attach, as a stream, buffer or just a plain string
    * @param options - declare more information about this attachment
    */
@@ -73,7 +73,7 @@ export type TestCaseContext = {
    */
   log(text: string): Promise<void>
   /**
-   * Capture a URL attachment.
+   * Capture a URL attachment
    * @param url - the URL to be captured
    * @param title - the text title that should accompany the URL
    * @remarks
@@ -82,7 +82,7 @@ export type TestCaseContext = {
   link(url: string, title?: string): Promise<void>
   /**
    * An object scoped only to this test case, that can be used to share state between
-   * test steps.
+   * test steps
    */
   world: World
 }
@@ -93,16 +93,16 @@ export type TestCaseContext = {
  */
 export type ParameterTypeOptions = {
   /**
-   * The name of the parameter type.
+   * The name of the parameter type
    */
   name: string
   /**
-   * One or more regular expressions which should be used to match the parameter type.
+   * One or more regular expressions which should be used to match the parameter type
    */
   regexp: RegExp | string | readonly RegExp[] | readonly string[]
   /**
    * A function for transforming the matched values to another object before passing to
-   * the step function.
+   * the step function
    * @param match - matched values from the regular expression
    * @remarks
    * If not provided, the raw matched value(s) will be passed to the step function.
@@ -110,13 +110,13 @@ export type ParameterTypeOptions = {
   transformer?: (this: World, ...match: string[]) => unknown
   /**
    * Whether this parameter type should be used when suggesting snippets for missing step
-   * definitions.
+   * definitions
    * @default true
    */
   useForSnippets?: boolean
   /**
    * Whether the regular expression(s) for this parameter type should take precedence if used
-   * in conjunction with regular expressions for step definitions.
+   * in conjunction with regular expressions for step definitions
    * @default false
    */
   preferForRegexpMatch?: boolean
@@ -128,18 +128,18 @@ export type ParameterTypeOptions = {
  */
 export type HookOptions = {
   /**
-   * Optional name for this hook which might be surfaced in reports.
+   * Optional name for this hook which might be surfaced in reports
    */
   name?: string
   /**
    * Optional tag expression which, if not a match for a given scenario, will cause this hook
-   * to be omitted from the test.
+   * to be omitted from the test
    */
-  tagFilter?: string
+  tags?: string
 }
 
 /**
- * A function to be executed as a hook.
+ * A function to be executed as a hook
  * @public
  * @remarks
  * Can optionally return a promise, which will duly be awaited. The actual returned/resolved value
@@ -148,7 +148,7 @@ export type HookOptions = {
 export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>
 
 /**
- * A function to be executed as a step.
+ * A function to be executed as a step
  * @public
  * @remarks
  * Can optionally return a promise, which will duly be awaited. The actual returned/resolved value

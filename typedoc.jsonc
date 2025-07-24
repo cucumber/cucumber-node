@@ -4,5 +4,9 @@
     "GitHub": "https://github.com/cucumber/cucumber-node"
   },
   "out": "./_site",
-  "readme": "none"
+  "readme": "none",
+  /*
+  Disable filters so that external symbols (i.e. DataTable) aren't hidden by default
+  */
+  "visibilityFilters": {}
 }

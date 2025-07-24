@@ -9,8 +9,8 @@ import {
   TestStepResultStatus,
 } from '@cucumber/messages'
 
-import { makeId } from '../makeId.js'
 import { makeTimestamp } from '../makeTimestamp.js'
+import { newId } from '../newId.js'
 import { PROTOCOL_PREFIX } from '../runner/MessagesCollector.js'
 import { mapTestStepResult } from './mapTestStepResult.js'
 import { meta } from './meta.js'
@@ -26,7 +26,7 @@ export async function* generateEnvelopes(
   const testRunEnvelopes: Array<Envelope> = []
 
   const testRunStarted: TestRunStarted = {
-    id: makeId(),
+    id: newId(),
     timestamp: makeTimestamp(),
   }
 

@@ -1,10 +1,11 @@
 import { suite, test } from 'node:test'
+import { styleText } from 'node:util'
 
+import { makeTestPlan } from '@cucumber/core'
 import { GherkinDocument, Pickle, Source, TestStepResult } from '@cucumber/messages'
 
-import { makeTestPlan } from '../core/makeTestPlan.js'
-import { makeId } from '../makeId.js'
 import { makeTimestamp } from '../makeTimestamp.js'
+import { newId } from '../newId.js'
 import { ContextTracker } from './ContextTracker.js'
 import { loadSupport } from './loadSupport.js'
 import { messages } from './state.js'
@@ -15,27 +16,27 @@ interface CompiledGherkin {
   pickles: ReadonlyArray<Pickle>
 }
 
-export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
-  void suite(gherkinDocument.feature?.name, async () => {
-    messages.push({ source })
-    messages.push({ gherkinDocument })
-    messages.push(...pickles.map((pickle) => ({ pickle })))
+export async function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
+  messages.push({ source })
+  messages.push({ gherkinDocument })
+  messages.push(...pickles.map((pickle) => ({ pickle })))
 
-    const { library, worldFactory } = await loadSupport()
-    messages.push(...library.toEnvelopes())
+  const { supportCodeLibrary, worldFactory } = await loadSupport()
+  messages.push(...supportCodeLibrary.toEnvelopes())
 
-    const plan = makeTestPlan(makeId, pickles, library)
-    messages.push(...plan.toEnvelopes())
+  const plan = makeTestPlan({ gherkinDocument, pickles, supportCodeLibrary }, { newId: newId })
+  messages.push(...plan.toEnvelopes())
 
-    for (const item of plan.testCases) {
-      const testCaseStartedId = makeId()
+  await suite(plan.name, async () => {
+    for (const testCase of plan.testCases) {
+      const testCaseStartedId = newId()
 
-      await test(item.name, async (ctx1) => {
+      await test(testCase.name, async (ctx1) => {
         messages.connect(ctx1)
         messages.push({
           testCaseStarted: {
             id: testCaseStartedId,
-            testCaseId: item.id,
+            testCaseId: testCase.id,
             attempt: 0,
             timestamp: makeTimestamp(),
           },
@@ -44,7 +45,7 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
         const world = await worldFactory.create()
         const tracker = new ContextTracker(testCaseStartedId, world, (e) => messages.push(e))
 
-        for (const step of item.steps) {
+        for (const step of testCase.steps) {
           messages.push({
             testStepStarted: {
               testCaseStartedId: testCaseStartedId,
@@ -54,7 +55,7 @@ export function run({ source, gherkinDocument, pickles }: CompiledGherkin) {
           })
 
           await ctx1.test(
-            step.name,
+            [styleText('bold', step.name.prefix), step.name.body].filter(Boolean).join(' '),
             { skip: tracker.outcomeKnown && !step.always },
             async (ctx2) => {
               let success = false

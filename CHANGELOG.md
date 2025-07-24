@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Support Node.js 24 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
+- Add `rows` and `rowsHash` methods to `DataTable` ([#83](https://github.com/cucumber/cucumber-node/pull/83))
+- Add support for regular expression steps ([#83](https://github.com/cucumber/cucumber-node/pull/83))
+
+### Changed
+- BREAKING CHANGE: Rename `tagFilter` to `tags` in `HookOptions` for continuity with cucumber-js ([#83](https://github.com/cucumber/cucumber-node/pull/83))
 
 ### Fixed
 - Fully isolate Cucumber tests from other tests for accurate reporting ([#80](https://github.com/cucumber/cucumber-node/pull/80))

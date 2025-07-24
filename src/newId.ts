@@ -1,3 +1,3 @@
 import { IdGenerator } from '@cucumber/messages'
 
-export const makeId = IdGenerator.uuid()
+export const newId = IdGenerator.uuid()
