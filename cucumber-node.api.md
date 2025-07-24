@@ -30,7 +30,7 @@ export function Before(options: HookOptions, fn: HookFunction): void;
 export { DataTable }
 
 // @public
-export function Given(pattern: string, fn: StepFunction): void;
+export function Given(pattern: string | RegExp, fn: StepFunction): void;
 
 // @public
 export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>;
@@ -69,10 +69,10 @@ export type TestCaseContext = {
 };
 
 // @public
-export function Then(pattern: string, fn: StepFunction): void;
+export function Then(pattern: string | RegExp, fn: StepFunction): void;
 
 // @public
-export function When(pattern: string, fn: StepFunction): void;
+export function When(pattern: string | RegExp, fn: StepFunction): void;
 
 // @public
 export type World = any;

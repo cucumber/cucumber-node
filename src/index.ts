@@ -110,38 +110,38 @@ export function After(arg1: HookFunction | HookOptions, arg2?: HookFunction) {
 /**
  * Define a step to be used with the "Given" keyword
  * @public
- * @param pattern - a Cucumber Expression used to match the step with steps from Gherkin
+ * @param pattern - a Cucumber Expression or regular expression used to match the step with steps from Gherkin
  * @param fn - the function to be executed
  * @example Given('I have \{int\} cukes in my belly', async (t, count) => \{
  *   // do stuff here
  * \})
  */
-export function Given(pattern: string, fn: StepFunction) {
+export function Given(pattern: string | RegExp, fn: StepFunction) {
   coreBuilder.step({ pattern, fn, sourceReference: makeSourceReference() })
 }
 
 /**
  * Define a step to be used with the "When" keyword
  * @public
- * @param pattern - a Cucumber Expression used to match the step with steps from Gherkin
+ * @param pattern - a Cucumber Expression or regular expression used to match the step with steps from Gherkin
  * @param fn - the function to be executed
  * @example When('I have \{int\} cukes in my belly', async (t, count) => \{
  *   // do stuff here
  * \})
  */
-export function When(pattern: string, fn: StepFunction) {
+export function When(pattern: string | RegExp, fn: StepFunction) {
   coreBuilder.step({ pattern, fn, sourceReference: makeSourceReference() })
 }
 
 /**
  * Define a step to be used with the "Then" keyword
  * @public
- * @param pattern - a Cucumber Expression used to match the step with steps from Gherkin
+ * @param pattern - a Cucumber Expression or regular expression used to match the step with steps from Gherkin
  * @param fn - the function to be executed
  * @example Then('I have \{int\} cukes in my belly', async (t, count) => \{
  *   // do stuff here
  * \})
  */
-export function Then(pattern: string, fn: StepFunction) {
+export function Then(pattern: string | RegExp, fn: StepFunction) {
   coreBuilder.step({ pattern, fn, sourceReference: makeSourceReference() })
 }
