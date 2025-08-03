@@ -7,6 +7,7 @@ import { makeTestHarness } from '../utils.js'
 import { globSync } from 'node:fs'
 import { Envelope } from '@cucumber/messages'
 import { Env } from '@cucumber/ci-environment'
+import { globby, globbySync } from 'globby'
 
 use(chaiExclude)
 
@@ -43,27 +44,32 @@ const UNSUPPORTED = [
 ]
 
 describe('Cucumber Compatibility Kit', () => {
-  const ndjsonPaths = globSync('node_modules/@cucumber/compatibility-kit/features/**/*.ndjson')
-  for (const ndjsonPath of ndjsonPaths) {
-    const [, name, extension] = /^.+[/\\](.+)(\.feature(?:\.md)?)\.ndjson$/.exec(
-      ndjsonPath
-    ) as RegExpExecArray
+  const directories = globbySync('node_modules/@cucumber/compatibility-kit/features', {
+    onlyDirectories: true,
+  })
+  for (const directory of directories) {
+    const suite = path.basename(directory)
 
-    it(name, async function () {
-      if (UNSUPPORTED.includes(name)) {
+    it(suite, async function () {
+      if (UNSUPPORTED.includes(suite)) {
         return this.skip()
       }
 
       const harness = await makeTestHarness()
 
-      await harness.copyDir(path.join(process.cwd(), 'test', 'cck', name), 'features')
-      await harness.copyFile(
-        path.join(CCK_PATH, 'features', name, name + extension),
-        path.join('features', name + extension)
-      )
+      await harness.copyDir(path.join(process.cwd(), 'test', 'cck', suite), 'features')
+      const featurePaths = await globby(['*.feature', '*.feature.md'], { cwd: directory })
+      for (const featurePath of featurePaths) {
+        await harness.copyFile(
+          path.join(CCK_PATH, 'features', suite, featurePath),
+          path.join('features', featurePath)
+        )
+      }
 
       const [actualOutput] = await harness.run('@cucumber/node/reporters/message')
-      const expectedOutput = await readFile(ndjsonPath, { encoding: 'utf-8' })
+      const expectedOutput = await readFile(path.join(directory, suite + '.ndjson'), {
+        encoding: 'utf-8',
+      })
 
       const actualEnvelopes = parseEnvelopes(actualOutput)
       const expectedEnvelopes = parseEnvelopes(expectedOutput)
