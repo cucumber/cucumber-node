@@ -44,7 +44,7 @@ const UNSUPPORTED = [
 ]
 
 describe('Cucumber Compatibility Kit', () => {
-  const directories = globbySync('node_modules/@cucumber/compatibility-kit/features', {
+  const directories = globbySync('node_modules/@cucumber/compatibility-kit/features/*', {
     onlyDirectories: true,
   })
   for (const directory of directories) {
