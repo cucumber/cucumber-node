@@ -25,18 +25,6 @@ When('an array with {int} bytes is attached as {string}', async (t, size, mediaT
   await t.attach(buffer, { mediaType })
 })
 
-When('a JPEG image is attached', async (t) => {
-  await t.attach(fs.createReadStream(import.meta.dirname + '/cucumber.jpeg'), {
-    mediaType: 'image/jpeg',
-  })
-})
-
-When('a PNG image is attached', async (t) => {
-  await t.attach(fs.createReadStream(import.meta.dirname + '/cucumber.png'), {
-    mediaType: 'image/png',
-  })
-})
-
 When('a PDF document is attached and renamed', async (t) => {
   await t.attach(fs.createReadStream(import.meta.dirname + '/document.pdf'), {
     mediaType: 'application/pdf',
