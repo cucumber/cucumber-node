@@ -45,7 +45,7 @@ export async function run({ source, gherkinDocument, pickles }: CompiledGherkin)
         const world = await worldFactory.create()
         const tracker = new ContextTracker(testCaseStartedId, world, (e) => messages.push(e))
 
-        for (const step of testCase.steps) {
+        for (const step of testCase.testSteps) {
           messages.push({
             testStepStarted: {
               testCaseStartedId: testCaseStartedId,
