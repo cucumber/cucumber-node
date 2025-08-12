@@ -4,9 +4,7 @@ import path from 'node:path'
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import { makeTestHarness } from '../utils.js'
-import { globSync } from 'node:fs'
 import { Envelope } from '@cucumber/messages'
-import { Env } from '@cucumber/ci-environment'
 import { globby, globbySync } from 'globby'
 
 use(chaiExclude)
