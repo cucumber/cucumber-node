@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fully isolate Cucumber tests from other tests for accurate reporting ([#80](https://github.com/cucumber/cucumber-node/pull/80))
+- Load support code once per process ([#103](https://github.com/cucumber/cucumber-node/pull/103))
 
 ### Removed
 - Drop support for Node.js 23 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
