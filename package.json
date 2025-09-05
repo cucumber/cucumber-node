@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@cucumber/ci-environment": "10.0.1",
-    "@cucumber/core": "0.3.0",
+    "@cucumber/core": "0.4.0",
     "@cucumber/cucumber-expressions": "18.0.1",
     "@cucumber/gherkin": "34.0.0",
     "@cucumber/html-formatter": "21.14.0",
