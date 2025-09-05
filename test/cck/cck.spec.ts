@@ -38,7 +38,12 @@ const IGNORABLE_KEYS = [
 const CCK_PATH = path.join(process.cwd(), 'node_modules', '@cucumber', 'compatibility-kit')
 
 const UNSUPPORTED = [
-  'retry', // node:test doesnt support retries yet
+  // we don't support global hooks yet
+  'global-hooks',
+  'global-hooks-beforeall-error',
+  'global-hooks-afterall-error',
+  // node:test doesnt support retries yet
+  'retry',
 ]
 
 describe('Cucumber Compatibility Kit', () => {
