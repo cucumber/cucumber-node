@@ -3,6 +3,11 @@ import { expect } from 'chai'
 import { makeTestHarness } from '../utils.js'
 
 describe('Isolation', () => {
+  if (Number(process.versions.node.split('.')[0]) < 24) {
+    it.skip('runs as expected with --test-isolation=none', () => {})
+    return
+  }
+
   it('runs as expected with --test-isolation=none', async () => {
     const harness = await makeTestHarness()
     await harness.writeFile(
@@ -28,7 +33,7 @@ Given('a step', () => {})
 Given('another step', () => {})
   `
     )
-    const [output] = await harness.run('spec', '--test-isolation=none')
+    const [output, stderr, error] = await harness.run('spec', '--test-isolation=none')
     const sanitised = stripVTControlCharacters(output.trim())
     expect(sanitised).to.include('ℹ pass 8')
   })
