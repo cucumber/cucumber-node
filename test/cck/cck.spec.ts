@@ -40,8 +40,13 @@ const CCK_PATH = path.join(process.cwd(), 'node_modules', '@cucumber', 'compatib
 const UNSUPPORTED = [
   // we don't support global hooks yet
   'global-hooks',
+  'global-hooks-attachments',
   'global-hooks-beforeall-error',
   'global-hooks-afterall-error',
+  // step definition messages emitted for every file
+  'multiple-features',
+  // we can't reverse order of all pickles
+  'multiple-features-reversed',
   // node:test doesnt support retries yet
   'retry',
 ]
