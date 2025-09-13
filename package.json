@@ -39,7 +39,7 @@
     "@cucumber/tag-expressions": "6.2.0",
     "globby": "^14.1.0",
     "stack-utils": "2.0.6",
-    "type-fest": "^4.33.0"
+    "type-fest": "^5.0.0"
   },
   "devDependencies": {
     "@cucumber/compatibility-kit": "^22.0.0",
