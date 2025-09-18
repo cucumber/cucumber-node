@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@cucumber/ci-environment": "10.0.1",
-    "@cucumber/core": "0.5.0",
+    "@cucumber/core": "0.5.1",
     "@cucumber/cucumber-expressions": "18.0.1",
     "@cucumber/gherkin": "35.0.0",
     "@cucumber/html-formatter": "21.15.1",
