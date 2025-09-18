@@ -22,6 +22,7 @@
     "exports:update": "api-extractor run --verbose --local",
     "fix": "eslint --max-warnings 0 src --fix && prettier --write src test",
     "lint": "eslint --max-warnings 0 src && prettier --check src test",
+    "prepublishOnly": "npm run build",
     "test": "npm run test:unit && npm run test:integration && npm run test:cck",
     "test:cck": "tsc && mocha test/cck/*.spec.ts",
     "test:integration": "tsc && mocha test/integration/*.spec.ts",
