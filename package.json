@@ -37,7 +37,7 @@
     "@cucumber/junit-xml-formatter": "0.9.0",
     "@cucumber/messages": "30.1.0",
     "@cucumber/query": "^14.0.0",
-    "@cucumber/tag-expressions": "7.0.0",
+    "@cucumber/tag-expressions": "8.0.0",
     "globby": "^15.0.0",
     "stack-utils": "2.0.6",
     "type-fest": "^5.0.0"
