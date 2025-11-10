@@ -29,7 +29,7 @@
     "test:unit": "mocha 'src/**/*.spec.ts'"
   },
   "dependencies": {
-    "@cucumber/ci-environment": "11.0.0",
+    "@cucumber/ci-environment": "12.0.0",
     "@cucumber/core": "0.5.1",
     "@cucumber/cucumber-expressions": "18.0.1",
     "@cucumber/gherkin": "36.1.0",
