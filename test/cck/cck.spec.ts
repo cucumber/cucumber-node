@@ -49,6 +49,9 @@ const UNSUPPORTED = [
   'multiple-features-reversed',
   // node:test doesnt support retries yet
   'retry',
+  'retry-ambiguous',
+  'retry-pending',
+  'retry-undefined',
 ]
 
 describe('Cucumber Compatibility Kit', () => {
