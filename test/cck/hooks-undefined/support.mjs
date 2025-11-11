@@ -1,4 +1,4 @@
-import { Before, After} from '@cucumber/node'
+import { Before, After } from '@cucumber/node'
 
 Before({}, () => {
   // no-op
