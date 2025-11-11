@@ -52,6 +52,8 @@ const UNSUPPORTED = [
   'retry-ambiguous',
   'retry-pending',
   'retry-undefined',
+  // not a test sample
+  'test-run-exception'
 ]
 
 describe('Cucumber Compatibility Kit', () => {
