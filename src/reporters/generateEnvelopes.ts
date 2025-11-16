@@ -1,4 +1,3 @@
-import path from 'node:path'
 import { TestEvent } from 'node:test/reporters'
 
 import {
@@ -92,7 +91,7 @@ export async function* generateEnvelopes(
 }
 
 function isFromHere(testLocationInfo: TestLocationInfo) {
-  return testLocationInfo.file?.startsWith(path.join(import.meta.dirname, '..'))
+  return testLocationInfo.file?.endsWith('.feature') || testLocationInfo.file?.endsWith('.feature.md')
 }
 
 function isEnvelope(data: string) {
