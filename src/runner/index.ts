@@ -8,6 +8,8 @@ import { loadSupport } from './loadSupport.js'
 import { messages } from './state.js'
 import { CompiledGherkin } from './types.js'
 
+export * from './types.js'
+
 export async function run(gherkin: CompiledGherkin) {
   const plan = await prepare(gherkin)
   await suite(plan.name, async () => {
