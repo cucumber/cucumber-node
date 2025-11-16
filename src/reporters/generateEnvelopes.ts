@@ -91,7 +91,9 @@ export async function* generateEnvelopes(
 }
 
 function isFromHere(testLocationInfo: TestLocationInfo) {
-  return testLocationInfo.file?.endsWith('.feature') || testLocationInfo.file?.endsWith('.feature.md')
+  return (
+    testLocationInfo.file?.endsWith('.feature') || testLocationInfo.file?.endsWith('.feature.md')
+  )
 }
 
 function isEnvelope(data: string) {

@@ -54,8 +54,9 @@ import { prepare } from '@cucumber/node/runner'
 
 const plan = await prepare(${JSON.stringify(gherkin)})
 await suite(plan.name, async () => {
-  ${gherkin.pickles.map((pickle, index) => {
-    return `const testCase${index} = plan.select(${JSON.stringify(pickle.id)})
+  ${gherkin.pickles
+    .map((pickle, index) => {
+      return `const testCase${index} = plan.select(${JSON.stringify(pickle.id)})
       await test(testCase${index}.name, async (ctx1) => {
         await testCase${index}.setup(ctx1)
         for (const testStep of testCase${index}.testSteps) {
@@ -67,7 +68,8 @@ await suite(plan.name, async () => {
         }
         await testCase${index}.teardown()
       })`
-  }).join('\n')}
+    })
+    .join('\n')}
 })
 `
 }
