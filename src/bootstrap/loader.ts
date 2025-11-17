@@ -53,8 +53,8 @@ function generateCode(gherkin: CompiledGherkin) {
 import { prepare } from '@cucumber/node/runner'
 
 async function run() {
-  const plan = await prepare(${JSON.stringify(gherkin)})
-  await suite(plan.name, async () => {
+  await suite(${JSON.stringify(gherkin.gherkinDocument.feature?.name ?? gherkin.gherkinDocument.uri)}, async () => {
+    const plan = await prepare(${JSON.stringify(gherkin)})
     ${gherkin.pickles
       .map((pickle, index) => {
         return `const testCase${index} = plan.select(${JSON.stringify(pickle.id)})
@@ -73,7 +73,6 @@ async function run() {
       .join('\n')}
   })
 }
-
 run()
 `
 }
