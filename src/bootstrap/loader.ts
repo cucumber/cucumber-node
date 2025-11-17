@@ -52,7 +52,7 @@ function generateCode(gherkin: CompiledGherkin) {
   return `import { suite, test } from 'node:test'
 import { prepare } from '@cucumber/node/runner'
 
-suite(${JSON.stringify(gherkin.gherkinDocument.feature?.name ?? gherkin.gherkinDocument.uri)}, async () => {
+suite(${JSON.stringify(gherkin.gherkinDocument.feature?.name || gherkin.gherkinDocument.uri)}, async () => {
   const plan = await prepare(${JSON.stringify(gherkin)})
   ${gherkin.pickles
     .map((pickle, index) => {
