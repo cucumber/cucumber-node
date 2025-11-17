@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.5.0] - 2025-11-17
 ### Added
 - Support Node.js 24 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
 - Add `rows` and `rowsHash` methods to `DataTable` ([#83](https://github.com/cucumber/cucumber-node/pull/83))
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release
 
 [Unreleased]: https://github.com/cucumber/cucumber-node/compare/0.1.0...HEAD
+[0.5.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.5.0
 [0.4.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.4.0
 [0.3.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.3.0
 [0.2.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.2.0
