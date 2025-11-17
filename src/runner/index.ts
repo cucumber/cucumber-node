@@ -1,12 +1,16 @@
 import { makeTestPlan } from '@cucumber/core'
+import { GherkinDocument, Pickle, Source } from '@cucumber/messages'
 
 import { newId } from '../newId.js'
 import { ExecutableTestPlan } from './ExecutableTestPlan.js'
 import { loadSupport } from './loadSupport.js'
 import { messages } from './state.js'
-import { CompiledGherkin } from './types.js'
 
-export * from './types.js'
+export interface CompiledGherkin {
+  source: Source
+  gherkinDocument: GherkinDocument
+  pickles: ReadonlyArray<Pickle>
+}
 
 export async function prepare({ source, gherkinDocument, pickles }: CompiledGherkin) {
   messages.push({ source })
