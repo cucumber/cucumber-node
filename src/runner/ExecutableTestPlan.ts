@@ -16,10 +16,6 @@ export class ExecutableTestPlan {
     }
   }
 
-  get name() {
-    return this.plan.name
-  }
-
   select(pickleId: string): ExecutableTestCase {
     const testCase = ensure(
       this.testCaseByPickleId.get(pickleId),
