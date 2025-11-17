@@ -52,27 +52,24 @@ function generateCode(gherkin: CompiledGherkin) {
   return `import { suite, test } from 'node:test'
 import { prepare } from '@cucumber/node/runner'
 
-async function run() {
-  await suite(${JSON.stringify(gherkin.gherkinDocument.feature?.name ?? gherkin.gherkinDocument.uri)}, async () => {
-    const plan = await prepare(${JSON.stringify(gherkin)})
-    ${gherkin.pickles
-      .map((pickle, index) => {
-        return `const testCase${index} = plan.select(${JSON.stringify(pickle.id)})
-        await test(testCase${index}.name, async (ctx1) => {
-          await testCase${index}.setup(ctx1)
-          for (const testStep of testCase${index}.testSteps) {
-            await testStep.setup()
-            await ctx1.test(testStep.name, testStep.options, async (ctx2) => {
-              await testStep.execute(ctx2)
-            })
-            await testStep.teardown()
-          }
-          await testCase${index}.teardown()
-        })`
-      })
-      .join('\n')}
-  })
-}
-run()
+suite(${JSON.stringify(gherkin.gherkinDocument.feature?.name ?? gherkin.gherkinDocument.uri)}, async () => {
+  const plan = await prepare(${JSON.stringify(gherkin)})
+  ${gherkin.pickles
+    .map((pickle, index) => {
+      return `const testCase${index} = plan.select(${JSON.stringify(pickle.id)})
+      await test(testCase${index}.name, async (ctx1) => {
+        await testCase${index}.setup(ctx1)
+        for (const testStep of testCase${index}.testSteps) {
+          await testStep.setup()
+          await ctx1.test(testStep.name, testStep.options, async (ctx2) => {
+            await testStep.execute(ctx2)
+          })
+          await testStep.teardown()
+        }
+        await testCase${index}.teardown()
+      })`
+    })
+    .join('\n')}
+})
 `
 }
