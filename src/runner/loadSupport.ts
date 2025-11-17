@@ -6,7 +6,7 @@ import { globby } from 'globby'
 import { coreBuilder, extraBuilder } from './state.js'
 import { WorldFactory } from './WorldFactory.js'
 
-type UsableSupport = {
+interface UsableSupport {
   supportCodeLibrary: SupportCodeLibrary
   worldFactory: WorldFactory
 }
