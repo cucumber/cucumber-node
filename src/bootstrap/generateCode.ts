@@ -1,12 +1,10 @@
-import assert from 'node:assert'
-import path from 'node:path'
-
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
 import { Pickle } from '@cucumber/messages'
 import { Query } from '@cucumber/query'
 
 import { CompiledGherkin } from '../runner/index.js'
+import { mapSourceLocation } from './mapSourceLocation.js'
 
 export function generateCode(gherkin: CompiledGherkin): string {
   const program = t.program([...makeImports(), makeSuite(gherkin)])
@@ -70,7 +68,7 @@ function makeSuite(gherkin: CompiledGherkin) {
 
 function makeTestCase(query: Query, pickle: Pickle, index: number) {
   const testCaseVar = `testCase${index}`
-  const location = makeSourceLocation(query, pickle)
+  const location = mapSourceLocation(pickle, query.findLocationOf(pickle))
 
   return [
     // const testCaseN = plan.select(pickleId)
@@ -203,17 +201,6 @@ function makeQuery(gherkin: CompiledGherkin): Query {
   query.update({ gherkinDocument: gherkin.gherkinDocument })
   gherkin.pickles.forEach((pickle: Pickle) => query.update({ pickle }))
   return query
-}
-
-function makeSourceLocation(query: Query, pickle: Pickle): t.SourceLocation {
-  const location = query.findLocationOf(pickle)
-  assert.ok(location)
-  return {
-    start: { line: location.line, column: (location.column ?? 0) - 1, index: 0 },
-    end: { line: location.line, column: (location.column ?? 0) - 1, index: 0 },
-    filename: path.basename(pickle.uri),
-    identifierName: undefined,
-  }
 }
 
 function withLoc<T extends t.Node>(node: T, loc: t.SourceLocation): T {
