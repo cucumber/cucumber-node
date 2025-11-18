@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
 
@@ -23,7 +25,7 @@ function createSourceLocation(uri: string): t.SourceLocation {
   return {
     start: { line: 1, column: 0, index: 0 },
     end: { line: 1, column: 0, index: 0 },
-    filename: uri,
+    filename: path.basename(uri),
     identifierName: undefined,
   }
 }
