@@ -6,6 +6,30 @@ import { TestStepResultStatus } from '@cucumber/messages'
 
 describe('Reporters', () => {
   describe('spec', () => {
+    it('correctly references pickle location when reporting errors', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/foo.feature',
+        `Feature: a feature
+  Scenario: a scenario
+    Given a passing step
+    And a failing step
+    `
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+  Given('a passing step', () => {})
+  Given('a failing step', () => {
+    throw new Error('whoops')
+  })
+    `
+      )
+      const [output] = await harness.run('spec')
+      const sanitised = stripVTControlCharacters(output.trim())
+      expect(sanitised).to.include('test at features/foo.feature:1:1')
+    })
+
     it('does not emit messages as diagnostics if no cucumber reporters', async () => {
       const harness = await makeTestHarness()
       await harness.writeFile(
