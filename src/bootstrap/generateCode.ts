@@ -5,6 +5,9 @@ import * as t from '@babel/types'
 import { Pickle } from '@cucumber/messages'
 
 import { CompiledGherkin } from '../runner/index.js'
+import { Query } from '@cucumber/query'
+import { ensure } from '@cucumber/junit-xml-formatter/dist/src/helpers.js'
+import assert from 'node:assert'
 
 export function generateCode(gherkin: CompiledGherkin): string {
   const program = t.program([...createImports(), createSuite(gherkin)])
@@ -43,6 +46,7 @@ function createImports() {
 
 function createSuite(gherkin: CompiledGherkin) {
   const suiteName = gherkin.gherkinDocument.feature?.name || gherkin.gherkinDocument.uri
+  const query = makeQuery(gherkin)
   return t.expressionStatement(
     // suite(suiteName, async () => { ... })
     t.callExpression(t.identifier('suite'), [
@@ -57,7 +61,7 @@ function createSuite(gherkin: CompiledGherkin) {
               t.awaitExpression(t.callExpression(t.identifier('prepare'), [t.valueToNode(gherkin)]))
             ),
           ]),
-          ...gherkin.pickles.flatMap((pickle, index) => createTestCase(pickle, index)),
+          ...gherkin.pickles.flatMap((pickle, index) => createTestCase(query, pickle, index)),
         ]),
         true
       ),
@@ -65,9 +69,9 @@ function createSuite(gherkin: CompiledGherkin) {
   )
 }
 
-function createTestCase(pickle: Pickle, index: number) {
+function createTestCase(query: Query, pickle: Pickle, index: number) {
   const testCaseVar = `testCase${index}`
-  const location = createPickleLocation(pickle)
+  const location = makeSourceLocation(query, pickle)
 
   return [
     // const testCaseN = plan.select(pickleId)
@@ -194,10 +198,20 @@ function createTestCase(pickle: Pickle, index: number) {
   ]
 }
 
-function createPickleLocation(pickle: Pickle): t.SourceLocation {
+function makeQuery(gherkin: CompiledGherkin): Query {
+  const query = new Query()
+  query.update({source: gherkin.source})
+  query.update({gherkinDocument: gherkin.gherkinDocument})
+  gherkin.pickles.forEach((pickle: Pickle) => query.update({pickle}))
+  return query
+}
+
+function makeSourceLocation(query: Query, pickle: Pickle): t.SourceLocation {
+  const location = query.findLocationOf(pickle)
+  assert.ok(location)
   return {
-    start: { line: 1, column: 0, index: 0 },
-    end: { line: 1, column: 0, index: 0 },
+    start: { line: location.line, column: (location.column ?? 0) - 1, index: 0 },
+    end: { line: location.line, column: (location.column ?? 0) - 1, index: 0 },
     filename: path.basename(pickle.uri),
     identifierName: undefined,
   }
