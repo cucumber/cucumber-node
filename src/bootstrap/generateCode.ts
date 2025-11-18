@@ -42,11 +42,11 @@ function createImports() {
 }
 
 function createSuite(gherkin: CompiledGherkin) {
-  const suiteName = gherkin.gherkinDocument.feature?.name ?? gherkin.gherkinDocument.uri ?? ''
+  const suiteName = gherkin.gherkinDocument.feature?.name || gherkin.gherkinDocument.uri
   return t.expressionStatement(
     // suite(suiteName, async () => { ... })
     t.callExpression(t.identifier('suite'), [
-      t.stringLiteral(suiteName),
+      t.valueToNode(suiteName),
       t.arrowFunctionExpression(
         [],
         t.blockStatement([
