@@ -27,7 +27,7 @@ describe('Reporters', () => {
       )
       const [output] = await harness.run('spec')
       const sanitised = stripVTControlCharacters(output.trim())
-      expect(sanitised).to.include('test at features/foo.feature:1:1')
+      expect(sanitised).to.include('test at features/foo.feature:2:3')
     })
 
     it('does not emit messages as diagnostics if no cucumber reporters', async () => {
