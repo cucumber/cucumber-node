@@ -1,10 +1,9 @@
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
 import { Pickle } from '@cucumber/messages'
-import { Query } from '@cucumber/query'
 
 import { CompiledGherkin } from '../runner/index.js'
-import { mapSourceLocation } from './mapSourceLocation.js'
+import { mapLocation } from './mapLocation.js'
 
 export function generateCode(gherkin: CompiledGherkin): string {
   const program = t.program([...makeImports(), makeSuite(gherkin)])
@@ -43,7 +42,6 @@ function makeImports() {
 
 function makeSuite(gherkin: CompiledGherkin) {
   const suiteName = gherkin.gherkinDocument.feature?.name || gherkin.gherkinDocument.uri
-  const query = makeQuery(gherkin)
   return t.expressionStatement(
     // suite(suiteName, async () => { ... })
     t.callExpression(t.identifier('suite'), [
@@ -58,7 +56,7 @@ function makeSuite(gherkin: CompiledGherkin) {
               t.awaitExpression(t.callExpression(t.identifier('prepare'), [t.valueToNode(gherkin)]))
             ),
           ]),
-          ...gherkin.pickles.flatMap((pickle, index) => makeTestCase(query, pickle, index)),
+          ...gherkin.pickles.flatMap((pickle, index) => makeTestCase(pickle, index)),
         ]),
         true
       ),
@@ -66,9 +64,9 @@ function makeSuite(gherkin: CompiledGherkin) {
   )
 }
 
-function makeTestCase(query: Query, pickle: Pickle, index: number) {
+function makeTestCase(pickle: Pickle, index: number) {
   const testCaseVar = `testCase${index}`
-  const location = mapSourceLocation(pickle, query.findLocationOf(pickle))
+  const location = mapLocation(pickle.uri, pickle.location)
 
   return [
     // const testCaseN = plan.select(pickleId)
@@ -193,14 +191,6 @@ function makeTestCase(query: Query, pickle: Pickle, index: number) {
       )
     ),
   ]
-}
-
-function makeQuery(gherkin: CompiledGherkin): Query {
-  const query = new Query()
-  query.update({ source: gherkin.source })
-  query.update({ gherkinDocument: gherkin.gherkinDocument })
-  gherkin.pickles.forEach((pickle: Pickle) => query.update({ pickle }))
-  return query
 }
 
 function withLoc<T extends t.Node>(node: T, loc: t.SourceLocation): T {
