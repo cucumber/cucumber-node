@@ -1,3 +1,4 @@
+import { EventData } from 'node:test'
 import { TestEvent } from 'node:test/reporters'
 
 import {
@@ -19,7 +20,7 @@ export async function* generateEnvelopes(
 ): AsyncGenerator<Envelope> {
   yield { meta }
 
-  const nodeFailOrPassEvents: Array<TestFail | TestPass> = []
+  const nodeFailOrPassEvents: Array<EventData.TestFail | EventData.TestPass> = []
   const testStepFinishedMessages: Array<TestStepFinished> = []
   const nonSuccessTestCaseStartedIds: Array<string> = []
   const testRunEnvelopes: Array<Envelope> = []
@@ -90,7 +91,7 @@ export async function* generateEnvelopes(
   yield { testRunFinished }
 }
 
-function isFromHere(testLocationInfo: TestLocationInfo) {
+function isFromHere(testLocationInfo: EventData.LocationInfo) {
   return (
     testLocationInfo.file?.endsWith('.feature') || testLocationInfo.file?.endsWith('.feature.md')
   )

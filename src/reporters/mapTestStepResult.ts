@@ -1,6 +1,10 @@
+import { EventData } from 'node:test'
+
 import { TestStepResult, TestStepResultStatus, TimeConversion } from '@cucumber/messages'
 
-export function mapTestStepResult(testEvent: TestFail | TestPass | undefined): TestStepResult {
+export function mapTestStepResult(
+  testEvent: EventData.TestFail | EventData.TestPass | undefined
+): TestStepResult {
   if (!testEvent) {
     return {
       duration: {
