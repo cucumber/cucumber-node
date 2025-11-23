@@ -4,8 +4,8 @@ Before({}, function () {
   // no-op
 })
 
-Before({ tags: '@skip-before' }, function () {
-  return 'skipped'
+Before({ tags: '@skip-before' }, (t) =>  {
+  t.skip()
 })
 
 Before({}, function () {
@@ -16,16 +16,16 @@ When('a normal step', function () {
   // no-op
 })
 
-When('a step that skips', function () {
-  return 'skipped'
+When('a step that skips', (t) => {
+  t.skip()
 })
 
 After({}, function () {
   // no-op
 })
 
-After({ tags: '@skip-after' }, function () {
-  return 'skipped'
+After({ tags: '@skip-after' }, (t) => {
+  t.skip()
 })
 
 After({}, function () {
