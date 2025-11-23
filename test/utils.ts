@@ -30,6 +30,7 @@ class TestHarness {
       exec(
         [
           'node',
+          `--enable-source-maps`,
           `--import`,
           `@cucumber/node/bootstrap`,
           `--test-reporter=${reporter}`,
