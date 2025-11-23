@@ -52,6 +52,7 @@ Given('another step', (t) => {
     )
     const [output] = await harness.run('spec')
     const sanitised = stripVTControlCharacters(output.trim())
-    expect(sanitised).to.include('ℹ todo 2')
+    expect(sanitised).to.include('ℹ todo 1')
+    expect(sanitised).to.include('ℹ skipped 1')
   })
 })
