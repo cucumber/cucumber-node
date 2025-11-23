@@ -72,7 +72,7 @@ Then('I should have heard {string}', (t, expectedResponse) => {
 Finally, run `node --test` with some special arguments:
 
 ```shell
-node --import @cucumber/node/bootstrap --test "features/**/*.feature"
+node --enable-source-maps --import @cucumber/node/bootstrap --test "features/**/*.feature"
 ```
 
 ## Running tests
@@ -132,7 +132,7 @@ npm install --save-dev tsx @types/node
 Then, add `tsx` as another import when you run:
 
 ```shell
-node --import @cucumber/node/bootstrap --import tsx --test "features/**/*.feature"
+node --enable-source-maps --import @cucumber/node/bootstrap --import tsx --test "features/**/*.feature"
 ```
 
 Remember to add a [`tsconfig.json`](https://www.typescriptlang.org/tsconfig/) to your project. If you're not sure what you need, [`@tsconfig/node22`](https://www.npmjs.com/package/@tsconfig/node22) is a good place to start.
