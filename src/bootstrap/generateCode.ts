@@ -5,8 +5,8 @@ import { Pickle } from '@cucumber/messages'
 import { CompiledGherkin } from '../runner/index.js'
 import { mapLocation } from './mapLocation.js'
 
-export function generateCode(gherkin: CompiledGherkin): string {
-  const program = t.program([...makeImports(), makeSuite(gherkin)])
+export function generateCode(filename: string, gherkin: CompiledGherkin): string {
+  const program = t.program([...makeImports(), makeSuite(filename, gherkin)])
 
   const output = generate(
     program,
@@ -14,7 +14,7 @@ export function generateCode(gherkin: CompiledGherkin): string {
       retainLines: false,
       compact: false,
       sourceMaps: true,
-      sourceFileName: gherkin.source.uri,
+      sourceFileName: filename,
     },
     gherkin.source.data
   )
@@ -40,7 +40,7 @@ function makeImports() {
   ]
 }
 
-function makeSuite(gherkin: CompiledGherkin) {
+function makeSuite(filename: string, gherkin: CompiledGherkin) {
   const suiteName = gherkin.gherkinDocument.feature?.name || gherkin.gherkinDocument.uri
   return t.expressionStatement(
     // suite(suiteName, async () => { ... })
@@ -56,7 +56,7 @@ function makeSuite(gherkin: CompiledGherkin) {
               t.awaitExpression(t.callExpression(t.identifier('prepare'), [t.valueToNode(gherkin)]))
             ),
           ]),
-          ...gherkin.pickles.flatMap((pickle, index) => makeTestCase(pickle, index)),
+          ...gherkin.pickles.flatMap((pickle, index) => makeTestCase(filename, pickle, index)),
         ]),
         true
       ),
@@ -64,9 +64,9 @@ function makeSuite(gherkin: CompiledGherkin) {
   )
 }
 
-function makeTestCase(pickle: Pickle, index: number) {
+function makeTestCase(filename: string, pickle: Pickle, index: number) {
   const testCaseVar = `testCase${index}`
-  const location = mapLocation(pickle.uri, pickle.location)
+  const location = mapLocation(filename, pickle.location)
 
   return [
     // const testCaseN = plan.select(pickleId)

@@ -1,14 +1,12 @@
-import path from 'node:path'
-
 import * as t from '@babel/types'
 import { Location } from '@cucumber/messages'
 
-export function mapLocation(uri: string, location?: Location): t.SourceLocation {
+export function mapLocation(filename: string, location?: Location): t.SourceLocation {
   const position = mapPosition(location)
   return {
     start: position,
     end: position,
-    filename: path.basename(uri),
+    filename,
     identifierName: undefined,
   }
 }

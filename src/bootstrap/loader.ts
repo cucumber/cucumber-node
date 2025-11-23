@@ -39,10 +39,11 @@ export const load: LoadHook = async (url, context, nextLoad) => {
       ...parser.parse(data),
     }
     const pickles = compile(gherkinDocument, uri, newId)
+    const filename = path.basename(uri)
     return {
       format: 'module',
       shortCircuit: true,
-      source: generateCode({ source, gherkinDocument, pickles }),
+      source: generateCode(filename, { source, gherkinDocument, pickles }),
     }
   }
   return nextLoad(url)
