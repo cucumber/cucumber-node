@@ -4,7 +4,7 @@ Before({}, function () {
   // no-op
 })
 
-Before({ tags: '@skip-before' }, (t) =>  {
+Before({ tags: '@skip-before' }, (t) => {
   t.skip()
 })
 
