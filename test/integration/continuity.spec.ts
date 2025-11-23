@@ -2,7 +2,7 @@ import { stripVTControlCharacters } from 'node:util'
 import { expect } from 'chai'
 import { makeTestHarness } from '../utils.js'
 
-describe('Compatibility with cucumber-js', () => {
+describe('Continuity for cucumber-js users', () => {
   it('skips when the user code function returns "skipped"', async () => {
     const harness = await makeTestHarness()
     await harness.writeFile(
