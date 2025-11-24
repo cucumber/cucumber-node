@@ -55,4 +55,42 @@ Given('another step', (t) => {
     expect(sanitised).to.include('ℹ todo 1')
     expect(sanitised).to.include('ℹ skipped 1')
   })
+
+  it('uses the world as `this` for user code functions', async () => {
+    const harness = await makeTestHarness()
+    await harness.writeFile(
+      'features/first.feature',
+      `Feature:
+Scenario:
+  Given a step
+  `
+    )
+    await harness.writeFile(
+      'features/steps.js',
+      `import assert from 'node:assert'
+import { After, Before, Given, ParameterType } from '@cucumber/node'
+Before(function(t) {
+  assert.strictEqual(this, t.world)
+  this.foo = 'bar'
+})
+ParameterType({
+  name: 'thing',
+  regexp: /[a-z]+/,
+  transformer(thing) {
+    assert.strictEqual(this.foo, 'bar')
+    return thing
+  },
+})
+Given('a {thing}', function(thing) {
+  assert.strictEqual(this.foo, 'bar')
+})
+After(function() {
+  assert.strictEqual(this.foo, 'bar')
+})
+  `
+    )
+    const [output] = await harness.run('spec')
+    const sanitised = stripVTControlCharacters(output.trim())
+    expect(sanitised).to.include('ℹ pass 4')
+  })
 })
