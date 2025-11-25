@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Provide source maps for pickles ([#149](https://github.com/cucumber/cucumber-node/pull/149))
+- Support returning "skipped" or "pending" from user code ([#155](https://github.com/cucumber/cucumber-node/pull/155))
 
 ## [0.5.0] - 2025-11-17
 ### Added

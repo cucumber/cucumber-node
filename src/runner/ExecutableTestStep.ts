@@ -41,7 +41,12 @@ export class ExecutableTestStep {
     try {
       const { fn, args } = this.assembledStep.prepare(this.parent.world)
       const context = this.makeContext(nodeTestContext)
-      await fn(context, ...args)
+      const returned = await fn(context, ...args)
+      if (returned === 'skipped') {
+        context.skip()
+      } else if (returned === 'pending') {
+        context.todo()
+      }
       success = true
     } finally {
       if (!success) {
