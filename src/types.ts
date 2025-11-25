@@ -108,7 +108,7 @@ export type ParameterTypeOptions = {
    * @remarks
    * If not provided, the raw matched value(s) will be passed to the step function.
    */
-  transformer?: (this: World, context: TestCaseContext, ...match: string[]) => unknown
+  transformer?: TransformerFunction
   /**
    * Whether this parameter type should be used when suggesting snippets for missing step
    * definitions
@@ -138,6 +138,12 @@ export type HookOptions = {
    */
   tags?: string
 }
+
+export type TransformerFunction = (
+  this: World,
+  context: TestCaseContext,
+  ...match: string[]
+) => unknown
 
 /**
  * A function to be executed as a hook

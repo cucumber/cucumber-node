@@ -1,9 +1,9 @@
-import { NewParameterType } from '@cucumber/core/dist/types.js'
+import { NewParameterType } from '@cucumber/core'
 
-import { ParameterTypeOptions, TestCaseContext } from './types.js'
+import { TestCaseContext, TransformerFunction } from './types.js'
 
 export function wrapTransformer(
-  transformer: ParameterTypeOptions['transformer']
+  transformer?: TransformerFunction
 ): NewParameterType['transformer'] {
   if (transformer) {
     return function (this: TestCaseContext, ...match: string[]) {
