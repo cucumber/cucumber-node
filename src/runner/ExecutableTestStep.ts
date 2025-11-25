@@ -1,7 +1,7 @@
 import { TestContext } from 'node:test'
 import { styleText } from 'node:util'
 
-import { AssembledTestStep } from '@cucumber/core'
+import { AssembledTestStep, DataTable } from '@cucumber/core'
 import { TestStepResult } from '@cucumber/messages'
 
 import { makeTimestamp } from '../makeTimestamp.js'
@@ -39,9 +39,15 @@ export class ExecutableTestStep {
   async execute(nodeTestContext: TestContext) {
     let success = false
     try {
-      const { fn, args } = this.assembledStep.prepare(this.parent.world)
+      const { fn, args, dataTable, docString } = this.assembledStep.prepare()
       const context = this.makeContext(nodeTestContext)
-      const returned = await fn(context, ...args)
+      const fnArgs: Array<unknown> = [context, ...args.map((arg) => arg.getValue(context))]
+      if (dataTable) {
+        fnArgs.push(DataTable.from(dataTable))
+      } else if (docString) {
+        fnArgs.push(docString.content)
+      }
+      const returned = await fn.apply(context.world, fnArgs)
       if (returned === 'skipped') {
         context.skip()
       } else if (returned === 'pending') {
