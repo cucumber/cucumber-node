@@ -10,7 +10,7 @@ describe('wrapTransformer', () => {
     expect(result).to.eq(undefined)
   })
 
-  it('wrapped transformer handles multiple match arguments', () => {
+  it('prepends context to args and uses world as this', () => {
     const transformer = function (
       this: any, // eslint-disable-line @typescript-eslint/no-explicit-any
       context: TestCaseContext,
@@ -27,7 +27,6 @@ describe('wrapTransformer', () => {
 
     const wrapped = wrapTransformer(transformer)!
     const testContext = { world: { foo: 'bar' } } as TestCaseContext
-
     const result = wrapped.call(testContext, 'a', 'b')
 
     expect(result).to.deep.eq({
