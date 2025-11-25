@@ -48,7 +48,7 @@ export function ParameterType(options: ParameterTypeOptions): void;
 export type ParameterTypeOptions = {
     name: string;
     regexp: RegExp | string | readonly RegExp[] | readonly string[];
-    transformer?: (this: World, ...match: string[]) => unknown;
+    transformer?: (this: World, context: TestCaseContext, ...match: string[]) => unknown;
     useForSnippets?: boolean;
     preferForRegexpMatch?: boolean;
 };
