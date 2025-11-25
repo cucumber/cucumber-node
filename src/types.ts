@@ -103,8 +103,6 @@ export type ParameterTypeOptions = {
   /**
    * A function for transforming the matched values to another object before passing to
    * the step function
-   * @param context - context object for the current test
-   * @param match - matched values from the regular expression
    * @remarks
    * If not provided, the raw matched value(s) will be passed to the step function.
    */
