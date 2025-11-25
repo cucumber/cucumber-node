@@ -7,7 +7,6 @@ import { TestStepResult } from '@cucumber/messages'
 import { makeTimestamp } from '../makeTimestamp.js'
 import { TestCaseContext } from '../types.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
-import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
 import { messages } from './state.js'
 
 export class ExecutableTestStep {
@@ -73,28 +72,7 @@ export class ExecutableTestStep {
         nodeTestContext.todo()
         this.parent.outcomeKnown = true
       },
-      attach: async (data, options) => {
-        const attachment = await makeAttachment(data, options)
-        attachment.timestamp = makeTimestamp()
-        attachment.testCaseStartedId = this.parent.id
-        attachment.testStepId = this.assembledStep.id
-        messages.push({ attachment })
-      },
-      log: async (text) => {
-        const attachment = await makeLog(text)
-        attachment.timestamp = makeTimestamp()
-        attachment.testCaseStartedId = this.parent.id
-        attachment.testStepId = this.assembledStep.id
-        messages.push({ attachment })
-      },
-      link: async (url, title) => {
-        const attachment = await makeLink(url, title)
-        attachment.timestamp = makeTimestamp()
-        attachment.testCaseStartedId = this.parent.id
-        attachment.testStepId = this.assembledStep.id
-        messages.push({ attachment })
-      },
-      world: this.parent.world,
+      ...this.parent.context,
     }
   }
 
