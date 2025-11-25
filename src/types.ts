@@ -103,11 +103,10 @@ export type ParameterTypeOptions = {
   /**
    * A function for transforming the matched values to another object before passing to
    * the step function
-   * @param match - matched values from the regular expression
    * @remarks
    * If not provided, the raw matched value(s) will be passed to the step function.
    */
-  transformer?: (this: World, ...match: string[]) => unknown
+  transformer?: TransformerFunction
   /**
    * Whether this parameter type should be used when suggesting snippets for missing step
    * definitions
@@ -137,6 +136,16 @@ export type HookOptions = {
    */
   tags?: string
 }
+
+/**
+ * A function to transform a raw parameter value into a user-defined type
+ * @public
+ */
+export type TransformerFunction = (
+  this: World,
+  context: TestCaseContext,
+  ...match: string[]
+) => unknown
 
 /**
  * A function to be executed as a hook
