@@ -61,25 +61,16 @@ export type TestCaseContext = {
   /**
    * Capture an attachment of some content that should be associated with this test step,
    * and might be accessed later in a report
-   * @param data - the content to attach, as a stream, buffer or just a plain string
-   * @param options - declare more information about this attachment
    */
-  attach(data: Readable | Buffer | string, options: AttachmentOptions): Promise<void>
+  attach: AttachFunction
   /**
    * Capture a "log" attachment.
-   * @param text - the text to be logged
-   * @remarks
-   * A shorthand for {@link TestCaseContext.attach} with a special media type.
    */
-  log(text: string): Promise<void>
+  log: LogFunction
   /**
-   * Capture a URL attachment
-   * @param url - the URL to be captured
-   * @param title - the text title that should accompany the URL
-   * @remarks
-   * A shorthand for {@link TestCaseContext.attach} with a special media type.
+   * Capture a URL attachment against this step
    */
-  link(url: string, title?: string): Promise<void>
+  link: LinkFunction
   /**
    * An object scoped only to this test case, that can be used to share state between
    * test steps
@@ -136,6 +127,36 @@ export type HookOptions = {
    */
   tags?: string
 }
+
+/**
+ * Capture an attachment
+ * @public
+ * @param data - the content to attach, as a stream, buffer or just a plain string
+ * @param options - declare more information about this attachment
+ */
+export type AttachFunction = (
+  data: Readable | Buffer | string,
+  options: AttachmentOptions
+) => Promise<void>
+
+/**
+ * Capture a "log" attachment.
+ * @public
+ * @param text - the text to be logged
+ * @remarks
+ * A shorthand for invoking a {@link AttachFunction} with a special media type.
+ */
+export type LogFunction = (text: string) => Promise<void>
+
+/**
+ * Capture a "log" attachment.
+ * @public
+ * @param url - the URL to be captured
+ * @param title - the text title that should accompany the URL
+ * @remarks
+ * A shorthand for invoking a {@link AttachFunction} with a special media type.
+ */
+export type LinkFunction = (url: string, title?: string) => Promise<void>
 
 /**
  * A function to transform a raw parameter value into a user-defined type
