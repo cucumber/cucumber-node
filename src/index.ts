@@ -3,6 +3,7 @@ import { Promisable } from 'type-fest'
 import { makeSourceReference } from './makeSourceReference.js'
 import { coreBuilder, extraBuilder } from './runner/state.js'
 import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction, World } from './types.js'
+import { wrapTransformer } from './wrapTransformer.js'
 
 export * from './types.js'
 export { DataTable } from '@cucumber/core'
@@ -37,7 +38,7 @@ export function WorldCreator(
  * @example ParameterType(\{
  *   name: 'flight',
  *   regexp: /([A-Z]\{3\})-([A-Z]\{3\})/,
- *   transformer(from, to) \{
+ *   transformer(t, from, to) \{
  *     return new Flight(from, to)
  *   \},
  * \})
@@ -45,6 +46,7 @@ export function WorldCreator(
 export function ParameterType(options: ParameterTypeOptions) {
   coreBuilder.parameterType({
     ...options,
+    transformer: wrapTransformer(options.transformer),
     sourceReference: makeSourceReference(),
   })
 }
