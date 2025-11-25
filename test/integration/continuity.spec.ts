@@ -93,4 +93,26 @@ After(function() {
     const sanitised = stripVTControlCharacters(output.trim())
     expect(sanitised).to.include('ℹ pass 4')
   })
+
+  it('supplies attachment functions to the world', async () => {
+    const harness = await makeTestHarness()
+    await harness.writeFile(
+      'features/first.feature',
+      `Feature:
+Scenario:
+  Given a step
+  `
+    )
+    await harness.writeFile(
+      'features/steps.js',
+      `import { Given } from '@cucumber/node'
+Given('a step', function() {
+  this.log('Hello world')
+})
+  `
+    )
+    const [output] = await harness.run('spec')
+    const sanitised = stripVTControlCharacters(output.trim())
+    expect(sanitised).to.include('ℹ pass 2')
+  })
 })
