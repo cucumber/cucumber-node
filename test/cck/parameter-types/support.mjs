@@ -14,9 +14,7 @@ class Flight {
 ParameterType({
   name: 'flight',
   regexp: /([A-Z]{3})-([A-Z]{3})/,
-  transformer(from, to) {
-    return new Flight(from, to)
-  },
+  transformer: (t, from, to) => new Flight(from, to),
 })
 
 Given('{flight} has been delayed', (t, flight) => {
