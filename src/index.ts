@@ -38,9 +38,7 @@ export function WorldCreator(
  * @example ParameterType(\{
  *   name: 'flight',
  *   regexp: /([A-Z]\{3\})-([A-Z]\{3\})/,
- *   transformer(t, from, to) \{
- *     return new Flight(from, to)
- *   \},
+ *   transformer: (t, from, to) => new Flight(from, to)
  * \})
  */
 export function ParameterType(options: ParameterTypeOptions) {
