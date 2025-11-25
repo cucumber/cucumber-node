@@ -139,6 +139,10 @@ export type HookOptions = {
   tags?: string
 }
 
+/**
+ * A function to transform a raw parameter value into a user-defined type
+ * @public
+ */
 export type TransformerFunction = (
   this: World,
   context: TestCaseContext,
