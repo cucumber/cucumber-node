@@ -14,7 +14,7 @@ class Flight {
 ParameterType({
   name: 'flight',
   regexp: /([A-Z]{3})-([A-Z]{3})/,
-  transformer(from, to) {
+  transformer(t, from, to) {
     return new Flight(from, to)
   },
 })
