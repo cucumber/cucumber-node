@@ -25,6 +25,13 @@ export type AttachmentOptions = {
 };
 
 // @public
+export type AttachmentsSupport = {
+    attach: AttachFunction;
+    log: LogFunction;
+    link: LinkFunction;
+};
+
+// @public
 export function Before(fn: HookFunction): void;
 
 // @public
@@ -90,7 +97,7 @@ export function When(pattern: string | RegExp, fn: StepFunction): void;
 export type World = any;
 
 // @public
-export function WorldCreator(creator: () => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
+export function WorldCreator(creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
 
 // (No @packageDocumentation comment for this package)
 

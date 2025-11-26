@@ -9,9 +9,23 @@ import { Promisable } from 'type-fest'
  */
 export type World = any // eslint-disable-line @typescript-eslint/no-explicit-any
 
+/**
+ * Functions for attaching content
+ * @public
+ */
 export type AttachmentsSupport = {
+  /**
+   * Capture an attachment of some content that should be associated with the current context,
+   * and might be accessed later in a report
+   */
   attach: AttachFunction
+  /**
+   * Capture a "log" attachment
+   */
   log: LogFunction
+  /**
+   * Capture a URL attachment
+   */
   link: LinkFunction
 }
 
@@ -70,7 +84,7 @@ export type TestCaseContext = {
    */
   attach: AttachFunction
   /**
-   * Capture a "log" attachment.
+   * Capture a "log" attachment against this step
    */
   log: LogFunction
   /**
@@ -146,7 +160,7 @@ export type AttachFunction = (
 ) => Promise<void>
 
 /**
- * Capture a "log" attachment.
+ * Capture a "log" attachment
  * @public
  * @param text - the text to be logged
  * @remarks
@@ -155,7 +169,7 @@ export type AttachFunction = (
 export type LogFunction = (text: string) => Promise<void>
 
 /**
- * Capture a "log" attachment.
+ * Capture a URL attachment
  * @public
  * @param url - the URL to be captured
  * @param title - the text title that should accompany the URL
