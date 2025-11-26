@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for Node.js 25.x ([#161](https://github.com/cucumber/cucumber-node/pull/161))
 - Provide source maps for pickles ([#149](https://github.com/cucumber/cucumber-node/pull/149))
 - Support returning "skipped" or "pending" from user code ([#155](https://github.com/cucumber/cucumber-node/pull/155))
+- Support attaching from world ([#162](https://github.com/cucumber/cucumber-node/pull/162))
 
 ### Changed
 - BREAKING CHANGE: Prepend context to parameter transformers ([#160](https://github.com/cucumber/cucumber-node/pull/160))
