@@ -1,6 +1,6 @@
 import { TestContext } from 'node:test'
 
-import { AssembledTestCase } from '@cucumber/core'
+import { AssembledTestCase, AssembledTestStep } from '@cucumber/core'
 
 import { makeTimestamp } from '../makeTimestamp.js'
 import { newId } from '../newId.js'
@@ -17,6 +17,7 @@ export class ExecutableTestCase {
   public link?: LinkFunction
   public world?: World
   public outcomeKnown = false
+  private testStep: AssembledTestStep | undefined
 
   constructor(
     private readonly worldFactory: WorldFactory,
@@ -38,6 +39,7 @@ export class ExecutableTestCase {
 
   *testSteps(): Generator<ExecutableTestStep> {
     for (const testStep of this.testCase.testSteps) {
+      this.testStep = testStep
       yield new ExecutableTestStep(this, testStep)
     }
   }
@@ -57,21 +59,21 @@ export class ExecutableTestCase {
       const attachment = await makeAttachment(data, options)
       attachment.timestamp = makeTimestamp()
       attachment.testCaseStartedId = this.id
-      attachment.testStepId = 'TODO'
+      attachment.testStepId = this.testStep?.id
       messages.push({ attachment })
     }
     this.log = async (text) => {
       const attachment = await makeLog(text)
       attachment.timestamp = makeTimestamp()
       attachment.testCaseStartedId = this.id
-      attachment.testStepId = 'TODO'
+      attachment.testStepId = this.testStep?.id
       messages.push({ attachment })
     }
     this.link = async (url, title) => {
       const attachment = await makeLink(url, title)
       attachment.timestamp = makeTimestamp()
       attachment.testCaseStartedId = this.id
-      attachment.testStepId = 'TODO'
+      attachment.testStepId = this.testStep?.id
       messages.push({ attachment })
     }
     this.world = await this.worldFactory.create({
