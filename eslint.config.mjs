@@ -71,4 +71,11 @@ export default [
       }],
     },
   },
+  {
+    files: ['src/**/*.spec.ts'],
+
+    rules: {
+      '@typescript-eslint/no-unused-expressions': 'off',
+    },
+  },
 ]

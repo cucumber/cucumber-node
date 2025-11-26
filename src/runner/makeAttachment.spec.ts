@@ -13,12 +13,14 @@ describe('makeAttachment', () => {
     const result = await makeAttachment(original, { mediaType: 'text/plain' })
     expect(result.body).to.eq(original)
     expect(result.contentEncoding).to.eq(AttachmentContentEncoding.IDENTITY)
+    expect(result.timestamp).to.be.ok
   })
 
   it('correctly handles a buffer', async () => {
     const result = await makeAttachment(Buffer.from(original, 'utf8'), { mediaType: 'text/plain' })
     expect(result.body).to.eq(base64)
     expect(result.contentEncoding).to.eq(AttachmentContentEncoding.BASE64)
+    expect(result.timestamp).to.be.ok
   })
 
   it('correctly handles a stream', async () => {
@@ -28,6 +30,7 @@ describe('makeAttachment', () => {
     const result = await makeAttachment(stream, { mediaType: 'text/plain' })
     expect(result.body).to.eq(base64)
     expect(result.contentEncoding).to.eq(AttachmentContentEncoding.BASE64)
+    expect(result.timestamp).to.be.ok
   })
 
   it('makes the correct attachment for a log', async () => {
@@ -35,6 +38,7 @@ describe('makeAttachment', () => {
     expect(result.body).to.eq('a thing happened')
     expect(result.contentEncoding).to.eq(AttachmentContentEncoding.IDENTITY)
     expect(result.mediaType).to.eq('text/x.cucumber.log+plain')
+    expect(result.timestamp).to.be.ok
   })
 
   it('makes the correct attachment for a link', async () => {
@@ -43,5 +47,6 @@ describe('makeAttachment', () => {
     expect(result.fileName).to.eq('Cucumber')
     expect(result.contentEncoding).to.eq(AttachmentContentEncoding.IDENTITY)
     expect(result.mediaType).to.eq('text/uri-list')
+    expect(result.timestamp).to.be.ok
   })
 })

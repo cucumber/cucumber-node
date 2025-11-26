@@ -54,21 +54,18 @@ export class ExecutableTestCase {
     this.attachmentsSupport = {
       attach: async (data, options) => {
         const attachment = await makeAttachment(data, options)
-        attachment.timestamp = makeTimestamp()
         attachment.testCaseStartedId = this.id
         attachment.testStepId = this.currentTestStepId
         messages.push({ attachment })
       },
       log: async (text) => {
         const attachment = await makeLog(text)
-        attachment.timestamp = makeTimestamp()
         attachment.testCaseStartedId = this.id
         attachment.testStepId = this.currentTestStepId
         messages.push({ attachment })
       },
       link: async (url, title) => {
         const attachment = await makeLink(url, title)
-        attachment.timestamp = makeTimestamp()
         attachment.testCaseStartedId = this.id
         attachment.testStepId = this.currentTestStepId
         messages.push({ attachment })
