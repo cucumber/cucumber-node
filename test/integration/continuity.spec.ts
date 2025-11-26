@@ -1,6 +1,7 @@
 import { stripVTControlCharacters } from 'node:util'
 import { expect } from 'chai'
 import { makeTestHarness } from '../utils.js'
+import { Query } from '@cucumber/query'
 
 describe('Continuity for cucumber-js users', () => {
   it('skips when the user code function returns "skipped"', async () => {
@@ -97,22 +98,33 @@ After(function() {
   it('supplies attachment functions to the world', async () => {
     const harness = await makeTestHarness()
     await harness.writeFile(
-      'features/first.feature',
-      `Feature:
-Scenario:
-  Given a step
-  `
+      'features/foo.feature',
+      `Feature: a feature
+  Scenario: a scenario
+    Given a noop step
+    And a step that attaches
+    `
     )
     await harness.writeFile(
       'features/steps.js',
       `import { Given } from '@cucumber/node'
-Given('a step', function() {
-  this.log('Hello world')
-})
-  `
+  Given('a noop step', () => {})
+  Given('a step that attaches', async function() {
+    await this.attach('{"foo":"bar"}', { mediaType: 'application/json' })
+    await this.log('Hello world')
+    await this.link('https://cucumber.io')
+  })
+    `
     )
-    const [output] = await harness.run('spec')
-    const sanitised = stripVTControlCharacters(output.trim())
-    expect(sanitised).to.include('ℹ pass 2')
+    const query = new Query()
+    await harness.run(query)
+    const [testCaseStarted] = query.findAllTestCaseStarted()
+    const [noopStep, attachStep] = query.findTestStepsFinishedBy(testCaseStarted)
+    expect(query.findAttachmentsBy(noopStep).map((a) => a.body)).to.deep.equal([])
+    expect(query.findAttachmentsBy(attachStep).map((a) => a.body)).to.deep.equal([
+      '{"foo":"bar"}',
+      'Hello world',
+      'https://cucumber.io',
+    ])
   })
 })
