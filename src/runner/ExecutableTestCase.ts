@@ -27,18 +27,18 @@ export class ExecutableTestCase {
     return this.testCase.name
   }
 
-  get testSteps(): ReadonlyArray<ExecutableTestStep> {
-    return this.testCase.testSteps.map((ts) => {
-      return new ExecutableTestStep(this, ts)
-    })
-  }
-
   get context() {
     return {
       attach: this.attach as AttachFunction,
       log: this.log as LogFunction,
       link: this.link as LinkFunction,
       world: this.world as World,
+    }
+  }
+
+  *testSteps(): Generator<ExecutableTestStep> {
+    for (const testStep of this.testCase.testSteps) {
+      yield new ExecutableTestStep(this, testStep)
     }
   }
 
