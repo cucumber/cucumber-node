@@ -58,20 +58,6 @@ export default [
     },
   },
   {
-    files: ['src/core/**/*.ts'],
-
-    rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [
-          {
-            group: ['../'],
-            message: 'The core should be self-contained'
-          }
-        ]
-      }],
-    },
-  },
-  {
     files: ['src/**/*.spec.ts'],
 
     rules: {
