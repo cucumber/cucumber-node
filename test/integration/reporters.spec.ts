@@ -3,6 +3,7 @@ import { expect } from 'chai'
 import { makeTestHarness } from '../utils.js'
 import path from 'node:path'
 import { TestStepResultStatus } from '@cucumber/messages'
+import { Query } from '@cucumber/query'
 
 describe('Reporters', () => {
   describe('spec', () => {
@@ -115,7 +116,8 @@ test('top level', (t) => {
 `
       )
 
-      const query = await harness.collectMessages()
+      const query = new Query()
+      await harness.run(query)
 
       expect(query.findAllTestCaseStarted().length).to.eq(1)
       expect(

@@ -16,9 +16,19 @@ export function After(fn: HookFunction): void;
 export function After(options: HookOptions, fn: HookFunction): void;
 
 // @public
+export type AttachFunction = (data: Readable | Buffer | string, options: AttachmentOptions) => Promise<void>;
+
+// @public
 export type AttachmentOptions = {
     mediaType: string;
     fileName?: string;
+};
+
+// @public
+export type AttachmentsSupport = {
+    attach: AttachFunction;
+    log: LogFunction;
+    link: LinkFunction;
 };
 
 // @public
@@ -42,6 +52,12 @@ export type HookOptions = {
 };
 
 // @public
+export type LinkFunction = (url: string, title?: string) => Promise<void>;
+
+// @public
+export type LogFunction = (text: string) => Promise<void>;
+
+// @public
 export function ParameterType(options: ParameterTypeOptions): void;
 
 // @public
@@ -62,9 +78,9 @@ export type TestCaseContext = {
     mock: TestContext['mock'];
     skip(): void;
     todo(): void;
-    attach(data: Readable | Buffer | string, options: AttachmentOptions): Promise<void>;
-    log(text: string): Promise<void>;
-    link(url: string, title?: string): Promise<void>;
+    attach: AttachFunction;
+    log: LogFunction;
+    link: LinkFunction;
     world: World;
 };
 
@@ -81,7 +97,7 @@ export function When(pattern: string | RegExp, fn: StepFunction): void;
 export type World = any;
 
 // @public
-export function WorldCreator(creator: () => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
+export function WorldCreator(creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
 
 // (No @packageDocumentation comment for this package)
 

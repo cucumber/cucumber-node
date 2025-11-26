@@ -23,9 +23,10 @@ class TestHarness {
   }
 
   async run(
-    reporter = 'spec',
+    reporter: string | Query = 'spec',
     ...extraArgs: string[]
   ): Promise<readonly [string, string, unknown]> {
+    const query = typeof reporter === 'object' ? reporter : undefined
     return new Promise((resolve) => {
       exec(
         [
@@ -33,7 +34,7 @@ class TestHarness {
           `--enable-source-maps`,
           `--import`,
           `@cucumber/node/bootstrap`,
-          `--test-reporter=${reporter}`,
+          `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
           `--test-reporter-destination=stdout`,
           ...extraArgs,
           `--test`,
@@ -45,21 +46,17 @@ class TestHarness {
           cwd: this.tempDir,
         },
         (error, stdout, stderr) => {
+          if (query) {
+            stdout
+              .trim()
+              .split('\n')
+              .map((line) => JSON.parse(line) as Envelope)
+              .forEach((envelope) => query.update(envelope))
+          }
           resolve([stdout, stderr, error])
         }
       )
     })
-  }
-
-  async collectMessages(): Promise<Query> {
-    const query = new Query()
-    const [output] = await this.run('@cucumber/node/reporters/message')
-    output
-      .trim()
-      .split('\n')
-      .map((line) => JSON.parse(line) as Envelope)
-      .forEach((envelope) => query.update(envelope))
-    return query
   }
 }
 

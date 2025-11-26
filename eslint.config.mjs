@@ -58,17 +58,10 @@ export default [
     },
   },
   {
-    files: ['src/core/**/*.ts'],
+    files: ['src/**/*.spec.ts'],
 
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [
-          {
-            group: ['../'],
-            message: 'The core should be self-contained'
-          }
-        ]
-      }],
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
 ]

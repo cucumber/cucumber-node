@@ -2,6 +2,7 @@ import { Readable } from 'node:stream'
 
 import { Attachment, AttachmentContentEncoding } from '@cucumber/messages'
 
+import { makeTimestamp } from '../makeTimestamp.js'
 import { AttachmentOptions } from '../types.js'
 
 const LOG_MEDIA_TYPE = 'text/x.cucumber.log+plain'
@@ -33,6 +34,7 @@ export async function makeAttachment(
     contentEncoding,
     mediaType: options.mediaType,
     fileName: options.fileName,
+    timestamp: makeTimestamp(),
   }
 }
 

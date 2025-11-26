@@ -102,10 +102,13 @@ function makeTestCase(filename: string, pickle: Pickle, index: number) {
                     )
                   )
                 ),
-                // for await (const testStep of testCaseN.testSteps) { ... }
+                // for await (const testStep of testCaseN.testSteps()) { ... }
                 t.forOfStatement(
                   t.variableDeclaration('const', [t.variableDeclarator(t.identifier('testStep'))]),
-                  t.memberExpression(t.identifier(testCaseVar), t.identifier('testSteps')),
+                  t.callExpression(
+                    t.memberExpression(t.identifier(testCaseVar), t.identifier('testSteps')),
+                    []
+                  ),
                   t.blockStatement([
                     // await testStep.setup()
                     t.expressionStatement(
