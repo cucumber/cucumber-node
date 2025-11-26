@@ -74,7 +74,11 @@ export class ExecutableTestCase {
       attachment.testStepId = 'TODO'
       messages.push({ attachment })
     }
-    this.world = await this.worldFactory.create()
+    this.world = await this.worldFactory.create({
+      attach: this.attach,
+      log: this.log,
+      link: this.link,
+    })
   }
 
   async teardown() {

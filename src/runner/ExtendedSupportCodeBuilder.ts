@@ -1,13 +1,15 @@
 import { Promisable } from 'type-fest'
 
-import { World } from '../types.js'
+import { AttachmentsSupport, World } from '../types.js'
 import { WorldFactory } from './WorldFactory.js'
 
 export class ExtraSupportCodeBuilder {
-  #worldCreator: () => Promisable<World> = () => ({})
+  #worldCreator: (attachmentsSupport: AttachmentsSupport) => Promisable<World> = (
+    attachmentsSupport
+  ) => ({ ...attachmentsSupport })
   #worldDestroyer: (world: World) => Promisable<void> = () => {}
 
-  worldCreator(creator: () => Promisable<World>) {
+  worldCreator(creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>) {
     this.#worldCreator = creator
   }
 

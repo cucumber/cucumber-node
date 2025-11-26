@@ -2,7 +2,14 @@ import { Promisable } from 'type-fest'
 
 import { makeSourceReference } from './makeSourceReference.js'
 import { coreBuilder, extraBuilder } from './runner/state.js'
-import { HookFunction, HookOptions, ParameterTypeOptions, StepFunction, World } from './types.js'
+import {
+  AttachmentsSupport,
+  HookFunction,
+  HookOptions,
+  ParameterTypeOptions,
+  StepFunction,
+  World,
+} from './types.js'
 import { wrapTransformer } from './wrapTransformer.js'
 
 export * from './types.js'
@@ -22,7 +29,7 @@ export { DataTable } from '@cucumber/core'
  * \})
  */
 export function WorldCreator(
-  creator: () => Promisable<World>,
+  creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>,
   destroyer?: (world: World) => Promisable<void>
 ) {
   extraBuilder.worldCreator(creator)

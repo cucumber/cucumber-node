@@ -9,8 +9,14 @@ import { Promisable } from 'type-fest'
  */
 export type World = any // eslint-disable-line @typescript-eslint/no-explicit-any
 
+export type AttachmentsSupport = {
+  attach: AttachFunction
+  log: LogFunction
+  link: LinkFunction
+}
+
 /**
- * Options for {@link TestCaseContext.attach}
+ * Options for {@link AttachFunction}
  * @public
  */
 export type AttachmentOptions = {
