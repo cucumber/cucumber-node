@@ -95,7 +95,7 @@ After(function() {
     expect(sanitised).to.include('ℹ pass 4')
   })
 
-  it('supplies attachment functions to the world', async () => {
+  it('makes attachment functions available on the default world', async () => {
     const harness = await makeTestHarness()
     await harness.writeFile(
       'features/foo.feature',
@@ -103,6 +103,54 @@ After(function() {
   Scenario: a scenario
     Given a noop step
     And a step that attaches
+    `
+    )
+    await harness.writeFile(
+      'features/steps.js',
+      `import { Given } from '@cucumber/node'
+  Given('a noop step', () => {})
+  Given('a step that attaches', async function() {
+    await this.attach('{"foo":"bar"}', { mediaType: 'application/json' })
+    await this.log('Hello world')
+    await this.link('https://cucumber.io')
+  })
+    `
+    )
+    const query = new Query()
+    await harness.run(query)
+    const [testCaseStarted] = query.findAllTestCaseStarted()
+    const [noopStep, attachStep] = query.findTestStepsFinishedBy(testCaseStarted)
+    expect(query.findAttachmentsBy(noopStep).map((a) => a.body)).to.deep.equal([])
+    expect(query.findAttachmentsBy(attachStep).map((a) => a.body)).to.deep.equal([
+      '{"foo":"bar"}',
+      'Hello world',
+      'https://cucumber.io',
+    ])
+  })
+
+  it('supplies attachment functions to the world creator', async () => {
+    const harness = await makeTestHarness()
+    await harness.writeFile(
+      'features/foo.feature',
+      `Feature: a feature
+  Scenario: a scenario
+    Given a noop step
+    And a step that attaches
+    `
+    )
+    await harness.writeFile(
+      'features/support.js',
+      `import { WorldCreator } from '@cucumber/node'
+  class CustomWorld {
+    constructor({attach, log, link}) {
+      this.attach = attach
+      this.log = log
+      this.link = link
+    }
+  }
+  WorldCreator((attachmentsSupport) => {
+    return new CustomWorld(attachmentsSupport)
+  })
     `
     )
     await harness.writeFile(
