@@ -54,11 +54,6 @@ const UNSUPPORTED = [
   'retry-undefined',
   // not a test sample
   'test-run-exception',
-  // suggestions not implemented yet
-  'examples-tables-undefined',
-  'hooks-undefined',
-  'undefined',
-  'unknown-parameter-type',
 ]
 
 describe('Cucumber Compatibility Kit', () => {
