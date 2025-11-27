@@ -1,4 +1,4 @@
-import { AssembledTestCase, AssembledTestPlan } from '@cucumber/core'
+import { AssembledTestCase, AssembledTestPlan, SupportCodeLibrary } from '@cucumber/core'
 import { ensure } from '@cucumber/junit-xml-formatter/dist/src/helpers.js'
 
 import { ExecutableTestCase } from './ExecutableTestCase.js'
@@ -9,6 +9,7 @@ export class ExecutableTestPlan {
 
   constructor(
     private readonly worldFactory: WorldFactory,
+    private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly plan: AssembledTestPlan
   ) {
     for (const testCase of plan.testCases) {
@@ -21,6 +22,6 @@ export class ExecutableTestPlan {
       this.testCaseByPickleId.get(pickleId),
       'AssembledTestCase must exist for pickleId'
     )
-    return new ExecutableTestCase(this.worldFactory, testCase)
+    return new ExecutableTestCase(this.worldFactory, this.supportCodeLibrary, testCase)
   }
 }

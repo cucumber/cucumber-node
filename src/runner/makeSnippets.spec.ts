@@ -1,0 +1,228 @@
+import { buildSupportCode } from '@cucumber/core'
+import { PickleStep, PickleStepType, SourceReference } from '@cucumber/messages'
+import { expect } from 'chai'
+
+import { makeSnippets } from './makeSnippets.js'
+
+describe('makeSnippets', () => {
+  it('generates snippet for Given step with plain text', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-1',
+      text: 'I have a simple step',
+      type: PickleStepType.CONTEXT,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].language).to.eq('javascript')
+    expect(snippets[0].code).to.eq(
+      `Given("I have a simple step", (t) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet for When step with plain text', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-2',
+      text: 'I do something',
+      type: PickleStepType.ACTION,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].language).to.eq('javascript')
+    expect(snippets[0].code).to.eq(
+      `When("I do something", (t) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet for Then step with plain text', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-3',
+      text: 'the result should be visible',
+      type: PickleStepType.OUTCOME,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].language).to.eq('javascript')
+    expect(snippets[0].code).to.eq(
+      `Then("the result should be visible", (t) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet for step with unknown type', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-4',
+      text: 'some unknown step',
+      type: PickleStepType.UNKNOWN,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].code).to.eq(
+      `Given("some unknown step", (t) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet with string parameter', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-5',
+      text: 'I have a "cucumber" in my basket',
+      type: PickleStepType.CONTEXT,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].code).to.eq(
+      `Given("I have a {string} in my basket", (t, string) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet with multiple string parameters', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-6',
+      text: 'I put "apples" and "oranges" together',
+      type: PickleStepType.ACTION,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].code).to.eq(
+      `When("I put {string} and {string} together", (t, string, string2) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet with number parameter', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-7',
+      text: 'I have 42 cucumbers',
+      type: PickleStepType.CONTEXT,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    // Numbers generate both int and float snippets
+    expect(snippets).to.have.lengthOf(2)
+    expect(snippets[0].code).to.eq(
+      `Given("I have {int} cucumbers", (t, int) => {
+  t.todo()
+})`
+    )
+    expect(snippets[1].code).to.eq(
+      `Given("I have {float} cucumbers", (t, float) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet with custom parameter type', () => {
+    const builder = buildSupportCode()
+    builder.parameterType({
+      name: 'flight',
+      regexp: /([A-Z]{3})-([A-Z]{3})/,
+      transformer: (from, to) => ({ from, to }),
+      sourceReference: {} as SourceReference,
+    })
+    const supportCodeLibrary = builder.build()
+
+    const pickleStep: PickleStep = {
+      id: 'step-8',
+      text: 'LHR-CDG has been delayed',
+      type: PickleStepType.CONTEXT,
+      astNodeIds: [],
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].code).to.eq(
+      `Given("{flight} has been delayed", (t, flight) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet with DataTable parameter', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-9',
+      text: 'I have the following items',
+      type: PickleStepType.CONTEXT,
+      astNodeIds: [],
+      argument: {
+        dataTable: {
+          rows: [
+            { cells: [{ value: 'item' }, { value: 'quantity' }] },
+            { cells: [{ value: 'apple' }, { value: '5' }] },
+          ],
+        },
+      },
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].code).to.eq(
+      `Given("I have the following items", (t, dataTable) => {
+  t.todo()
+})`
+    )
+  })
+
+  it('generates snippet with docString parameter', () => {
+    const supportCodeLibrary = buildSupportCode().build()
+    const pickleStep: PickleStep = {
+      id: 'step-10',
+      text: 'I have the following text',
+      type: PickleStepType.CONTEXT,
+      astNodeIds: [],
+      argument: {
+        docString: {
+          content: 'Some multiline\ntext here',
+          mediaType: 'text/plain',
+        },
+      },
+    }
+
+    const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+    expect(snippets).to.have.lengthOf(1)
+    expect(snippets[0].code).to.eq(
+      `Given("I have the following text", (t, docString) => {
+  t.todo()
+})`
+    )
+  })
+})

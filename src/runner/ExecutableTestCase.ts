@@ -1,6 +1,6 @@
 import { TestContext } from 'node:test'
 
-import { AssembledTestCase } from '@cucumber/core'
+import { AssembledTestCase, SupportCodeLibrary } from '@cucumber/core'
 
 import { makeTimestamp } from '../makeTimestamp.js'
 import { newId } from '../newId.js'
@@ -19,6 +19,7 @@ export class ExecutableTestCase {
 
   constructor(
     private readonly worldFactory: WorldFactory,
+    private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly testCase: AssembledTestCase
   ) {}
 
@@ -36,7 +37,7 @@ export class ExecutableTestCase {
   *testSteps() {
     for (const testStep of this.testCase.testSteps) {
       this.currentTestStepId = testStep.id
-      yield new ExecutableTestStep(this, testStep)
+      yield new ExecutableTestStep(this, this.supportCodeLibrary, testStep)
     }
   }
 

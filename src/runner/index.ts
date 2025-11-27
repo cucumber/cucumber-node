@@ -23,5 +23,5 @@ export async function prepare({ source, gherkinDocument, pickles }: CompiledGher
   const plan = makeTestPlan({ gherkinDocument, pickles, supportCodeLibrary }, { newId: newId })
   messages.push(...plan.toEnvelopes())
 
-  return new ExecutableTestPlan(worldFactory, plan)
+  return new ExecutableTestPlan(worldFactory, supportCodeLibrary, plan)
 }

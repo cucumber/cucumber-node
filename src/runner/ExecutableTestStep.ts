@@ -1,17 +1,26 @@
 import { TestContext } from 'node:test'
 import { styleText } from 'node:util'
 
-import { AmbiguousError, AssembledTestStep, DataTable, UndefinedError } from '@cucumber/core'
+import {
+  AmbiguousError,
+  AssembledTestStep,
+  DataTable,
+  SupportCodeLibrary,
+  UndefinedError,
+} from '@cucumber/core'
 import { TestStepResult } from '@cucumber/messages'
 
 import { makeTimestamp } from '../makeTimestamp.js'
+import { newId } from '../newId.js'
 import { TestCaseContext } from '../types.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
+import { makeSnippets } from './makeSnippets.js'
 import { messages } from './state.js'
 
 export class ExecutableTestStep {
   constructor(
     private readonly parent: ExecutableTestCase,
+    private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly assembledStep: AssembledTestStep
   ) {}
 
@@ -41,7 +50,15 @@ export class ExecutableTestStep {
       const prepared = this.assembledStep.prepare()
 
       if (prepared.type === 'undefined') {
-        throw new UndefinedError(prepared)
+        const snippets = makeSnippets(prepared.pickleStep, this.supportCodeLibrary)
+        messages.push({
+          suggestion: {
+            id: newId(),
+            pickleStepId: prepared.pickleStep.id,
+            snippets,
+          },
+        })
+        throw new UndefinedError(prepared, snippets)
       } else if (prepared.type === 'ambiguous') {
         throw new AmbiguousError(prepared)
       }

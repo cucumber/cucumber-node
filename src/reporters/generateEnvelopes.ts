@@ -51,6 +51,7 @@ export async function* generateEnvelopes(
               case 'testCaseFinished':
               case 'testStepStarted':
               case 'attachment':
+              case 'suggestion':
                 testRunEnvelopes.push(envelope)
                 break
               case 'testStepFinished':
