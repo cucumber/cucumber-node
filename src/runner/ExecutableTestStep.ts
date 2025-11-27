@@ -1,7 +1,7 @@
 import { TestContext } from 'node:test'
 import { styleText } from 'node:util'
 
-import { AssembledTestStep, DataTable } from '@cucumber/core'
+import { AmbiguousError, AssembledTestStep, DataTable, UndefinedError } from '@cucumber/core'
 import { TestStepResult } from '@cucumber/messages'
 
 import { makeTimestamp } from '../makeTimestamp.js'
@@ -38,7 +38,15 @@ export class ExecutableTestStep {
   async execute(nodeTestContext: TestContext) {
     let success = false
     try {
-      const { fn, args, dataTable, docString } = this.assembledStep.prepare()
+      const prepared = this.assembledStep.prepare()
+
+      if (prepared.type === 'undefined') {
+        throw new UndefinedError(prepared)
+      } else if (prepared.type === 'ambiguous') {
+        throw new AmbiguousError(prepared)
+      }
+
+      const { fn, args, dataTable, docString } = prepared
       const context = this.makeContext(nodeTestContext)
       const fnArgs: Array<unknown> = [context, ...args.map((arg) => arg.getValue(context))]
       if (dataTable) {
@@ -46,6 +54,7 @@ export class ExecutableTestStep {
       } else if (docString) {
         fnArgs.push(docString.content)
       }
+
       const returned = await fn.apply(context.world, fnArgs)
       if (returned === 'skipped') {
         context.skip()

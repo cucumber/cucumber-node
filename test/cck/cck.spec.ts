@@ -33,6 +33,9 @@ const IGNORABLE_KEYS = [
   // errors
   'message',
   'stackTrace',
+  // snippets
+  'code',
+  'language',
 ]
 
 const CCK_PATH = path.join(process.cwd(), 'node_modules', '@cucumber', 'compatibility-kit')
