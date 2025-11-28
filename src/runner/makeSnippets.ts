@@ -1,5 +1,7 @@
+import { generate } from '@babel/generator'
+import * as t from '@babel/types'
 import { SupportCodeLibrary } from '@cucumber/core'
-import { PickleStep, PickleStepArgument, PickleStepType, Snippet } from '@cucumber/messages'
+import { PickleStep, PickleStepType, Snippet } from '@cucumber/messages'
 
 const METHOD_BY_TYPE: Record<PickleStepType, string> = {
   [PickleStepType.CONTEXT]: 'Given',
@@ -13,33 +15,42 @@ export function makeSnippets(
   supportCodeLibrary: SupportCodeLibrary
 ): ReadonlyArray<Snippet> {
   const method = METHOD_BY_TYPE[pickleStep.type ?? PickleStepType.UNKNOWN]
-  const stepArgument = makeStepArgument(pickleStep.argument)
   return supportCodeLibrary
     .getExpressionGenerator()
     .generateExpressions(pickleStep.text)
     .map((expression) => {
-      const allArguments = expression.parameterInfos.map((pi) => {
-        return pi.name + (pi.count === 1 ? '' : pi.count.toString())
-      })
-      if (stepArgument) {
-        allArguments.push(stepArgument)
+      const args = [t.identifier('t')]
+      for (const pi of expression.parameterInfos) {
+        const variableName = pi.name + (pi.count === 1 ? '' : pi.count.toString())
+        args.push(t.identifier(variableName))
       }
-      const params = allArguments.length > 0 ? `, ${allArguments.join(', ')}` : ''
-      const code = `${method}(${JSON.stringify(expression.source)}, (t${params}) => {
-  t.todo()
-})`
+      if (pickleStep.argument?.dataTable) {
+        args.push(t.identifier('dataTable'))
+      } else if (pickleStep.argument?.docString) {
+        args.push(t.identifier('docString'))
+      }
+
+      const statement = t.expressionStatement(t.callExpression(t.identifier(method), [
+        t.stringLiteral(expression.source),
+        t.arrowFunctionExpression(
+          args,
+          t.blockStatement([
+            t.expressionStatement(
+              t.callExpression(t.memberExpression(t.identifier('t'), t.identifier('todo')), [])
+            ),
+          ])
+        ),
+      ]))
+
+      const output = generate(statement, {
+        retainLines: false,
+        compact: false,
+        jsescOption: { quotes: 'single' },
+      })
+
       return {
         language: 'javascript',
-        code,
+        code: output.code,
       }
     })
-}
-
-function makeStepArgument(pickleStepArgument: PickleStepArgument | undefined) {
-  if (pickleStepArgument?.dataTable) {
-    return 'dataTable'
-  } else if (pickleStepArgument?.docString) {
-    return 'docString'
-  }
-  return ''
 }

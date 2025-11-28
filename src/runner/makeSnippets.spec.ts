@@ -19,9 +19,9 @@ describe('makeSnippets', () => {
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].language).to.eq('javascript')
     expect(snippets[0].code).to.eq(
-      `Given("I have a simple step", (t) => {
-  t.todo()
-})`
+      `Given('I have a simple step', t => {
+  t.todo();
+});`
     )
   })
 
@@ -39,9 +39,9 @@ describe('makeSnippets', () => {
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].language).to.eq('javascript')
     expect(snippets[0].code).to.eq(
-      `When("I do something", (t) => {
-  t.todo()
-})`
+      `When('I do something', t => {
+  t.todo();
+});`
     )
   })
 
@@ -59,9 +59,9 @@ describe('makeSnippets', () => {
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].language).to.eq('javascript')
     expect(snippets[0].code).to.eq(
-      `Then("the result should be visible", (t) => {
-  t.todo()
-})`
+      `Then('the result should be visible', t => {
+  t.todo();
+});`
     )
   })
 
@@ -78,9 +78,9 @@ describe('makeSnippets', () => {
 
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].code).to.eq(
-      `Given("some unknown step", (t) => {
-  t.todo()
-})`
+      `Given('some unknown step', t => {
+  t.todo();
+});`
     )
   })
 
@@ -97,9 +97,9 @@ describe('makeSnippets', () => {
 
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].code).to.eq(
-      `Given("I have a {string} in my basket", (t, string) => {
-  t.todo()
-})`
+      `Given('I have a {string} in my basket', (t, string) => {
+  t.todo();
+});`
     )
   })
 
@@ -116,9 +116,9 @@ describe('makeSnippets', () => {
 
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].code).to.eq(
-      `When("I put {string} and {string} together", (t, string, string2) => {
-  t.todo()
-})`
+      `When('I put {string} and {string} together', (t, string, string2) => {
+  t.todo();
+});`
     )
   })
 
@@ -136,14 +136,14 @@ describe('makeSnippets', () => {
     // Numbers generate both int and float snippets
     expect(snippets).to.have.lengthOf(2)
     expect(snippets[0].code).to.eq(
-      `Given("I have {int} cucumbers", (t, int) => {
-  t.todo()
-})`
+      `Given('I have {int} cucumbers', (t, int) => {
+  t.todo();
+});`
     )
     expect(snippets[1].code).to.eq(
-      `Given("I have {float} cucumbers", (t, float) => {
-  t.todo()
-})`
+      `Given('I have {float} cucumbers', (t, float) => {
+  t.todo();
+});`
     )
   })
 
@@ -168,9 +168,9 @@ describe('makeSnippets', () => {
 
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].code).to.eq(
-      `Given("{flight} has been delayed", (t, flight) => {
-  t.todo()
-})`
+      `Given('{flight} has been delayed', (t, flight) => {
+  t.todo();
+});`
     )
   })
 
@@ -195,9 +195,9 @@ describe('makeSnippets', () => {
 
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].code).to.eq(
-      `Given("I have the following items", (t, dataTable) => {
-  t.todo()
-})`
+      `Given('I have the following items', (t, dataTable) => {
+  t.todo();
+});`
     )
   })
 
@@ -220,9 +220,9 @@ describe('makeSnippets', () => {
 
     expect(snippets).to.have.lengthOf(1)
     expect(snippets[0].code).to.eq(
-      `Given("I have the following text", (t, docString) => {
-  t.todo()
-})`
+      `Given('I have the following text', (t, docString) => {
+  t.todo();
+});`
     )
   })
 })
