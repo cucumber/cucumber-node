@@ -30,17 +30,19 @@ export function makeSnippets(
         args.push(t.identifier('docString'))
       }
 
-      const statement = t.expressionStatement(t.callExpression(t.identifier(method), [
-        t.stringLiteral(expression.source),
-        t.arrowFunctionExpression(
-          args,
-          t.blockStatement([
-            t.expressionStatement(
-              t.callExpression(t.memberExpression(t.identifier('t'), t.identifier('todo')), [])
-            ),
-          ])
-        ),
-      ]))
+      const statement = t.expressionStatement(
+        t.callExpression(t.identifier(method), [
+          t.stringLiteral(expression.source),
+          t.arrowFunctionExpression(
+            args,
+            t.blockStatement([
+              t.expressionStatement(
+                t.callExpression(t.memberExpression(t.identifier('t'), t.identifier('todo')), [])
+              ),
+            ])
+          ),
+        ])
+      )
 
       const output = generate(statement, {
         retainLines: false,
