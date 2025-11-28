@@ -87,11 +87,10 @@ describe('makeSnippets', () => {
       )
     })
 
-    it('generates snippet for step with unknown type', () => {
+    it('generates snippet for step with missing type', () => {
       const pickleStep: PickleStep = {
         id: 'step-4',
         text: 'some unknown step',
-        type: PickleStepType.UNKNOWN,
         astNodeIds: [],
       }
 
