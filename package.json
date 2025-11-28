@@ -4,6 +4,7 @@
   "author": "David Goss (https://github.com/davidjgoss)",
   "license": "MIT",
   "type": "module",
+  "repository": "github:cucumber/cucumber-node",
   "exports": {
     ".": "./lib/index.js",
     "./bootstrap": "./lib/bootstrap/index.js",
