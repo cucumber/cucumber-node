@@ -21,7 +21,7 @@ import { messages } from './state.js'
 
 export class ExecutableTestStep {
   constructor(
-    private readonly parent: ExecutableTestCase,
+    private readonly testCase: ExecutableTestCase,
     private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly assembledStep: AssembledTestStep
   ) {}
@@ -33,13 +33,13 @@ export class ExecutableTestStep {
   }
 
   get options() {
-    return { skip: this.parent.outcomeKnown && !this.assembledStep.always }
+    return { skip: this.testCase.outcomeKnown && !this.assembledStep.always }
   }
 
   async setup() {
     messages.push({
       testStepStarted: {
-        testCaseStartedId: this.parent.id,
+        testCaseStartedId: this.testCase.id,
         testStepId: this.assembledStep.id,
         timestamp: makeTimestamp(),
       },
@@ -89,7 +89,7 @@ export class ExecutableTestStep {
       success = true
     } finally {
       if (!success) {
-        this.parent.outcomeKnown = true
+        this.testCase.outcomeKnown = true
       }
     }
   }
@@ -100,20 +100,20 @@ export class ExecutableTestStep {
       mock: nodeTestContext.mock,
       skip: () => {
         nodeTestContext.skip()
-        this.parent.outcomeKnown = true
+        this.testCase.outcomeKnown = true
       },
       todo: () => {
         nodeTestContext.todo()
-        this.parent.outcomeKnown = true
+        this.testCase.outcomeKnown = true
       },
-      ...this.parent.context,
+      ...this.testCase.context,
     }
   }
 
   async teardown() {
     messages.push({
       testStepFinished: {
-        testCaseStartedId: this.parent.id,
+        testCaseStartedId: this.testCase.id,
         testStepId: this.assembledStep.id,
         timestamp: makeTimestamp(),
         testStepResult: {} as TestStepResult,
