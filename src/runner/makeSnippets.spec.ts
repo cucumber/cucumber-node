@@ -1,7 +1,7 @@
 import path from 'node:path'
 
 import { buildSupportCode, SupportCodeLibrary } from '@cucumber/core'
-import { PickleStep, PickleStepType, SourceReference } from '@cucumber/messages'
+import { PickleStep, PickleStepType } from '@cucumber/messages'
 import { expect } from 'chai'
 
 import { makeSnippets } from './makeSnippets.js'
@@ -12,6 +12,14 @@ describe('makeSnippets', () => {
 
     before(() => {
       supportCodeLibrary = buildSupportCode()
+        .parameterType({
+          name: 'flight',
+          regexp: /([A-Z]{3})-([A-Z]{3})/,
+          transformer: (from, to) => ({ from, to }),
+          sourceReference: {
+            uri: path.join('features', 'support.js'),
+          },
+        })
         .step({
           pattern: 'some unused step',
           fn: () => {},
@@ -163,15 +171,6 @@ describe('makeSnippets', () => {
     })
 
     it('generates snippet with custom parameter type', () => {
-      const builder = buildSupportCode()
-      builder.parameterType({
-        name: 'flight',
-        regexp: /([A-Z]{3})-([A-Z]{3})/,
-        transformer: (from, to) => ({ from, to }),
-        sourceReference: {} as SourceReference,
-      })
-      supportCodeLibrary = builder.build()
-
       const pickleStep: PickleStep = {
         id: 'step-8',
         text: 'LHR-CDG has been delayed',
@@ -248,6 +247,14 @@ describe('makeSnippets', () => {
 
     before(() => {
       supportCodeLibrary = buildSupportCode()
+        .parameterType({
+          name: 'flight',
+          regexp: /([A-Z]{3})-([A-Z]{3})/,
+          transformer: (from, to) => ({ from, to }),
+          sourceReference: {
+            uri: path.join('features', 'support.ts'),
+          },
+        })
         .step({
           pattern: 'some unused step',
           fn: () => {},
@@ -323,15 +330,6 @@ describe('makeSnippets', () => {
     })
 
     it('generates snippet with custom parameter type', () => {
-      const builder = buildSupportCode()
-      builder.parameterType({
-        name: 'flight',
-        regexp: /([A-Z]{3})-([A-Z]{3})/,
-        transformer: (from, to) => ({ from, to }),
-        sourceReference: {} as SourceReference,
-      })
-      supportCodeLibrary = builder.build()
-
       const pickleStep: PickleStep = {
         id: 'step-8',
         text: 'LHR-CDG has been delayed',

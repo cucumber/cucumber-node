@@ -2,10 +2,16 @@ import path from 'node:path'
 
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
+import { TSType } from '@babel/types'
 import { SupportCodeLibrary } from '@cucumber/core'
 import { PickleStep, PickleStepType, Snippet } from '@cucumber/messages'
 
 const TYPESCRIPT_EXTENSIONS = ['.ts', '.cts', '.mts', '.tsx']
+
+const TYPE_MAPPINGS: Record<string, TSType> = {
+  String: t.tsStringKeyword(),
+  Number: t.tsNumberKeyword(),
+}
 
 const METHOD_BY_TYPE: Record<PickleStepType, string> = {
   [PickleStepType.CONTEXT]: 'Given',
@@ -24,22 +30,22 @@ export function makeSnippets(
     .getExpressionGenerator()
     .generateExpressions(pickleStep.text)
     .map((expression) => {
-      const args = [t.identifier('t')]
+      const params = [mapParameter(language, 't')]
       for (const pi of expression.parameterInfos) {
         const variableName = pi.name + (pi.count === 1 ? '' : pi.count.toString())
-        args.push(t.identifier(variableName))
+        params.push(mapParameter(language, variableName, pi.type))
       }
       if (pickleStep.argument?.dataTable) {
-        args.push(t.identifier('dataTable'))
+        params.push(mapParameter(language, 'dataTable', 'DataTable'))
       } else if (pickleStep.argument?.docString) {
-        args.push(t.identifier('docString'))
+        params.push(mapParameter(language, 'docString', t.tsStringKeyword()))
       }
 
       const statement = t.expressionStatement(
         t.callExpression(t.identifier(method), [
           t.stringLiteral(expression.source),
           t.arrowFunctionExpression(
-            args,
+            params,
             t.blockStatement([
               t.expressionStatement(
                 t.callExpression(t.memberExpression(t.identifier('t'), t.identifier('todo')), [])
@@ -62,11 +68,24 @@ export function makeSnippets(
     })
 }
 
+function mapParameter(language: string, name: string, tsType?: TSType | string | null) {
+  const identifier = t.identifier(name)
+  if (language === 'typescript' && tsType) {
+    if (typeof tsType === 'string') {
+      tsType = TYPE_MAPPINGS[tsType] ?? t.tsTypeReference(t.identifier(tsType))
+    }
+    identifier.typeAnnotation = t.tSTypeAnnotation(tsType)
+  }
+  return identifier
+}
+
 function detectLanguage(supportCodeLibrary: SupportCodeLibrary) {
   return supportCodeLibrary
     .getAllSources()
     .map((source) => source.uri)
     .filter((uri) => !!uri)
     .map((uri) => path.extname(uri as string))
-    .some((extension) => TYPESCRIPT_EXTENSIONS.includes(extension)) ? 'typescript' : 'javascript'
+    .some((extension) => TYPESCRIPT_EXTENSIONS.includes(extension))
+    ? 'typescript'
+    : 'javascript'
 }
