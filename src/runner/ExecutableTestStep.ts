@@ -1,6 +1,8 @@
 import { TestContext } from 'node:test'
 import { styleText } from 'node:util'
 
+// @ts-expect-error incomplete types
+import { highlight } from '@babel/code-frame'
 import {
   AmbiguousError,
   AssembledTestStep,
@@ -58,7 +60,13 @@ export class ExecutableTestStep {
             snippets,
           },
         })
-        throw new UndefinedError(prepared, snippets)
+        throw new UndefinedError(
+          prepared,
+          snippets.map((snippet) => ({
+            ...snippet,
+            code: highlight(snippet.code),
+          }))
+        )
       } else if (prepared.type === 'ambiguous') {
         throw new AmbiguousError(prepared)
       }
