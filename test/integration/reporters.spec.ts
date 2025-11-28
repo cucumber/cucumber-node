@@ -83,7 +83,15 @@ Given('a step', () => {})`
       )
       const [output] = await harness.run('spec')
       const sanitised = stripVTControlCharacters(output.trim())
-      expect(sanitised).to.include('No matching step definitions found for text "a step"')
+      expect(sanitised).to.include(`
+  Error: No matching step definitions found for text "a step"
+  
+  You can implement the step with this code:
+  
+  Given('a step', t => {
+    t.todo();
+  });
+`)
     })
   })
 
