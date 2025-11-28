@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { buildSupportCode, SupportCodeLibrary } from '@cucumber/core'
 import { PickleStep, PickleStepType, SourceReference } from '@cucumber/messages'
 import { expect } from 'chai'
@@ -14,7 +16,7 @@ describe('makeSnippets', () => {
           pattern: 'some unused step',
           fn: () => {},
           sourceReference: {
-            uri: 'features/steps.js',
+            uri: path.join('features', 'steps.js'),
           },
         })
         .build()
@@ -250,7 +252,7 @@ describe('makeSnippets', () => {
           pattern: 'some unused step',
           fn: () => {},
           sourceReference: {
-            uri: 'features/steps.ts',
+            uri: path.join('features', 'steps.ts'),
           },
         })
         .build()

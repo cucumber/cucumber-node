@@ -1,7 +1,11 @@
+import path from 'node:path'
+
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
 import { SupportCodeLibrary } from '@cucumber/core'
 import { PickleStep, PickleStepType, Snippet } from '@cucumber/messages'
+
+const TYPESCRIPT_EXTENSIONS = ['.ts', '.cts', '.mts', '.tsx']
 
 const METHOD_BY_TYPE: Record<PickleStepType, string> = {
   [PickleStepType.CONTEXT]: 'Given',
@@ -14,6 +18,7 @@ export function makeSnippets(
   pickleStep: PickleStep,
   supportCodeLibrary: SupportCodeLibrary
 ): ReadonlyArray<Snippet> {
+  const language = detectLanguage(supportCodeLibrary)
   const method = METHOD_BY_TYPE[pickleStep.type ?? PickleStepType.UNKNOWN]
   return supportCodeLibrary
     .getExpressionGenerator()
@@ -51,8 +56,17 @@ export function makeSnippets(
       })
 
       return {
-        language: 'javascript',
+        language,
         code: output.code,
       }
     })
+}
+
+function detectLanguage(supportCodeLibrary: SupportCodeLibrary) {
+  return supportCodeLibrary
+    .getAllSources()
+    .map((source) => source.uri)
+    .filter((uri) => !!uri)
+    .map((uri) => path.extname(uri as string))
+    .some((extension) => TYPESCRIPT_EXTENSIONS.includes(extension)) ? 'typescript' : 'javascript'
 }
