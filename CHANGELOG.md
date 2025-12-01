@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.6.0] - 2025-12-01
 ### Added
 - Add support for Node.js 25.x ([#161](https://github.com/cucumber/cucumber-node/pull/161))
 - Provide source maps for pickles ([#149](https://github.com/cucumber/cucumber-node/pull/149))
@@ -49,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release
 
 [Unreleased]: https://github.com/cucumber/cucumber-node/compare/0.1.0...HEAD
+[0.6.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.6.0
 [0.5.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.5.0
 [0.4.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.4.0
 [0.3.0]: https://github.com/cucumber/cucumber-node/compare/0.1.0...v0.3.0
