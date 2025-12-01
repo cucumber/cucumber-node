@@ -161,8 +161,6 @@ There are some pretty standard Cucumber features that are missing (but not for l
 
 - [Filtering by tag expression](https://github.com/cucumber/cucumber-node/issues/9)
 - [BeforeAll/AfterAll hooks](https://github.com/cucumber/cucumber-node/issues/8)
-- [Regular expression steps](https://github.com/cucumber/cucumber-node/issues/6)
-- [Snippets](https://github.com/cucumber/cucumber-node/issues/36)
 
 ## What's different?
 
