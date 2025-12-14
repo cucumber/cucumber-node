@@ -5,7 +5,6 @@
 ```ts
 
 import { DataTable } from '@cucumber/core';
-import { Promisable } from 'type-fest';
 import { Readable } from 'node:stream';
 import { TestContext } from 'node:test';
 
@@ -43,7 +42,7 @@ export { DataTable }
 export function Given(pattern: string | RegExp, fn: StepFunction): void;
 
 // @public
-export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>;
+export type HookFunction = (this: World, context: TestCaseContext) => any | PromiseLike<any>;
 
 // @public
 export type HookOptions = {
@@ -70,7 +69,7 @@ export type ParameterTypeOptions = {
 };
 
 // @public
-export type StepFunction = (this: World, context: TestCaseContext, ...args: any) => Promisable<void>;
+export type StepFunction = (this: World, context: TestCaseContext, ...args: any) => any | PromiseLike<any>;
 
 // @public
 export type TestCaseContext = {
@@ -88,7 +87,7 @@ export type TestCaseContext = {
 export function Then(pattern: string | RegExp, fn: StepFunction): void;
 
 // @public
-export type TransformerFunction = (this: World, context: TestCaseContext, ...match: string[]) => unknown;
+export type TransformerFunction = (this: World, context: TestCaseContext, ...match: string[]) => unknown | PromiseLike<unknown>;
 
 // @public
 export function When(pattern: string | RegExp, fn: StepFunction): void;
@@ -97,7 +96,7 @@ export function When(pattern: string | RegExp, fn: StepFunction): void;
 export type World = any;
 
 // @public
-export function WorldCreator(creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>, destroyer?: (world: World) => Promisable<void>): void;
+export function WorldCreator(creator: (attachmentsSupport: AttachmentsSupport) => World | PromiseLike<World>, destroyer?: (world: World) => void | PromiseLike<void>): void;
 
 // (No @packageDocumentation comment for this package)
 

@@ -1,5 +1,3 @@
-import { Promisable } from 'type-fest'
-
 import { makeSourceReference } from './makeSourceReference.js'
 import { coreBuilder, extraBuilder } from './runner/state.js'
 import {
@@ -29,8 +27,8 @@ export { DataTable } from '@cucumber/core'
  * \})
  */
 export function WorldCreator(
-  creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>,
-  destroyer?: (world: World) => Promisable<void>
+  creator: (attachmentsSupport: AttachmentsSupport) => World | PromiseLike<World>,
+  destroyer?: (world: World) => void | PromiseLike<void>
 ) {
   extraBuilder.worldCreator(creator)
   if (destroyer) {

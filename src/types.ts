@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Readable } from 'node:stream'
 import { TestContext } from 'node:test'
-
-import { Promisable } from 'type-fest'
 
 /**
  * An object for sharing state between test steps.
  * @public
  */
-export type World = any // eslint-disable-line @typescript-eslint/no-explicit-any
+export type World = any
 
 /**
  * Functions for attaching content
@@ -186,7 +185,7 @@ export type TransformerFunction = (
   this: World,
   context: TestCaseContext,
   ...match: string[]
-) => unknown
+) => unknown | PromiseLike<unknown>
 
 /**
  * A function to be executed as a hook
@@ -195,7 +194,7 @@ export type TransformerFunction = (
  * Can optionally return a promise, which will duly be awaited. The actual returned/resolved value
  * is not read.
  */
-export type HookFunction = (this: World, context: TestCaseContext) => Promisable<void>
+export type HookFunction = (this: World, context: TestCaseContext) => any | PromiseLike<any>
 
 /**
  * A function to be executed as a step
@@ -204,5 +203,8 @@ export type HookFunction = (this: World, context: TestCaseContext) => Promisable
  * Can optionally return a promise, which will duly be awaited. The actual returned/resolved value
  * is not read.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type StepFunction = (this: World, context: TestCaseContext, ...args: any) => Promisable<void>
+export type StepFunction = (
+  this: World,
+  context: TestCaseContext,
+  ...args: any
+) => any | PromiseLike<any>

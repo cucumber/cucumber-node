@@ -43,8 +43,7 @@
     "@cucumber/query": "^14.0.0",
     "@cucumber/tag-expressions": "8.1.0",
     "globby": "^16.0.0",
-    "stack-utils": "2.0.6",
-    "type-fest": "^5.0.0"
+    "stack-utils": "2.0.6"
   },
   "devDependencies": {
     "@cucumber/compatibility-kit": "^26.0.0",
