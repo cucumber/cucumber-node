@@ -73,7 +73,9 @@ export class ExecutableTestStep {
 
       const { fn, args, dataTable, docString } = prepared
       const context = this.makeContext(nodeTestContext)
-      const fnArgs: Array<unknown> = [context, ...args.map((arg) => arg.getValue(context))]
+      const fnArgs: Array<unknown> = [context]
+      const values = await Promise.all(args.map((arg) => arg.getValue(context)))
+      fnArgs.push(...values)
       if (dataTable) {
         fnArgs.push(DataTable.from(dataTable))
       } else if (docString) {

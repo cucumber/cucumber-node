@@ -1,11 +1,11 @@
-import { Promisable } from 'type-fest'
-
 import { AttachmentsSupport, World } from '../types.js'
 
 export class WorldFactory {
   constructor(
-    private readonly creator: (attachmentsSupport: AttachmentsSupport) => Promisable<World>,
-    private readonly destroyer: (world: World) => Promisable<void>
+    private readonly creator: (
+      attachmentsSupport: AttachmentsSupport
+    ) => World | PromiseLike<World>,
+    private readonly destroyer: (world: World) => void | PromiseLike<void>
   ) {}
 
   async create(attachmentsSupport: AttachmentsSupport): Promise<World> {

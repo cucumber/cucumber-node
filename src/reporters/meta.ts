@@ -4,13 +4,14 @@ import path from 'node:path'
 
 import detectCiEnvironment from '@cucumber/ci-environment'
 import { Meta, version as protocolVersion } from '@cucumber/messages'
-import { PackageJson } from 'type-fest'
 
 const { version } = JSON.parse(
   await fs.readFile(path.join(import.meta.dirname, '..', '..', 'package.json'), {
     encoding: 'utf-8',
   })
-) as PackageJson
+) as {
+  version: string
+}
 
 export const meta: Meta = {
   protocolVersion,
