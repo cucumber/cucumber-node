@@ -90,13 +90,13 @@ function makeTestCase(filename: string, pickle: Pickle, index: number) {
             t.arrowFunctionExpression(
               [t.identifier('ctx1')],
               t.blockStatement([
-                // await testCaseN.setup(ctx1)
+                // await testCaseN.setup()
                 t.expressionStatement(
                   t.awaitExpression(
                     withLoc(
                       t.callExpression(
                         t.memberExpression(t.identifier(testCaseVar), t.identifier('setup')),
-                        [t.identifier('ctx1')]
+                        []
                       ),
                       location
                     )

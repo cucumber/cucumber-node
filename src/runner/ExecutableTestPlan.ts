@@ -1,8 +1,8 @@
 import { AssembledTestCase, AssembledTestPlan, SupportCodeLibrary } from '@cucumber/core'
 import { ensure } from '@cucumber/junit-xml-formatter/dist/src/helpers.js'
 
+import { WorldFactory } from '../support/index.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
-import { WorldFactory } from './WorldFactory.js'
 
 export class ExecutableTestPlan {
   private readonly testCaseByPickleId: Map<string, AssembledTestCase> = new Map()
