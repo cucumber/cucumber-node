@@ -16,6 +16,8 @@ import { mapTestStepResult } from './mapTestStepResult.js'
 import { meta } from './meta.js'
 
 await setupMessageListening()
+const rawEnvelopes: Array<Envelope> = []
+eventEmitter.on('envelope', (envelope) => rawEnvelopes.push(envelope))
 
 export async function* generateEnvelopes(
   source: AsyncIterable<TestEvent>
@@ -24,10 +26,7 @@ export async function* generateEnvelopes(
 
   const nodeFailOrPassEvents: Array<EventData.TestFail | EventData.TestPass> = []
   const testStepFinishedMessages: Array<TestStepFinished> = []
-  const rawEnvelopes: Array<Envelope> = []
   const testRunEnvelopes: Array<Envelope> = []
-
-  eventEmitter.on('envelope', (envelope) => rawEnvelopes.push(envelope))
 
   const testRunStarted: TestRunStarted = {
     id: newId(),
