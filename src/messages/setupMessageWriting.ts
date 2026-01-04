@@ -1,7 +1,7 @@
 import { connect } from 'node:net'
 
 import { deriveSocketPath } from './deriveSocketPath.js'
-import { eventEmitter } from './eventEmitter.js'
+import { envelopes$ } from './eventEmitter.js'
 
 export async function setupMessageWriting() {
   const listenerPid = process.env.CUCUMBER_MESSAGES_LISTENING
@@ -12,7 +12,7 @@ export async function setupMessageWriting() {
       const socketPath = deriveSocketPath(listenerPid)
       const client = connect(socketPath, resolve)
 
-      eventEmitter.on('envelope', (envelope) => {
+      envelopes$.subscribe((envelope) => {
         client.write(JSON.stringify(envelope) + '\n')
       })
 

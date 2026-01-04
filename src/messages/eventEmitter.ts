@@ -1,7 +1,4 @@
-import { EventEmitter } from 'node:events'
-
 import { Envelope } from '@cucumber/messages'
+import { ReplaySubject } from 'rxjs'
 
-export const eventEmitter = new EventEmitter<{
-  envelope: [Envelope]
-}>()
+export const envelopes$ = new ReplaySubject<Envelope>()

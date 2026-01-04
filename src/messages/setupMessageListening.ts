@@ -5,7 +5,7 @@ import { Envelope } from '@cucumber/messages'
 import { Buffer } from 'buffer'
 
 import { deriveSocketPath } from './deriveSocketPath.js'
-import { eventEmitter } from './eventEmitter.js'
+import { envelopes$ } from './eventEmitter.js'
 
 export async function setupMessageListening() {
   const pid = process.pid.toString()
@@ -50,7 +50,7 @@ class Deframer {
     for (const line of lines) {
       if (line) {
         const envelope = JSON.parse(line.toString()) as Envelope
-        eventEmitter.emit('envelope', envelope)
+        envelopes$.next(envelope)
       }
     }
   }
