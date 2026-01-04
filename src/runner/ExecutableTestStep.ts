@@ -17,7 +17,7 @@ import { newId } from '../newId.js'
 import { TestCaseContext } from '../types.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
 import { makeSnippets } from './makeSnippets.js'
-import { messages } from './state.js'
+import { messages } from './messages.js'
 
 export class ExecutableTestStep {
   constructor(

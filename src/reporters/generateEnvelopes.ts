@@ -10,10 +10,12 @@ import {
 } from '@cucumber/messages'
 
 import { makeTimestamp } from '../makeTimestamp.js'
+import { envelopes$, setupMessageListening } from '../messages/index.js'
 import { newId } from '../newId.js'
-import { PROTOCOL_PREFIX } from '../runner/MessagesCollector.js'
 import { mapTestStepResult } from './mapTestStepResult.js'
 import { meta } from './meta.js'
+
+await setupMessageListening()
 
 export async function* generateEnvelopes(
   source: AsyncIterable<TestEvent>
@@ -22,8 +24,10 @@ export async function* generateEnvelopes(
 
   const nodeFailOrPassEvents: Array<EventData.TestFail | EventData.TestPass> = []
   const testStepFinishedMessages: Array<TestStepFinished> = []
-  const nonSuccessTestCaseStartedIds: Array<string> = []
+  const rawEnvelopes: Array<Envelope> = []
   const testRunEnvelopes: Array<Envelope> = []
+
+  envelopes$.subscribe((envelope) => rawEnvelopes.push(envelope))
 
   const testRunStarted: TestRunStarted = {
     id: newId(),
@@ -38,42 +42,6 @@ export async function* generateEnvelopes(
           nodeFailOrPassEvents.push(event.data)
         }
         break
-      case 'test:diagnostic':
-        if (isFromHere(event.data) && isEnvelope(event.data.message)) {
-          const envelope = fromPrefixed(event.data.message)
-          for (const key of Object.keys(envelope) as ReadonlyArray<keyof Envelope>) {
-            switch (key) {
-              case 'testCase':
-                envelope.testCase!.testRunStartedId = testRunStarted.id
-                testRunEnvelopes.push(envelope)
-                break
-              case 'testCaseStarted':
-              case 'testCaseFinished':
-              case 'testStepStarted':
-              case 'attachment':
-              case 'suggestion':
-                testRunEnvelopes.push(envelope)
-                break
-              case 'testStepFinished':
-                {
-                  const testStepFinished = envelope.testStepFinished!
-                  testStepFinishedMessages.push(testStepFinished)
-                  testStepFinished.testStepResult = mapTestStepResult(
-                    nodeFailOrPassEvents.at(testStepFinishedMessages.indexOf(testStepFinished))
-                  )
-                  if (isNonSuccess(testStepFinished.testStepResult)) {
-                    nonSuccessTestCaseStartedIds.push(testStepFinished.testCaseStartedId)
-                  }
-                  testRunEnvelopes.push(envelope)
-                }
-                break
-              default:
-                yield envelope
-                break
-            }
-          }
-        }
-        break
       default:
         break
     }
@@ -82,9 +50,42 @@ export async function* generateEnvelopes(
   const testRunFinished = {
     testRunStartedId: testRunStarted.id,
     timestamp: makeTimestamp(),
-    success: nonSuccessTestCaseStartedIds.length === 0,
+    success: true,
   }
 
+  for (const envelope of rawEnvelopes) {
+    for (const key of Object.keys(envelope) as ReadonlyArray<keyof Envelope>) {
+      switch (key) {
+        case 'testCase':
+          envelope.testCase!.testRunStartedId = testRunStarted.id
+          testRunEnvelopes.push(envelope)
+          break
+        case 'testCaseStarted':
+        case 'testCaseFinished':
+        case 'testStepStarted':
+        case 'attachment':
+        case 'suggestion':
+          testRunEnvelopes.push(envelope)
+          break
+        case 'testStepFinished':
+          {
+            const testStepFinished = envelope.testStepFinished!
+            testStepFinishedMessages.push(testStepFinished)
+            testStepFinished.testStepResult = mapTestStepResult(
+              nodeFailOrPassEvents.at(testStepFinishedMessages.indexOf(testStepFinished))
+            )
+            if (isNonSuccess(testStepFinished.testStepResult)) {
+              testRunFinished.success = false
+            }
+            testRunEnvelopes.push(envelope)
+          }
+          break
+        default:
+          yield envelope
+          break
+      }
+    }
+  }
   yield { testRunStarted }
   for (const envelope of testRunEnvelopes) {
     yield envelope
@@ -96,14 +97,6 @@ function isFromHere(testLocationInfo: EventData.LocationInfo) {
   return (
     testLocationInfo.file?.endsWith('.feature') || testLocationInfo.file?.endsWith('.feature.md')
   )
-}
-
-function isEnvelope(data: string) {
-  return data.startsWith(PROTOCOL_PREFIX)
-}
-
-function fromPrefixed(data: string): Envelope {
-  return JSON.parse(data.substring(PROTOCOL_PREFIX.length))
 }
 
 function isNonSuccess(testStepResult: TestStepResult) {

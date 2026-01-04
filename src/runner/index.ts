@@ -4,7 +4,7 @@ import { GherkinDocument, Pickle, Source } from '@cucumber/messages'
 import { newId } from '../newId.js'
 import { ExecutableTestPlan } from './ExecutableTestPlan.js'
 import { loadSupport } from './loadSupport.js'
-import { messages } from './state.js'
+import { messages } from './messages.js'
 
 export interface CompiledGherkin {
   source: Source

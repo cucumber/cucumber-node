@@ -1,14 +1,12 @@
-import { TestContext } from 'node:test'
-
 import { AssembledTestCase, SupportCodeLibrary } from '@cucumber/core'
 
 import { makeTimestamp } from '../makeTimestamp.js'
 import { newId } from '../newId.js'
+import { WorldFactory } from '../support/index.js'
 import { AttachmentsSupport, World } from '../types.js'
 import { ExecutableTestStep } from './ExecutableTestStep.js'
 import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
-import { messages } from './state.js'
-import { WorldFactory } from './WorldFactory.js'
+import { messages } from './messages.js'
 
 export class ExecutableTestCase {
   readonly id = newId()
@@ -41,8 +39,7 @@ export class ExecutableTestCase {
     }
   }
 
-  async setup(nodeTestContext: TestContext) {
-    messages.connect(nodeTestContext)
+  async setup() {
     messages.push({
       testCaseStarted: {
         id: this.id,

@@ -1,5 +1,5 @@
 import { makeSourceReference } from './makeSourceReference.js'
-import { coreBuilder, extraBuilder } from './runner/state.js'
+import { coreBuilder, extraBuilder } from './support/index.js'
 import {
   AttachmentsSupport,
   HookFunction,

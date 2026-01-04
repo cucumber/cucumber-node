@@ -43,6 +43,7 @@
     "@cucumber/query": "^14.0.0",
     "@cucumber/tag-expressions": "8.1.0",
     "globby": "^16.0.0",
+    "rxjs": "7.8.2",
     "stack-utils": "2.0.6"
   },
   "devDependencies": {
