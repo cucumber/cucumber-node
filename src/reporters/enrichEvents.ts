@@ -47,9 +47,15 @@ export async function* enrichEvents(events: AsyncIterable<TestEvent>): AsyncGene
         break
     }
     while (envelopesQueue.length > 0) {
-      const { file, envelope } = envelopesQueue.shift() as EnvelopeFromFile
+      const { file, envelope: original } = envelopesQueue.shift() as EnvelopeFromFile
+      let envelope = original
       if (envelope.testCase) {
-        envelope.testCase.testRunStartedId = testRunStartedId
+        envelope = {
+          testCase: {
+            ...envelope.testCase,
+            testRunStartedId,
+          },
+        }
       } else if (envelope.testStepStarted) {
         testStepKeysByFile.put(file, deriveKey(envelope.testStepStarted))
       } else if (envelope.testStepFinished) {
@@ -60,9 +66,15 @@ export async function* enrichEvents(events: AsyncIterable<TestEvent>): AsyncGene
           envelopesQueue.unshift({ file, envelope })
           break
         }
-        envelope.testStepFinished.testStepResult = mapTestStepResult(completeEvent)
-        if (isNonSuccess(envelope.testStepFinished.testStepResult)) {
+        const testStepResult = mapTestStepResult(completeEvent)
+        if (isNonSuccess(testStepResult)) {
           success = false
+        }
+        envelope = {
+          testStepFinished: {
+            ...envelope.testStepFinished,
+            testStepResult,
+          },
         }
       }
       yield envelope
