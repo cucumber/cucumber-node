@@ -1,3 +1,4 @@
+export * from './EnvelopesReplaySubject.js'
 export * from './envelopesSubject.js'
 export * from './setupMessageListening.js'
 export * from './setupMessageWriting.js'

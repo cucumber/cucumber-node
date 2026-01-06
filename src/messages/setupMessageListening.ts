@@ -2,6 +2,7 @@ import { unlinkSync } from 'node:fs'
 import { createServer } from 'node:net'
 
 import { deriveSocketPath } from './deriveSocketPath.js'
+import { envelopesSubject } from './envelopesSubject.js'
 import { MessagesDeframer } from './MessagesDeframer.js'
 
 export async function setupMessageListening() {
@@ -20,7 +21,7 @@ export async function setupMessageListening() {
     }
 
     const server = createServer((socket) => {
-      const deframer = new MessagesDeframer()
+      const deframer = new MessagesDeframer(envelopesSubject)
       socket.on('data', (data) => {
         deframer.handle(data)
       })
