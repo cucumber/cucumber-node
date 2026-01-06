@@ -14,7 +14,7 @@ export class MessagesDeframer {
     this.buffer += data.toString()
 
     const lines = this.buffer.split('\n')
-    this.buffer = lines.pop() ?? ''
+    this.buffer = lines.pop() || ''
 
     for (const line of lines) {
       if (line) {

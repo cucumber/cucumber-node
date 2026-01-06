@@ -21,10 +21,12 @@ export async function setupMessageListening() {
     }
 
     const server = createServer((socket) => {
+      /* c8 ignore start */
       const deframer = new MessagesDeframer(envelopesSubject)
       socket.on('data', (data) => {
         deframer.handle(data)
       })
+      /* c8 ignore stop */
     })
 
     server.listen(socketPath, resolve)

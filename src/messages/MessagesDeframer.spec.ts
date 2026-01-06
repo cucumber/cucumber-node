@@ -9,46 +9,43 @@ import { MessagesDeframer } from './MessagesDeframer.js'
 import { EnvelopeFromFile } from './types.js'
 
 describe('MessagesDeframer', () => {
-  it('correctly reassembles envelopes from randomly chunked NDJSON', () => {
-    const ndjsonPath = resolve(
-      import.meta.dirname,
-      '../../node_modules/@cucumber/compatibility-kit/features/minimal/minimal.ndjson'
+  it('correctly reassembles envelopes from randomly chunked ndjson', () => {
+    // grab real envelopes of a full test run, wrap them to match our from-file shape
+    const expectedEnvelopes: EnvelopeFromFile[] = readFileSync(
+      resolve(
+        import.meta.dirname,
+        '../../node_modules/@cucumber/compatibility-kit/features/minimal/minimal.ndjson'
+      ),
+      'utf-8'
     )
-    const ndjsonContent = readFileSync(ndjsonPath, 'utf-8')
-
-    // Transform raw envelopes to EnvelopeFromFile format
-    const expectedEnvelopes: EnvelopeFromFile[] = ndjsonContent
       .split('\n')
       .filter((line) => line.trim())
       .map((line) => ({
-        file: 'minimal.ndjson',
+        file: 'features/minimal.feature',
         envelope: JSON.parse(line) as Envelope,
       }))
 
-    // Create NDJSON in EnvelopeFromFile format
-    const transformedNdjson = expectedEnvelopes.map((e) => JSON.stringify(e)).join('\n') + '\n'
-
-    // Break into random-length chunks
+    // break into random-length chunks, simulating ipc behaviour
+    const ndjson = expectedEnvelopes.map((e) => JSON.stringify(e)).join('\n') + '\n'
     const chunks: Buffer<ArrayBuffer>[] = []
-    let remaining = transformedNdjson
+    let remaining = ndjson
     while (remaining.length > 0) {
       const chunkSize = Math.floor(Math.random() * 50) + 1
       chunks.push(Buffer.from(remaining.slice(0, chunkSize)))
       remaining = remaining.slice(chunkSize)
     }
 
-    // Collect results via subscription to a test-specific subject
+    // subscribe to re-assembled items
     const subject = new EnvelopesReplaySubject()
-    const collected: EnvelopeFromFile[] = []
-    subject.subscribe((item) => collected.push(item))
+    const reassembled: EnvelopeFromFile[] = []
+    subject.subscribe((item) => reassembled.push(item))
 
-    // Push chunks through deframer
+    // push chunks through deframer
     const deframer = new MessagesDeframer(subject)
     for (const chunk of chunks) {
       deframer.handle(chunk)
     }
 
-    // Assert we got all envelopes correctly
-    expect(collected).to.deep.equal(expectedEnvelopes)
+    expect(reassembled).to.deep.equal(expectedEnvelopes)
   })
 })

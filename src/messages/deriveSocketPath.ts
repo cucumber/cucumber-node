@@ -1,7 +1,10 @@
-/* c8 ignore file */
 import { platform } from 'node:os'
 
 export function deriveSocketPath(pid: number | string) {
   const identifier = `cucumber-node-messages-${pid}`
-  return platform() === 'win32' ? `\\\\.\\pipe\\${identifier}` : `/tmp/${identifier}.sock`
+  /* c8 ignore next 3 */
+  if (platform() === 'win32') {
+    return `\\\\.\\pipe\\${identifier}`
+  }
+  return `/tmp/${identifier}.sock`
 }
