@@ -17,10 +17,11 @@ import { newId } from '../newId.js'
 import { TestCaseContext } from '../types.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
 import { makeSnippets } from './makeSnippets.js'
-import { messages } from './state.js'
+import { MessagesCollector } from './MessagesCollector.js'
 
 export class ExecutableTestStep {
   constructor(
+    private readonly messages: MessagesCollector,
     private readonly testCase: ExecutableTestCase,
     private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly assembledStep: AssembledTestStep
@@ -37,7 +38,7 @@ export class ExecutableTestStep {
   }
 
   async setup() {
-    messages.push({
+    this.messages.push({
       testStepStarted: {
         testCaseStartedId: this.testCase.id,
         testStepId: this.assembledStep.id,
@@ -53,7 +54,7 @@ export class ExecutableTestStep {
 
       if (prepared.type === 'undefined') {
         const snippets = makeSnippets(prepared.pickleStep, this.supportCodeLibrary)
-        messages.push({
+        this.messages.push({
           suggestion: {
             id: newId(),
             pickleStepId: prepared.pickleStep.id,
@@ -113,7 +114,7 @@ export class ExecutableTestStep {
   }
 
   async teardown() {
-    messages.push({
+    this.messages.push({
       testStepFinished: {
         testCaseStartedId: this.testCase.id,
         testStepId: this.assembledStep.id,

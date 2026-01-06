@@ -3,20 +3,15 @@ import { TestEvent } from 'node:test/reporters'
 
 import { CucumberHtmlStream } from '@cucumber/html-formatter'
 
-import { generateEnvelopes } from '../generateEnvelopes.js'
+import { enrichEvents } from '../enrichEvents.js'
 
-/*
-Signal to the runner that we are listening for messages so it should emit them
- */
-process.env.CUCUMBER_MESSAGES_LISTENING = 'true'
-
-export default async function* (source: AsyncIterable<TestEvent>): AsyncGenerator<string> {
+export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
   const output: string[] = []
 
   const htmlStream = new CucumberHtmlStream()
   htmlStream.on('data', (chunk) => output.push(chunk))
 
-  const envelopes = generateEnvelopes(source)
+  const envelopes = enrichEvents(events)
   for await (const envelope of envelopes) {
     htmlStream.write(envelope)
   }

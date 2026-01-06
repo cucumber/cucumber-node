@@ -60,43 +60,55 @@ const UNSUPPORTED = [
 ]
 
 describe('Cucumber Compatibility Kit', () => {
-  const directories = globbySync('node_modules/@cucumber/compatibility-kit/features/*', {
-    onlyDirectories: true,
-  })
-  for (const directory of directories) {
-    const suite = path.basename(directory)
+  let isolationOption = '--test-isolation'
+  if (Number(process.versions.node.split('.')[0]) < 24) {
+    isolationOption = '--experimental-test-isolation'
+  }
+  const isolationModes = ['none', 'process']
 
-    it(suite, async function () {
-      if (UNSUPPORTED.includes(suite)) {
-        return this.skip()
-      }
-
-      const harness = await makeTestHarness()
-
-      await harness.copyDir(path.join(process.cwd(), 'test', 'cck', suite), 'features')
-      const featurePaths = await globby(['*.feature', '*.feature.md'], { cwd: directory })
-      for (const featurePath of featurePaths) {
-        await harness.copyFile(
-          path.join(CCK_PATH, 'features', suite, featurePath),
-          path.join('features', featurePath)
-        )
-      }
-
-      const [actualOutput] = await harness.run('@cucumber/node/reporters/message')
-      const expectedOutput = await readFile(path.join(directory, suite + '.ndjson'), {
-        encoding: 'utf-8',
+  for (const isolationMode of isolationModes) {
+    describe(`isolation=${isolationMode}`, () => {
+      const directories = globbySync('node_modules/@cucumber/compatibility-kit/features/*', {
+        onlyDirectories: true,
       })
+      for (const directory of directories) {
+        const suite = path.basename(directory)
+        it(suite, async function () {
+          if (UNSUPPORTED.includes(suite)) {
+            return this.skip()
+          }
 
-      const actualEnvelopes = parseEnvelopes(actualOutput)
-      const expectedEnvelopes = parseEnvelopes(expectedOutput)
+          const harness = await makeTestHarness()
 
-      // first assert on the order and type of messages
-      expect(actualEnvelopes.flatMap((envelope) => Object.keys(envelope))).to.deep.eq(
-        expectedEnvelopes.flatMap((envelope) => Object.keys(envelope))
-      )
+          await harness.copyDir(path.join(process.cwd(), 'test', 'cck', suite), 'features')
+          const featurePaths = await globby(['*.feature', '*.feature.md'], { cwd: directory })
+          for (const featurePath of featurePaths) {
+            await harness.copyFile(
+              path.join(CCK_PATH, 'features', suite, featurePath),
+              path.join('features', featurePath)
+            )
+          }
 
-      // now get into the contents, excluding non-deterministic fields
-      expect(actualEnvelopes).excludingEvery(IGNORABLE_KEYS).to.deep.eq(expectedEnvelopes)
+          const [actualOutput] = await harness.run(
+            '@cucumber/node/reporters/message',
+            `${isolationOption}=${isolationMode}`
+          )
+          const expectedOutput = await readFile(path.join(directory, suite + '.ndjson'), {
+            encoding: 'utf-8',
+          })
+
+          const actualEnvelopes = reorderEnvelopes(parseEnvelopes(actualOutput))
+          const expectedEnvelopes = parseEnvelopes(expectedOutput)
+
+          // first assert on the order and type of messages
+          expect(actualEnvelopes.flatMap((envelope) => Object.keys(envelope))).to.deep.eq(
+            expectedEnvelopes.flatMap((envelope) => Object.keys(envelope))
+          )
+
+          // now get into the contents, excluding non-deterministic fields
+          expect(actualEnvelopes).excludingEvery(IGNORABLE_KEYS).to.deep.eq(expectedEnvelopes)
+        })
+      }
     })
   }
 })
@@ -106,4 +118,22 @@ function parseEnvelopes(raw: string): ReadonlyArray<Envelope> {
     .split('\n')
     .filter((line) => !!line)
     .map((line) => JSON.parse(line))
+}
+
+/**
+ * Finds the TestRunStarted envelope and moves it to just before either the first TestCase
+ * envelope, or the TestRunFinished envelope if there are none.
+ */
+function reorderEnvelopes(original: ReadonlyArray<Envelope>): ReadonlyArray<Envelope> {
+  const reordered = [...original]
+  const [testRunStartedEnvelope] = reordered.splice(
+    reordered.findIndex((envelope) => envelope.testRunStarted),
+    1
+  )
+  reordered.splice(
+    reordered.findIndex((envelope) => envelope.testCase || envelope.testRunFinished),
+    0,
+    testRunStartedEnvelope
+  )
+  return reordered
 }

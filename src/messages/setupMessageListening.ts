@@ -1,0 +1,36 @@
+import { unlinkSync } from 'node:fs'
+import { createServer } from 'node:net'
+
+import { deriveSocketPath } from './deriveSocketPath.js'
+import { MessagesDeframer } from './MessagesDeframer.js'
+
+export async function setupMessageListening() {
+  const pid = process.pid.toString()
+  process.env.CUCUMBER_MESSAGES_LISTENING = pid
+
+  return new Promise<void>((resolve) => {
+    const socketPath = deriveSocketPath(pid)
+
+    if (isUnixSocket(socketPath)) {
+      try {
+        unlinkSync(socketPath)
+      } catch {
+        // noop
+      }
+    }
+
+    const server = createServer((socket) => {
+      const deframer = new MessagesDeframer()
+      socket.on('data', (data) => {
+        deframer.handle(data)
+      })
+    })
+
+    server.listen(socketPath, resolve)
+    server.unref()
+  })
+}
+
+function isUnixSocket(socketPath: string) {
+  return socketPath.startsWith('/tmp')
+}
