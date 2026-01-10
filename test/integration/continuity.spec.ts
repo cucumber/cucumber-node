@@ -1,7 +1,9 @@
 import { stripVTControlCharacters } from 'node:util'
-import { expect } from 'chai'
-import { makeTestHarness } from '../utils.js'
+
 import { Query } from '@cucumber/query'
+import { expect } from 'chai'
+
+import { makeTestHarness } from '../utils.js'
 
 describe('Continuity for cucumber-js users', () => {
   it('skips when the user code function returns "skipped"', async () => {

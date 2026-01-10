@@ -1,5 +1,7 @@
 import { stripVTControlCharacters } from 'node:util'
+
 import { expect } from 'chai'
+
 import { makeTestHarness } from '../utils.js'
 
 describe('Isolation', () => {

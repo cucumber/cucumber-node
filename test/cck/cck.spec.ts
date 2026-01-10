@@ -1,11 +1,13 @@
-import { describe, it } from 'mocha'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+
+import { Envelope } from '@cucumber/messages'
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
-import { makeTestHarness } from '../utils.js'
-import { Envelope } from '@cucumber/messages'
 import { globby, globbySync } from 'globby'
+import { describe, it } from 'mocha'
+
+import { makeTestHarness } from '../utils.js'
 
 use(chaiExclude)
 

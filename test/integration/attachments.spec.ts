@@ -1,6 +1,7 @@
-import { expect } from 'chai'
-import { makeTestHarness } from '../utils.js'
 import { Query } from '@cucumber/query'
+import { expect } from 'chai'
+
+import { makeTestHarness } from '../utils.js'
 
 describe('Attachments', () => {
   it('captures attachments against the correct test case and test step', async () => {

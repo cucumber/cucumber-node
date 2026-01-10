@@ -3,12 +3,14 @@
  * terminal. Includes syntax highlighting.
  */
 
-import { load } from '../../src/loader/index.js'
-import { pathToFileURL } from 'node:url'
-import path from 'node:path'
 import { LoadFnOutput, LoadHookContext } from 'node:module'
+import path from 'node:path'
+import { pathToFileURL } from 'node:url'
+
 // @ts-expect-error incomplete types
 import { highlight } from '@babel/code-frame'
+
+import { load } from '../../src/loader/index.js'
 
 const transpiled = await load(
   pathToFileURL(path.join(import.meta.dirname, './sample.feature')).toString(),
