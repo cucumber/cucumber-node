@@ -1,9 +1,9 @@
 import { connect } from 'node:net'
 
 import { deriveSocketPath } from './deriveSocketPath.js'
-import { envelopesSubject } from './envelopesSubject.js'
+import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
 
-export async function setupMessageWriting() {
+export async function setupMessageWriting(subject: EnvelopesReplaySubject) {
   const listenerPid = process.env.CUCUMBER_MESSAGES_LISTENING
   const runnerPid = process.pid.toString()
 
@@ -12,7 +12,15 @@ export async function setupMessageWriting() {
       const socketPath = deriveSocketPath(listenerPid)
       const client = connect(socketPath, resolve)
 
-      envelopesSubject.subscribe((envelope) => {
+      client.on('error', (e) => {
+        console.warn(
+          `cucumber-node caught an error when communicating with listener ${listenerPid}:`,
+          e.message
+        )
+        resolve()
+      })
+
+      subject.subscribe((envelope) => {
         client.write(JSON.stringify(envelope) + '\n')
       })
 

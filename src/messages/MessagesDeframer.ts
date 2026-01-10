@@ -18,8 +18,12 @@ export class MessagesDeframer {
 
     for (const line of lines) {
       if (line) {
-        const item = JSON.parse(line.toString()) as EnvelopeFromFile
-        this.subject.next(item)
+        try {
+          const item = JSON.parse(line.toString()) as EnvelopeFromFile
+          this.subject.next(item)
+        } catch (e) {
+          console.warn(`cucumber-node couldn't parse a message from a test:`, (e as Error).message)
+        }
       }
     }
   }

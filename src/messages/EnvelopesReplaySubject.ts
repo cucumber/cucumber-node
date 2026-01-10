@@ -15,6 +15,10 @@ export class EnvelopesReplaySubject {
 
   next(item: EnvelopeFromFile) {
     if (item.envelope.testCaseStarted) {
+      /*
+      Once we see a TestCaseStarted, the actual test runner stuff is underway, and we can
+      reasonably assume any listener is already active, so there's no need to buffer any more.
+       */
       this.buffering = false
     }
     if (this.buffering) {

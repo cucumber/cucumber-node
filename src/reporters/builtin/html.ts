@@ -3,7 +3,7 @@ import { TestEvent } from 'node:test/reporters'
 
 import { CucumberHtmlStream } from '@cucumber/html-formatter'
 
-import { enrichEvents } from '../enrichEvents.js'
+import { enrichMessages } from '../enrichMessages.js'
 
 export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
   const output: string[] = []
@@ -11,7 +11,7 @@ export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerato
   const htmlStream = new CucumberHtmlStream()
   htmlStream.on('data', (chunk) => output.push(chunk))
 
-  const envelopes = enrichEvents(events)
+  const envelopes = enrichMessages(events)
   for await (const envelope of envelopes) {
     htmlStream.write(envelope)
   }

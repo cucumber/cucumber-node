@@ -1,13 +1,16 @@
 import { Envelope } from '@cucumber/messages'
 
-import { envelopesSubject } from '../messages/index.js'
+import { EnvelopesReplaySubject } from '../messages/index.js'
 
 export class MessagesCollector {
-  constructor(private readonly file: string) {}
+  constructor(
+    private readonly file: string,
+    private readonly subject: EnvelopesReplaySubject
+  ) {}
 
   push(...envelopes: ReadonlyArray<Envelope>) {
     envelopes.forEach((envelope) =>
-      envelopesSubject.next({
+      this.subject.next({
         file: this.file,
         envelope,
       })

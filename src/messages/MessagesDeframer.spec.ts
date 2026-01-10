@@ -1,3 +1,4 @@
+import { fail } from 'node:assert'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -47,5 +48,31 @@ describe('MessagesDeframer', () => {
     }
 
     expect(reassembled).to.deep.equal(expectedEnvelopes)
+  })
+
+  it('discards invalid JSON and continues processing', () => {
+    const subject = new EnvelopesReplaySubject()
+    const reassembled: EnvelopeFromFile[] = []
+    subject.subscribe((item) => reassembled.push(item))
+
+    const deframer = new MessagesDeframer(subject)
+
+    // valid, invalid, valid
+    const input =
+      [
+        '{"file":"a.feature","envelope":{"source":{"uri":"a.feature"}}}',
+        '{not valid json}',
+        '{"file":"b.feature","envelope":{"source":{"uri":"b.feature"}}}',
+      ].join('\n') + '\n'
+
+    try {
+      deframer.handle(Buffer.from(input))
+    } catch (e) {
+      fail(e as Error)
+    }
+
+    expect(reassembled).to.have.length(2)
+    expect(reassembled[0].file).to.equal('a.feature')
+    expect(reassembled[1].file).to.equal('b.feature')
   })
 })

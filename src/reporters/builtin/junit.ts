@@ -3,7 +3,7 @@ import { TestEvent } from 'node:test/reporters'
 import plugin from '@cucumber/junit-xml-formatter'
 import { Envelope } from '@cucumber/messages'
 
-import { enrichEvents } from '../enrichEvents.js'
+import { enrichMessages } from '../enrichMessages.js'
 
 export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
   const output: string[] = []
@@ -16,7 +16,7 @@ export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerato
     options: {},
   })
 
-  const envelopes = enrichEvents(events)
+  const envelopes = enrichMessages(events)
   for await (const envelope of envelopes) {
     handler(envelope)
   }

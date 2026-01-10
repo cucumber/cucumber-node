@@ -1,13 +1,13 @@
 import { makeTestPlan } from '@cucumber/core'
 import { GherkinDocument, Pickle, Source } from '@cucumber/messages'
 
-import { setupMessageWriting } from '../messages/index.js'
+import { envelopesSubject, setupMessageWriting } from '../messages/index.js'
 import { newId } from '../newId.js'
 import { ExecutableTestPlan } from './ExecutableTestPlan.js'
 import { loadSupport } from './loadSupport.js'
 import { MessagesCollector } from './MessagesCollector.js'
 
-await setupMessageWriting()
+await setupMessageWriting(envelopesSubject)
 
 export interface CompiledGherkin {
   source: Source
@@ -16,7 +16,7 @@ export interface CompiledGherkin {
 }
 
 export async function prepare(file: string, { source, gherkinDocument, pickles }: CompiledGherkin) {
-  const messages = new MessagesCollector(file)
+  const messages = new MessagesCollector(file, envelopesSubject)
 
   messages.push({ source })
   messages.push({ gherkinDocument })

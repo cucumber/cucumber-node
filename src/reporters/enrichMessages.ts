@@ -16,9 +16,9 @@ import { newId } from '../newId.js'
 import { mapTestStepResult } from './mapTestStepResult.js'
 import { meta } from './meta.js'
 
-await setupMessageListening()
+await setupMessageListening(envelopesSubject)
 
-export async function* enrichEvents(events: AsyncIterable<TestEvent>): AsyncGenerator<Envelope> {
+export async function* enrichMessages(events: AsyncIterable<TestEvent>): AsyncGenerator<Envelope> {
   const completeEventsByFile: ArrayMultimap<string, EventData.TestComplete> = new ArrayMultimap()
   const testStepKeysByFile: ArrayMultimap<string, string> = new ArrayMultimap()
   const envelopesQueue: Array<EnvelopeFromFile> = []

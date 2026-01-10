@@ -2,10 +2,10 @@ import { unlinkSync } from 'node:fs'
 import { createServer } from 'node:net'
 
 import { deriveSocketPath } from './deriveSocketPath.js'
-import { envelopesSubject } from './envelopesSubject.js'
+import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
 import { MessagesDeframer } from './MessagesDeframer.js'
 
-export async function setupMessageListening() {
+export async function setupMessageListening(subject: EnvelopesReplaySubject) {
   const pid = process.pid.toString()
   process.env.CUCUMBER_MESSAGES_LISTENING = pid
 
@@ -22,7 +22,7 @@ export async function setupMessageListening() {
 
     const server = createServer((socket) => {
       /* c8 ignore start */
-      const deframer = new MessagesDeframer(envelopesSubject)
+      const deframer = new MessagesDeframer(subject)
       socket.on('data', (data) => {
         deframer.handle(data)
       })
