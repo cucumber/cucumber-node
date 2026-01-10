@@ -1,4 +1,3 @@
-import { fail } from 'node:assert'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -65,11 +64,7 @@ describe('MessagesDeframer', () => {
         '{"file":"b.feature","envelope":{"source":{"uri":"b.feature"}}}',
       ].join('\n') + '\n'
 
-    try {
-      deframer.handle(Buffer.from(input))
-    } catch (e) {
-      fail(e as Error)
-    }
+    deframer.handle(Buffer.from(input))
 
     expect(reassembled).to.have.length(2)
     expect(reassembled[0].file).to.equal('a.feature')

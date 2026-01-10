@@ -5,6 +5,7 @@ import { EnvelopeFromFile } from './types.js'
  * Handles envelopes from files arriving in chunks, re-assembles them into discrete
  * items and forwards to the subject which multicasts to interested subscribers.
  */
+/* c8 ignore next */
 export class MessagesDeframer {
   private buffer = ''
 

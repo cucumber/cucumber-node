@@ -1,4 +1,3 @@
-import { fail } from 'node:assert'
 import { createServer, Server, Socket } from 'node:net'
 
 import { SourceMediaType } from '@cucumber/messages'
@@ -8,14 +7,8 @@ import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
 import { setupMessageWriting } from './setupMessageWriting.js'
 
 describe('setupMessageWriting', () => {
-  const originalVar = process.env.CUCUMBER_MESSAGES_LISTENING
-
   afterEach(() => {
-    if (originalVar === undefined) {
-      delete process.env.CUCUMBER_MESSAGES_LISTENING
-    } else {
-      process.env.CUCUMBER_MESSAGES_LISTENING = originalVar
-    }
+    delete process.env.CUCUMBER_MESSAGES_LISTENING
   })
 
   it('handles gracefully when the socket does not exist', async () => {
@@ -46,11 +39,7 @@ describe('setupMessageWriting', () => {
       },
     })
 
-    try {
-      await setupMessageWriting(subject)
-    } catch (e) {
-      fail(e as Error)
-    }
+    await setupMessageWriting(subject)
   })
 
   it('handles gracefully when the server closes mid-stream', async () => {
@@ -87,23 +76,19 @@ describe('setupMessageWriting', () => {
     await new Promise<void>((resolve) => server.close(() => resolve()))
 
     // push more envelopes after disconnected
-    try {
-      subject.next({
-        file: 'test.feature',
-        envelope: {
-          pickle: {
-            id: '1',
-            uri: 'test.feature',
-            name: 'test',
-            language: 'en',
-            steps: [],
-            tags: [],
-            astNodeIds: [],
-          },
+    subject.next({
+      file: 'test.feature',
+      envelope: {
+        pickle: {
+          id: '1',
+          uri: 'test.feature',
+          name: 'test',
+          language: 'en',
+          steps: [],
+          tags: [],
+          astNodeIds: [],
         },
-      })
-    } catch (e) {
-      fail(e as Error)
-    }
+      },
+    })
   })
 })
