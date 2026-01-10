@@ -151,7 +151,7 @@ Some Cucumber formatters are included as Node.js test reporters:
 
 ## Mixing tests
 
-You can execute Cucumber tests and normal JavaScript tests in the same test run - cucumber-node won't interfere with the other tests.
+You can execute Cucumber tests and normal JavaScript tests in the same test run - cucumber-node won't interfere with the other tests. But the reporters mentioned above will only report on the Cucumber tests in your run.
 
 ## Limitations
 
