@@ -3,8 +3,7 @@ import { pathToFileURL } from 'node:url'
 import { SupportCodeLibrary } from '@cucumber/core'
 import { globby } from 'globby'
 
-import { coreBuilder, extraBuilder } from './state.js'
-import { WorldFactory } from './WorldFactory.js'
+import { coreBuilder, extraBuilder, WorldFactory } from '../support/index.js'
 
 interface UsableSupport {
   supportCodeLibrary: SupportCodeLibrary

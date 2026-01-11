@@ -149,8 +149,6 @@ Some Cucumber formatters are included as Node.js test reporters:
 - JUnit `--test-reporter=@cucumber/node/reporters/junit --test-reporter-destination=./TEST-cucumber.xml`
 - Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`
 
-For now, avoid using the `spec` reporter at the same time as one of the above reporters - because we're abusing the `diagnostic` channel to send messages to the reporter, it makes the `spec` output very noisy - we recommend the `dot` reporter instead.
-
 ## Mixing tests
 
 You can execute Cucumber tests and normal JavaScript tests in the same test run - cucumber-node won't interfere with the other tests. But the reporters mentioned above will only report on the Cucumber tests in your run.

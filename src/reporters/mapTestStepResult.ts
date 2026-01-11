@@ -3,17 +3,8 @@ import { EventData } from 'node:test'
 import { TestStepResult, TestStepResultStatus, TimeConversion } from '@cucumber/messages'
 
 export function mapTestStepResult(
-  testEvent: EventData.TestFail | EventData.TestPass | undefined
+  testEvent: EventData.TestFail | EventData.TestPass
 ): TestStepResult {
-  if (!testEvent) {
-    return {
-      duration: {
-        seconds: 0,
-        nanos: 0,
-      },
-      status: TestStepResultStatus.UNKNOWN,
-    }
-  }
   let status: TestStepResultStatus = TestStepResultStatus.PASSED
   let exception = undefined
   if (testEvent.skip) {

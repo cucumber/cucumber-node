@@ -1,14 +1,12 @@
-import { TestContext } from 'node:test'
-
 import { AssembledTestCase, SupportCodeLibrary } from '@cucumber/core'
 
 import { makeTimestamp } from '../makeTimestamp.js'
 import { newId } from '../newId.js'
+import { WorldFactory } from '../support/index.js'
 import { AttachmentsSupport, World } from '../types.js'
 import { ExecutableTestStep } from './ExecutableTestStep.js'
 import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
-import { messages } from './state.js'
-import { WorldFactory } from './WorldFactory.js'
+import { MessagesCollector } from './MessagesCollector.js'
 
 export class ExecutableTestCase {
   readonly id = newId()
@@ -18,6 +16,7 @@ export class ExecutableTestCase {
   private currentTestStepId?: string
 
   constructor(
+    private readonly messages: MessagesCollector,
     private readonly worldFactory: WorldFactory,
     private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly testCase: AssembledTestCase
@@ -37,13 +36,12 @@ export class ExecutableTestCase {
   *testSteps() {
     for (const testStep of this.testCase.testSteps) {
       this.currentTestStepId = testStep.id
-      yield new ExecutableTestStep(this, this.supportCodeLibrary, testStep)
+      yield new ExecutableTestStep(this.messages, this, this.supportCodeLibrary, testStep)
     }
   }
 
-  async setup(nodeTestContext: TestContext) {
-    messages.connect(nodeTestContext)
-    messages.push({
+  async setup() {
+    this.messages.push({
       testCaseStarted: {
         id: this.id,
         testCaseId: this.testCase.id,
@@ -57,19 +55,19 @@ export class ExecutableTestCase {
         const attachment = await makeAttachment(data, options)
         attachment.testCaseStartedId = this.id
         attachment.testStepId = this.currentTestStepId
-        messages.push({ attachment })
+        this.messages.push({ attachment })
       },
       log: async (text) => {
         const attachment = await makeLog(text)
         attachment.testCaseStartedId = this.id
         attachment.testStepId = this.currentTestStepId
-        messages.push({ attachment })
+        this.messages.push({ attachment })
       },
       link: async (url, title) => {
         const attachment = await makeLink(url, title)
         attachment.testCaseStartedId = this.id
         attachment.testStepId = this.currentTestStepId
-        messages.push({ attachment })
+        this.messages.push({ attachment })
       },
     }
     this.world = await this.worldFactory.create(this.attachmentsSupport)
@@ -78,7 +76,7 @@ export class ExecutableTestCase {
   async teardown() {
     await this.worldFactory.destroy(this.world)
 
-    messages.push({
+    this.messages.push({
       testCaseFinished: {
         testCaseStartedId: this.id,
         willBeRetried: false,

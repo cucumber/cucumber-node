@@ -1,11 +1,13 @@
 import { stripVTControlCharacters } from 'node:util'
+
 import { expect } from 'chai'
+
 import { makeTestHarness } from '../utils.js'
 
 describe('Isolation', () => {
+  let isolationOption = '--test-isolation'
   if (Number(process.versions.node.split('.')[0]) < 24) {
-    it.skip('runs as expected with --test-isolation=none', () => {})
-    return
+    isolationOption = '--experimental-test-isolation'
   }
 
   it('runs as expected with --test-isolation=none', async () => {
@@ -33,7 +35,7 @@ Given('a step', () => {})
 Given('another step', () => {})
   `
     )
-    const [output] = await harness.run('spec', '--test-isolation=none')
+    const [output] = await harness.run('spec', `${isolationOption}=none`)
     const sanitised = stripVTControlCharacters(output.trim())
     expect(sanitised).to.include('ℹ tests 6')
     expect(sanitised).to.include('ℹ suites 2')

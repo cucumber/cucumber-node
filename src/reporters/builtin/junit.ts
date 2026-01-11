@@ -3,14 +3,9 @@ import { TestEvent } from 'node:test/reporters'
 import plugin from '@cucumber/junit-xml-formatter'
 import { Envelope } from '@cucumber/messages'
 
-import { generateEnvelopes } from '../generateEnvelopes.js'
+import { enrichMessages } from '../enrichMessages.js'
 
-/*
-Signal to the runner that we are listening for messages so it should emit them
- */
-process.env.CUCUMBER_MESSAGES_LISTENING = 'true'
-
-export default async function* (source: AsyncIterable<TestEvent>): AsyncGenerator<string> {
+export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
   const output: string[] = []
   let handler: (envelope: Envelope) => void = () => {}
   plugin.formatter({
@@ -21,7 +16,7 @@ export default async function* (source: AsyncIterable<TestEvent>): AsyncGenerato
     options: {},
   })
 
-  const envelopes = generateEnvelopes(source)
+  const envelopes = enrichMessages(events)
   for await (const envelope of envelopes) {
     handler(envelope)
   }

@@ -1,6 +1,7 @@
-import { expect } from 'chai'
-import { makeTestHarness } from '../utils.js'
 import { Query } from '@cucumber/query'
+import { expect } from 'chai'
+
+import { makeTestHarness } from '../utils.js'
 
 describe('Parameters', () => {
   it('awaits a promise returned by a parameter type transformer', async () => {

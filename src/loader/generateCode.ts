@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
 import { Pickle } from '@cucumber/messages'
@@ -5,7 +7,8 @@ import { Pickle } from '@cucumber/messages'
 import { CompiledGherkin } from '../runner/index.js'
 import { mapLocation } from './mapLocation.js'
 
-export function generateCode(filename: string, gherkin: CompiledGherkin): string {
+export function generateCode(gherkin: CompiledGherkin): string {
+  const filename = path.basename(gherkin.source.uri)
   const program = t.program([...makeImports(), makeSuite(filename, gherkin)])
 
   const output = generate(
@@ -43,17 +46,22 @@ function makeImports() {
 function makeSuite(filename: string, gherkin: CompiledGherkin) {
   const suiteName = gherkin.gherkinDocument.feature?.name || gherkin.gherkinDocument.uri
   return t.expressionStatement(
-    // suite(suiteName, async () => { ... })
+    // suite(suiteName, async (ctx0) => { ... })
     t.callExpression(t.identifier('suite'), [
       t.valueToNode(suiteName),
       t.arrowFunctionExpression(
-        [],
+        [t.identifier('ctx0')],
         t.blockStatement([
-          // const plan = await prepare(gherkin)
+          // const plan = await prepare(ctx0.filePath, gherkin)
           t.variableDeclaration('const', [
             t.variableDeclarator(
               t.identifier('plan'),
-              t.awaitExpression(t.callExpression(t.identifier('prepare'), [t.valueToNode(gherkin)]))
+              t.awaitExpression(
+                t.callExpression(t.identifier('prepare'), [
+                  t.memberExpression(t.identifier('ctx0'), t.identifier('filePath')),
+                  t.valueToNode(gherkin),
+                ])
+              )
             ),
           ]),
           ...gherkin.pickles.flatMap((pickle, index) => makeTestCase(filename, pickle, index)),
@@ -90,13 +98,13 @@ function makeTestCase(filename: string, pickle: Pickle, index: number) {
             t.arrowFunctionExpression(
               [t.identifier('ctx1')],
               t.blockStatement([
-                // await testCaseN.setup(ctx1)
+                // await testCaseN.setup()
                 t.expressionStatement(
                   t.awaitExpression(
                     withLoc(
                       t.callExpression(
                         t.memberExpression(t.identifier(testCaseVar), t.identifier('setup')),
-                        [t.identifier('ctx1')]
+                        []
                       ),
                       location
                     )
