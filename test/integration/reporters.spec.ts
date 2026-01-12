@@ -95,6 +95,37 @@ Given('a step', () => {})`
     })
   })
 
+  describe('progress', () => {
+    it('outputs the progress format', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/first.feature',
+        `Feature:
+  Scenario:
+    Given a step
+    And a step
+    
+  Scenario:
+    Given a step
+    But a step
+    `
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+  Given('a step', () => {})
+    `
+      )
+
+      const [output] = await harness.run('@cucumber/node/reporters/progress')
+      const sanitised = stripVTControlCharacters(output.trim())
+
+      expect(sanitised).to.include(
+        '....\n' + '\n' + '2 scenarios (2 passed)\n' + '4 steps (4 passed)\n'
+      )
+    })
+  })
+
   describe('junit', () => {
     it('outputs a junit xml report', async () => {
       const harness = await makeTestHarness()
