@@ -14,7 +14,7 @@ export function generateCode(gherkin: CompiledGherkin): string {
   const output = generate(
     program,
     {
-      retainLines: false,
+      retainLines: true,
       compact: false,
       sourceMaps: true,
       sourceFileName: filename,

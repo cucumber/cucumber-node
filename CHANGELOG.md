@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Avoid diagnostic hack for messages ([#177](https://github.com/cucumber/cucumber-node/pull/177))
+- Use retainLines option when generating code ([#182](https://github.com/cucumber/cucumber-node/pull/182))
 
 ## [0.6.1] - 2025-12-14
 ### Fixed
