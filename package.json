@@ -34,7 +34,7 @@
     "@babel/generator": "^7.28.5",
     "@babel/types": "^7.28.5",
     "@cucumber/ci-environment": "12.0.0",
-    "@cucumber/core": "0.8.1",
+    "@cucumber/core": "0.8.3",
     "@cucumber/cucumber-expressions": "18.1.0",
     "@cucumber/gherkin": "38.0.0",
     "@cucumber/html-formatter": "22.3.0",
