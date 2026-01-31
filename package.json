@@ -41,7 +41,7 @@
     "@cucumber/junit-xml-formatter": "0.9.0",
     "@cucumber/messages": "32.0.0",
     "@cucumber/query": "^15.0.0",
-    "@cucumber/tag-expressions": "8.1.0",
+    "@cucumber/tag-expressions": "9.0.0",
     "@teppeis/multimaps": "3.0.0",
     "globby": "16.1.0",
     "stack-utils": "2.0.6"
