@@ -37,7 +37,7 @@
     "@cucumber/core": "0.8.1",
     "@cucumber/cucumber-expressions": "18.1.0",
     "@cucumber/gherkin": "38.0.0",
-    "@cucumber/html-formatter": "22.3.0",
+    "@cucumber/html-formatter": "23.0.0",
     "@cucumber/junit-xml-formatter": "0.9.0",
     "@cucumber/messages": "32.0.0",
     "@cucumber/query": "^15.0.0",
