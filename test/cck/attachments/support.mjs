@@ -35,3 +35,8 @@ When('a PDF document is attached and renamed', async (t) => {
 When('a link to {string} is attached', async (t, uri) => {
   await t.link(uri)
 })
+
+When('the string {string} is attached as {string} before a failure', async (t, text, mediaType) => {
+  await t.attach(text, { mediaType })
+  throw new Error('whoops')
+})

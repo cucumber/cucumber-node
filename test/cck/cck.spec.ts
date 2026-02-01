@@ -43,6 +43,8 @@ const IGNORABLE_KEYS = [
 const CCK_PATH = path.join(process.cwd(), 'node_modules', '@cucumber', 'compatibility-kit')
 
 const UNSUPPORTED = [
+  // not a test sample
+  'all-statuses',
   // we don't support global hooks yet
   'global-hooks',
   'global-hooks-attachments',
