@@ -75,37 +75,6 @@ Given('a step', () => {})`
     })
   })
 
-  describe('progress', () => {
-    it('outputs the progress format', async () => {
-      const harness = await makeTestHarness()
-      await harness.writeFile(
-        'features/first.feature',
-        `Feature:
-  Scenario:
-    Given a step
-    And a step
-    
-  Scenario:
-    Given a step
-    But a step
-    `
-      )
-      await harness.writeFile(
-        'features/steps.js',
-        `import { Given } from '@cucumber/node'
-  Given('a step', () => {})
-    `
-      )
-
-      const [output] = await harness.run('@cucumber/node/reporters/progress')
-      const sanitised = stripVTControlCharacters(output.trim())
-
-      expect(sanitised).to.include(
-        '....\n' + '\n' + '2 scenarios (2 passed)\n' + '4 steps (4 passed)\n'
-      )
-    })
-  })
-
   describe('pretty', () => {
     it('outputs the pretty format', async () => {
       const harness = await makeTestHarness()
@@ -143,6 +112,70 @@ Given('a step', () => {})`
 
 2 scenarios (2 passed)
 4 steps (4 passed)`)
+    })
+  })
+
+  describe('progress', () => {
+    it('outputs the progress format', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/first.feature',
+        `Feature:
+  Scenario:
+    Given a step
+    And a step
+    
+  Scenario:
+    Given a step
+    But a step
+    `
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+  Given('a step', () => {})
+    `
+      )
+
+      const [output] = await harness.run('@cucumber/node/reporters/progress')
+      const sanitised = stripVTControlCharacters(output.trim())
+
+      expect(sanitised).to.include(
+        '....\n' + '\n' + '2 scenarios (2 passed)\n' + '4 steps (4 passed)\n'
+      )
+    })
+  })
+
+  describe('progress-bar', () => {
+    it('outputs the progress-bar format', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/first.feature',
+        `Feature:
+  Scenario:
+    Given a step
+    And a step
+
+  Scenario:
+    Given a step
+    But a step
+    `
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+  Given('a step', () => {})
+    `
+      )
+
+      const [output] = await harness.run('@cucumber/node/reporters/progress-bar')
+      const sanitised = stripVTControlCharacters(output.trim())
+
+      expect(sanitised).to.include(
+        '██████████████████████████████████████████████████ 2/2 scenarios\n' +
+          '██████████████████████████████████████████████████ 4/4 steps\n' +
+          'Done'
+      )
     })
   })
 

@@ -1,14 +1,10 @@
 import { TestEvent } from 'node:test/reporters'
 
-import {
-  ProgressBarOptions,
-  ProgressBarPrinter,
-} from '@cucumber/pretty-formatter'
+import { ProgressBarOptions, ProgressBarPrinter } from '@cucumber/pretty-formatter'
 
 import { enrichMessages } from '../enrichMessages.js'
 
-const options: ProgressBarOptions = {
-}
+const options: ProgressBarOptions = {}
 
 export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
   const buffer: Array<string> = []
