@@ -1,10 +1,10 @@
-import { exec } from 'node:child_process'
 import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 
 import { Envelope } from '@cucumber/messages'
 import { Query } from '@cucumber/query'
+import * as pty from 'node-pty'
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}
@@ -26,37 +26,49 @@ class TestHarness {
   async run(
     reporter: string | Query = 'spec',
     ...extraArgs: string[]
-  ): Promise<readonly [string, string, unknown]> {
+  ): Promise<readonly [string, unknown]> {
     const query = typeof reporter === 'object' ? reporter : undefined
+
     return new Promise((resolve) => {
-      exec(
-        [
-          'node',
-          `--enable-source-maps`,
-          `--import`,
-          `@cucumber/node/bootstrap`,
-          `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
-          `--test-reporter-destination=stdout`,
-          ...extraArgs,
-          `--test`,
-          `"*.test.mjs"`,
-          `"features/**/*.feature"`,
-          `"features/**/*.feature.md"`,
-        ].join(' '),
-        {
-          cwd: this.tempDir,
-        },
-        (error, stdout, stderr) => {
-          if (query) {
-            stdout
-              .trim()
-              .split('\n')
-              .map((line) => JSON.parse(line) as Envelope)
-              .forEach((envelope) => query.update(envelope))
-          }
-          resolve([stdout, stderr, error])
+      const args = [
+        '--enable-source-maps',
+        '--import',
+        '@cucumber/node/bootstrap',
+        `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
+        '--test-reporter-destination=stdout',
+        ...extraArgs,
+        '--test',
+        '*.test.mjs',
+        'features/**/*.feature',
+        'features/**/*.feature.md',
+      ]
+
+      const ptyProcess = pty.spawn(process.execPath, args, {
+        name: process.platform === 'win32' ? '' : 'xterm-256color',
+        cols: 80,
+        rows: 24,
+        cwd: this.tempDir,
+        env: process.env as Record<string, string>,
+      })
+
+      let output = ''
+      ptyProcess.onData((data: string) => {
+        output += data
+      })
+
+      ptyProcess.onExit(({ exitCode }) => {
+        const normalizedOutput = output.replace(/\r\n/g, '\n')
+        if (query) {
+          normalizedOutput
+            .trim()
+            .split('\n')
+            .filter((line) => line.trim().startsWith('{'))
+            .map((line) => JSON.parse(line) as Envelope)
+            .forEach((envelope) => query.update(envelope))
         }
-      )
+        const error = exitCode !== 0 ? { code: exitCode } : null
+        resolve([normalizedOutput, error])
+      })
     })
   }
 }
