@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid diagnostic hack for messages ([#177](https://github.com/cucumber/cucumber-node/pull/177))
 - Use retainLines option when generating code ([#182](https://github.com/cucumber/cucumber-node/pull/182))
 
+### Fixed
+- Fix error type resolution ([#205](https://github.com/cucumber/cucumber-node/pull/205))
+
 ## [0.6.1] - 2025-12-14
 ### Fixed
 - Handle async parameter type transformers ([#169](https://github.com/cucumber/cucumber-node/pull/169))
