@@ -71,10 +71,7 @@ describe('mapTestStepResult', () => {
       details: {
         duration_ms: 100,
         error: {
-          cause: {
-            name: 'AssertionError',
-            message: 'expected true to be false',
-          },
+          cause: new Error('expected true to be false'),
         },
       },
     } as EventData.TestFail
@@ -82,7 +79,7 @@ describe('mapTestStepResult', () => {
     const result = mapTestStepResult(testEvent)
 
     expect(result.status).to.eq(TestStepResultStatus.FAILED)
-    expect(result.exception).to.deep.eq({ type: 'AssertionError' })
+    expect(result.exception).to.deep.eq({ type: 'Error' })
   })
 
   it('returns PASSED when there is no skip, todo, or error', () => {

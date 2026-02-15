@@ -20,7 +20,7 @@ export function mapTestStepResult(
     } else {
       status = TestStepResultStatus.FAILED
       exception = {
-        type: error.cause.name,
+        type: error.cause.constructor.name,
       }
     }
   }
