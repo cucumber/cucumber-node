@@ -24,14 +24,15 @@ Given('a step', (t) => {
     )
     await harness.writeFile(
       'run.js',
-      `import { spec } from 'node:test/reporters'
-import { run } from 'node:test'
+      `import { run } from 'node:test'
+import { spec } from 'node:test/reporters'
 
 run({
-    globPatterns: ['features/**/*.feature'],
+  execArgv: ['--enable-source-maps', '--import', '@cucumber/node/bootstrap'],  
+  globPatterns: ['features/**/*.feature'],
 })
-    .compose(spec)
-    .pipe(process.stdout)
+  .compose(spec)
+  .pipe(process.stdout)
 `
     )
     const [output] = await harness.execFile('./run.js')

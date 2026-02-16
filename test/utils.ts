@@ -26,7 +26,7 @@ class TestHarness {
   async execFile(file: string): Promise<readonly [string, string, unknown]> {
     return new Promise((resolve) => {
       exec(
-        ['node', `--enable-source-maps`, `--import`, `@cucumber/node/bootstrap`, file].join(' '),
+        ['node', `--enable-source-maps`, file].join(' '),
         {
           cwd: this.tempDir,
         },
