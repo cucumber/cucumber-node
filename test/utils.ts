@@ -23,6 +23,20 @@ class TestHarness {
     await writeFile(path.join(this.tempDir, target), content, { encoding: 'utf-8' })
   }
 
+  async execFile(file: string): Promise<readonly [string, string, unknown]> {
+    return new Promise((resolve) => {
+      exec(
+        ['node', `--enable-source-maps`, `--import`, `@cucumber/node/bootstrap`, file].join(' '),
+        {
+          cwd: this.tempDir,
+        },
+        (error, stdout, stderr) => {
+          resolve([stdout, stderr, error])
+        }
+      )
+    })
+  }
+
   async run(
     reporter: string | Query = 'spec',
     ...extraArgs: string[]
