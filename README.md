@@ -149,6 +149,26 @@ Some Cucumber formatters are included as Node.js test reporters:
 - JUnit `--test-reporter=@cucumber/node/reporters/junit --test-reporter-destination=./TEST-cucumber.xml`
 - Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`
 
+## Running programmatically
+
+You can use [the `run` function](https://nodejs.org/api/test.html#runoptions) exposed by the `node:test` module to run your Cucumber tests programatically:
+
+```javascript
+import { run } from 'node:test'
+import { spec } from 'node:test/reporters'
+
+run({
+  execArgv: [
+    '--enable-source-maps',
+    '--import',
+    '@cucumber/node/bootstrap'
+  ],
+  globPatterns: ['features/**/*.feature'],
+})
+  .compose(spec)
+  .pipe(process.stdout)
+```
+
 ## Mixing tests
 
 You can execute Cucumber tests and normal JavaScript tests in the same test run - cucumber-node won't interfere with the other tests. But the reporters mentioned above will only report on the Cucumber tests in your run.
