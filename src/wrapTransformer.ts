@@ -1,6 +1,6 @@
-import { NewParameterType } from '@cucumber/core'
+import type { NewParameterType } from '@cucumber/core'
 
-import { TestCaseContext, TransformerFunction } from './types.js'
+import type { TestCaseContext, TransformerFunction } from './types.js'
 
 /*
  * Turn the user-supplied transformer function into one we can provide to

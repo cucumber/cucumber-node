@@ -1,12 +1,12 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-import { Envelope } from '@cucumber/messages'
+import type { Envelope } from '@cucumber/messages'
 import { expect } from 'chai'
 
 import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
 import { MessagesDeframer } from './MessagesDeframer.js'
-import { EnvelopeFromFile } from './types.js'
+import type { EnvelopeFromFile } from './types.js'
 
 describe('MessagesDeframer', () => {
   it('correctly reassembles envelopes from randomly chunked ndjson', () => {
@@ -26,7 +26,7 @@ describe('MessagesDeframer', () => {
       }))
 
     // break into random-length chunks, simulating ipc behaviour
-    const ndjson = expectedEnvelopes.map((e) => JSON.stringify(e)).join('\n') + '\n'
+    const ndjson = `${expectedEnvelopes.map((e) => JSON.stringify(e)).join('\n')}\n`
     const chunks: Buffer<ArrayBuffer>[] = []
     let remaining = ndjson
     while (remaining.length > 0) {
@@ -57,12 +57,10 @@ describe('MessagesDeframer', () => {
     const deframer = new MessagesDeframer(subject)
 
     // valid, invalid, valid
-    const input =
-      [
-        '{"file":"a.feature","envelope":{"source":{"uri":"a.feature"}}}',
-        '{not valid json}',
-        '{"file":"b.feature","envelope":{"source":{"uri":"b.feature"}}}',
-      ].join('\n') + '\n'
+    const input = `{"file":"a.feature","envelope":{"source":{"uri":"a.feature"}}}
+{not valid json}
+{"file":"b.feature","envelope":{"source":{"uri":"b.feature"}}}
+`
 
     deframer.handle(Buffer.from(input))
 

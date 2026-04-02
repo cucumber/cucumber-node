@@ -1,23 +1,23 @@
-import { TestContext } from 'node:test'
+import type { TestContext } from 'node:test'
 import { styleText } from 'node:util'
 
 // @ts-expect-error incomplete types
 import { highlight } from '@babel/code-frame'
 import {
   AmbiguousError,
-  AssembledTestStep,
+  type AssembledTestStep,
   DataTable,
-  SupportCodeLibrary,
+  type SupportCodeLibrary,
   UndefinedError,
 } from '@cucumber/core'
-import { TestStepResult } from '@cucumber/messages'
+import type { TestStepResult } from '@cucumber/messages'
 
 import { makeTimestamp } from '../makeTimestamp.js'
 import { newId } from '../newId.js'
-import { TestCaseContext } from '../types.js'
-import { ExecutableTestCase } from './ExecutableTestCase.js'
+import type { TestCaseContext } from '../types.js'
+import type { ExecutableTestCase } from './ExecutableTestCase.js'
+import type { MessagesCollector } from './MessagesCollector.js'
 import { makeSnippets } from './makeSnippets.js'
-import { MessagesCollector } from './MessagesCollector.js'
 
 export class ExecutableTestStep {
   constructor(

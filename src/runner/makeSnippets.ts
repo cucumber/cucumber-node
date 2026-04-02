@@ -1,10 +1,10 @@
 import path from 'node:path'
 
 import { generate } from '@babel/generator'
+import type { TSType } from '@babel/types'
 import * as t from '@babel/types'
-import { TSType } from '@babel/types'
-import { SupportCodeLibrary } from '@cucumber/core'
-import { PickleStep, PickleStepType, Snippet } from '@cucumber/messages'
+import type { SupportCodeLibrary } from '@cucumber/core'
+import { type PickleStep, PickleStepType, type Snippet } from '@cucumber/messages'
 
 const TYPESCRIPT_EXTENSIONS = ['.ts', '.cts', '.mts', '.tsx']
 

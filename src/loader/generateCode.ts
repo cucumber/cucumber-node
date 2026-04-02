@@ -2,9 +2,9 @@ import path from 'node:path'
 
 import { generate } from '@babel/generator'
 import * as t from '@babel/types'
-import { Pickle } from '@cucumber/messages'
+import type { Pickle } from '@cucumber/messages'
 
-import { CompiledGherkin } from '../runner/index.js'
+import type { CompiledGherkin } from '../runner/index.js'
 import { mapLocation } from './mapLocation.js'
 
 export function generateCode(gherkin: CompiledGherkin): string {

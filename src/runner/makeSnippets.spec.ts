@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-import { buildSupportCode, SupportCodeLibrary } from '@cucumber/core'
-import { PickleStep, PickleStepType } from '@cucumber/messages'
+import { buildSupportCode, type SupportCodeLibrary } from '@cucumber/core'
+import { type PickleStep, PickleStepType } from '@cucumber/messages'
 import { expect } from 'chai'
 
 import { makeSnippets } from './makeSnippets.js'

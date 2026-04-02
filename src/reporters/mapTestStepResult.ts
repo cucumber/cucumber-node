@@ -1,12 +1,17 @@
-import { EventData } from 'node:test'
+import type { EventData } from 'node:test'
 
-import { TestStepResult, TestStepResultStatus, TimeConversion } from '@cucumber/messages'
+import {
+  type Exception,
+  type TestStepResult,
+  TestStepResultStatus,
+  TimeConversion,
+} from '@cucumber/messages'
 
 export function mapTestStepResult(
   testEvent: EventData.TestFail | EventData.TestPass
 ): TestStepResult {
   let status: TestStepResultStatus = TestStepResultStatus.PASSED
-  let exception = undefined
+  let exception: Exception | undefined
   if (testEvent.skip) {
     status = TestStepResultStatus.SKIPPED
   } else if (testEvent.todo) {

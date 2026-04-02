@@ -1,5 +1,5 @@
-import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
-import { EnvelopeFromFile } from './types.js'
+import type { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
+import type { EnvelopeFromFile } from './types.js'
 
 /**
  * Handles envelopes from files arriving in chunks, re-assembles them into discrete

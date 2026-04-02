@@ -1,6 +1,6 @@
 import { makeSourceReference } from './makeSourceReference.js'
 import { coreBuilder, extraBuilder } from './support/index.js'
-import {
+import type {
   AttachmentsSupport,
   HookFunction,
   HookOptions,
@@ -10,8 +10,8 @@ import {
 } from './types.js'
 import { wrapTransformer } from './wrapTransformer.js'
 
-export * from './types.js'
 export { DataTable } from '@cucumber/core'
+export * from './types.js'
 
 /**
  * Define a custom world creator and (optional) destroyer. These will be use to create and
