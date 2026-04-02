@@ -1,9 +1,9 @@
 import { pathToFileURL } from 'node:url'
 
-import { SupportCodeLibrary } from '@cucumber/core'
+import type { SupportCodeLibrary } from '@cucumber/core'
 import { globby } from 'globby'
 
-import { coreBuilder, extraBuilder, WorldFactory } from '../support/index.js'
+import { coreBuilder, extraBuilder, type WorldFactory } from '../support/index.js'
 
 interface UsableSupport {
   supportCodeLibrary: SupportCodeLibrary

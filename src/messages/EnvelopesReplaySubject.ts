@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events'
 
-import { EnvelopeFromFile } from './types.js'
+import type { EnvelopeFromFile } from './types.js'
 
 /**
  * A minimal implementation of a "ReplaySubject" (ala rxjs) to wrap an event emitter

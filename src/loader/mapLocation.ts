@@ -1,5 +1,5 @@
-import * as t from '@babel/types'
-import { Location } from '@cucumber/messages'
+import type * as t from '@babel/types'
+import type { Location } from '@cucumber/messages'
 
 export function mapLocation(filename: string, location?: Location): t.SourceLocation {
   const position = mapPosition(location)

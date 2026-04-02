@@ -1,17 +1,21 @@
-import { EventData } from 'node:test'
-import { TestEvent } from 'node:test/reporters'
+import type { EventData } from 'node:test'
+import type { TestEvent } from 'node:test/reporters'
 
 import {
-  Envelope,
-  TestStepFinished,
-  TestStepResult,
+  type Envelope,
+  type TestStepFinished,
+  type TestStepResult,
   TestStepResultStatus,
-  TestStepStarted,
+  type TestStepStarted,
 } from '@cucumber/messages'
 import { ArrayMultimap } from '@teppeis/multimaps'
 
 import { makeTimestamp } from '../makeTimestamp.js'
-import { EnvelopeFromFile, envelopesSubject, setupMessageListening } from '../messages/index.js'
+import {
+  type EnvelopeFromFile,
+  envelopesSubject,
+  setupMessageListening,
+} from '../messages/index.js'
 import { newId } from '../newId.js'
 import { mapTestStepResult } from './mapTestStepResult.js'
 import { meta } from './meta.js'
@@ -98,7 +102,7 @@ function isFromCucumberStep(eventData: EventData.TestComplete) {
 }
 
 function deriveKey(message: TestStepStarted | TestStepFinished) {
-  return message.testCaseStartedId + '/' + message.testStepId
+  return `${message.testCaseStartedId}/${message.testStepId}`
 }
 
 function isNonSuccess(testStepResult: TestStepResult) {

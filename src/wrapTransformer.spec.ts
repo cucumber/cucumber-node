@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import { TestCaseContext } from './types.js'
+import type { TestCaseContext } from './types.js'
 import { wrapTransformer } from './wrapTransformer.js'
 
 describe('wrapTransformer', () => {
@@ -12,7 +12,8 @@ describe('wrapTransformer', () => {
 
   it('prepends context to args and uses world as this', () => {
     const transformer = function (
-      this: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: test fixture needs an intentionally loose this context
+      this: any,
       context: TestCaseContext,
       match1: string,
       match2: string

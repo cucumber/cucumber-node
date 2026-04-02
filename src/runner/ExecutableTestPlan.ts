@@ -1,9 +1,9 @@
-import { AssembledTestCase, AssembledTestPlan, SupportCodeLibrary } from '@cucumber/core'
+import type { AssembledTestCase, AssembledTestPlan, SupportCodeLibrary } from '@cucumber/core'
 import { ensure } from '@cucumber/junit-xml-formatter/dist/src/helpers.js'
 
-import { WorldFactory } from '../support/index.js'
+import type { WorldFactory } from '../support/index.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
-import { MessagesCollector } from './MessagesCollector.js'
+import type { MessagesCollector } from './MessagesCollector.js'
 
 export class ExecutableTestPlan {
   private readonly testCaseByPickleId: Map<string, AssembledTestCase> = new Map()
@@ -12,7 +12,7 @@ export class ExecutableTestPlan {
     private readonly messages: MessagesCollector,
     private readonly worldFactory: WorldFactory,
     private readonly supportCodeLibrary: SupportCodeLibrary,
-    private readonly plan: AssembledTestPlan
+    plan: AssembledTestPlan
   ) {
     for (const testCase of plan.testCases) {
       this.testCaseByPickleId.set(testCase.pickleId, testCase)

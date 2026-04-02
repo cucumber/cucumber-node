@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Readable } from 'node:stream'
-import { TestContext } from 'node:test'
+// biome-ignore-all lint/suspicious/noExplicitAny: public API types intentionally permit any-shaped worlds and hooks
+import type { Readable } from 'node:stream'
+import type { TestContext } from 'node:test'
 
 /**
  * An object for sharing state between test steps.

@@ -3,7 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 
 import detectCiEnvironment from '@cucumber/ci-environment'
-import { Meta, version as protocolVersion } from '@cucumber/messages'
+import { type Meta, version as protocolVersion } from '@cucumber/messages'
 
 const { version } = JSON.parse(
   await fs.readFile(path.join(import.meta.dirname, '..', '..', 'package.json'), {

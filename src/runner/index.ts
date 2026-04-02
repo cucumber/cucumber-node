@@ -1,5 +1,5 @@
 import { makeTestPlan } from '@cucumber/core'
-import { GherkinDocument, Pickle, Source } from '@cucumber/messages'
+import type { GherkinDocument, Pickle, Source } from '@cucumber/messages'
 
 import { envelopesSubject, setupMessageWriting } from '../messages/index.js'
 import { newId } from '../newId.js'

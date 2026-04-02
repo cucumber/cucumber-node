@@ -1,5 +1,5 @@
 import { finished } from 'node:stream/promises'
-import { TestEvent } from 'node:test/reporters'
+import type { TestEvent } from 'node:test/reporters'
 
 import { CucumberHtmlStream } from '@cucumber/html-formatter'
 

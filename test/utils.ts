@@ -3,8 +3,8 @@ import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promis
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 
-import { Envelope } from '@cucumber/messages'
-import { Query } from '@cucumber/query'
+import type { Envelope } from '@cucumber/messages'
+import type { Query } from '@cucumber/query'
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}
@@ -66,7 +66,9 @@ class TestHarness {
               .trim()
               .split('\n')
               .map((line) => JSON.parse(line) as Envelope)
-              .forEach((envelope) => query.update(envelope))
+              .forEach((envelope) => {
+                query.update(envelope)
+              })
           }
           resolve([stdout, stderr, error])
         }
