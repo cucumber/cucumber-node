@@ -82,6 +82,8 @@ class TestHarness {
       })
 
       ptyProcess.onExit(({ exitCode }) => {
+        // TEMP: dump raw pty bytes to diagnose Windows newline handling
+        process.stderr.write(`\n[DEBUG_PTY_RAW] ${JSON.stringify(captured)}\n`)
         const normalized = captured
           .replace(/\r\n/g, '\n')
           // strip OSC sequences (e.g. terminal title) which Windows ConPty emits at startup;
