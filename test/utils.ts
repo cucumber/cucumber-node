@@ -1,10 +1,16 @@
 import { exec } from 'node:child_process'
-import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promises'
+import { copyFile, cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import type { Envelope } from '@cucumber/messages'
 import type { Query } from '@cucumber/query'
 import * as pty from 'node-pty'
+
+const ESC = String.fromCharCode(0x1b)
+const BEL = String.fromCharCode(0x07)
+const stripOscRegex = new RegExp(`${ESC}\\][^${BEL}${ESC}]*(?:${BEL}|${ESC}\\\\)`, 'g')
+
+let messageFileSeq = 0
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}
@@ -42,21 +48,26 @@ class TestHarness {
     ...extraArgs: string[]
   ): Promise<readonly [string, unknown]> {
     const query = typeof reporter === 'object' ? reporter : undefined
+    // when collecting envelopes for a query, route the message reporter to a file so the
+    // (potentially long) ndjson bypasses the pty entirely and isn't subject to terminal wrapping
+    const messageFile = query
+      ? path.join(tmpdir(), `cucumber-node-messages-${process.pid}-${++messageFileSeq}.ndjson`)
+      : undefined
 
-    return new Promise((resolve) => {
-      const args = [
-        '--enable-source-maps',
-        '--import',
-        '@cucumber/node/bootstrap',
-        `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
-        '--test-reporter-destination=stdout',
-        ...extraArgs,
-        '--test',
-        '*.test.mjs',
-        'features/**/*.feature',
-        'features/**/*.feature.md',
-      ]
+    const args = [
+      '--enable-source-maps',
+      '--import',
+      '@cucumber/node/bootstrap',
+      `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
+      `--test-reporter-destination=${messageFile ?? 'stdout'}`,
+      ...extraArgs,
+      '--test',
+      '*.test.mjs',
+      'features/**/*.feature',
+      'features/**/*.feature.md',
+    ]
 
+    const [output, error] = await new Promise<readonly [string, unknown]>((resolve) => {
       const ptyProcess = pty.spawn(process.execPath, args, {
         name: process.platform === 'win32' ? '' : 'xterm-256color',
         cols: 80,
@@ -65,27 +76,32 @@ class TestHarness {
         env: process.env as Record<string, string>,
       })
 
-      let output = ''
+      let captured = ''
       ptyProcess.onData((data: string) => {
-        output += data
+        captured += data
       })
 
       ptyProcess.onExit(({ exitCode }) => {
-        const normalizedOutput = output.replace(/\r\n/g, '\n')
-        if (query) {
-          normalizedOutput
-            .trim()
-            .split('\n')
-            .filter((line) => line.trim().startsWith('{'))
-            .map((line) => JSON.parse(line) as Envelope)
-            .forEach((envelope) => {
-              query.update(envelope)
-            })
-        }
-        const error = exitCode !== 0 ? { code: exitCode } : null
-        resolve([normalizedOutput, error])
+        const normalized = captured
+          .replace(/\r\n/g, '\n')
+          // strip OSC sequences (e.g. terminal title) which Windows ConPty emits at startup;
+          // Node's stripVTControlCharacters does not handle them correctly
+          .replace(stripOscRegex, '')
+        resolve([normalized, exitCode !== 0 ? { code: exitCode } : null])
       })
     })
+
+    if (query && messageFile) {
+      const ndjson = await readFile(messageFile, 'utf-8')
+      await rm(messageFile, { force: true })
+      for (const line of ndjson.split('\n')) {
+        if (line.trim().startsWith('{')) {
+          query.update(JSON.parse(line) as Envelope)
+        }
+      }
+    }
+
+    return [output, error]
   }
 }
 
