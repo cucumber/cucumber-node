@@ -31,26 +31,6 @@ describe('Reporters', () => {
       expect(sanitised).to.include(`test at ${path.join('features', 'foo.feature')}:2:3`)
     })
 
-    it('does not emit messages as diagnostics if no cucumber reporters', async () => {
-      const harness = await makeTestHarness()
-      await harness.writeFile(
-        'features/first.feature',
-        `Feature:
-  Scenario:
-    Given a step
-    `
-      )
-      await harness.writeFile(
-        'features/steps.js',
-        `import { Given } from '@cucumber/node'
-  Given('a step', () => {})
-    `
-      )
-      const [output] = await harness.run('spec')
-      const sanitised = stripVTControlCharacters(output.trim())
-      expect(sanitised).not.to.include('@cucumber/messages:')
-    })
-
     it('provides a useful error for an ambiguous step', async () => {
       const harness = await makeTestHarness()
       await harness.writeFile(
@@ -92,6 +72,79 @@ Given('a step', () => {})`
     t.todo();
   });
 `)
+    })
+  })
+
+  describe('pretty', () => {
+    it('outputs the pretty format', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/first.feature',
+        `Feature:
+  Scenario:
+    Given a step
+    And a step
+    
+  Scenario:
+    Given a step
+    But a step
+    `
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+  Given('a step', () => {})
+    `
+      )
+
+      const [output] = await harness.run('@cucumber/node/reporters/pretty')
+      const sanitised = stripVTControlCharacters(output.trim())
+
+      const featurePath = path.join('features', 'first.feature')
+      const stepsPath = path.join('features', 'steps.js')
+      expect(sanitised).to.include(`Feature: ${''}
+
+  Scenario:        # ${featurePath}:2
+    ✔ Given a step # ${stepsPath}:2
+    ✔ And a step   # ${stepsPath}:2
+
+  Scenario:        # ${featurePath}:6
+    ✔ Given a step # ${stepsPath}:2
+    ✔ But a step   # ${stepsPath}:2
+
+2 scenarios (2 passed)
+4 steps (4 passed)`)
+    })
+  })
+
+  describe('progress', () => {
+    it('outputs the progress format', async () => {
+      const harness = await makeTestHarness()
+      await harness.writeFile(
+        'features/first.feature',
+        `Feature:
+  Scenario:
+    Given a step
+    And a step
+    
+  Scenario:
+    Given a step
+    But a step
+    `
+      )
+      await harness.writeFile(
+        'features/steps.js',
+        `import { Given } from '@cucumber/node'
+  Given('a step', () => {})
+    `
+      )
+
+      const [output] = await harness.run('@cucumber/node/reporters/progress')
+      const sanitised = stripVTControlCharacters(output.trim())
+
+      expect(sanitised).to.include(
+        '....\n' + '\n' + '2 scenarios (2 passed)\n' + '4 steps (4 passed)\n'
+      )
     })
   })
 

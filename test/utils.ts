@@ -1,10 +1,11 @@
-import { exec } from 'node:child_process'
-import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promises'
+import { exec, spawn } from 'node:child_process'
+import { copyFile, cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-
 import type { Envelope } from '@cucumber/messages'
 import type { Query } from '@cucumber/query'
+
+let messageFileSeq = 0
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}
@@ -40,40 +41,60 @@ class TestHarness {
   async run(
     reporter: string | Query = 'spec',
     ...extraArgs: string[]
-  ): Promise<readonly [string, string, unknown]> {
+  ): Promise<readonly [string, unknown]> {
     const query = typeof reporter === 'object' ? reporter : undefined
-    return new Promise((resolve) => {
-      exec(
-        [
-          'node',
-          `--enable-source-maps`,
-          `--import`,
-          `@cucumber/node/bootstrap`,
-          `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
-          `--test-reporter-destination=stdout`,
-          ...extraArgs,
-          `--test`,
-          `"*.test.mjs"`,
-          `"features/**/*.feature"`,
-          `"features/**/*.feature.md"`,
-        ].join(' '),
-        {
-          cwd: this.tempDir,
-        },
-        (error, stdout, stderr) => {
-          if (query) {
-            stdout
-              .trim()
-              .split('\n')
-              .map((line) => JSON.parse(line) as Envelope)
-              .forEach((envelope) => {
-                query.update(envelope)
-              })
-          }
-          resolve([stdout, stderr, error])
-        }
-      )
+    // when collecting envelopes for a query, route the message reporter to a file so long
+    // ndjson payloads bypass stdout (which on Windows is line-buffered and would interleave
+    // awkwardly with anything else the runner emits)
+    const messageFile = query
+      ? path.join(tmpdir(), `cucumber-node-messages-${process.pid}-${++messageFileSeq}.ndjson`)
+      : undefined
+
+    const args = [
+      '--enable-source-maps',
+      '--import',
+      '@cucumber/node/bootstrap',
+      `--test-reporter=${query ? '@cucumber/node/reporters/message' : reporter}`,
+      `--test-reporter-destination=${messageFile ?? 'stdout'}`,
+      ...extraArgs,
+      '--test',
+      '*.test.mjs',
+      'features/**/*.feature',
+      'features/**/*.feature.md',
+    ]
+
+    const [output, error] = await new Promise<readonly [string, unknown]>((resolve) => {
+      const child = spawn(process.execPath, args, {
+        cwd: this.tempDir,
+        // FORCE_COLOR makes node:util.styleText emit ANSI escapes even though stdout
+        // isn't a TTY here, so we exercise the formatters' styled-output path
+        env: { ...process.env, FORCE_COLOR: '1' },
+      })
+
+      let captured = ''
+      child.stdout.on('data', (chunk) => {
+        captured += chunk.toString()
+      })
+      child.stderr.on('data', (chunk) => {
+        captured += chunk.toString()
+      })
+
+      child.on('close', (code) => {
+        resolve([captured, code !== 0 ? { code } : null])
+      })
     })
+
+    if (query && messageFile) {
+      const ndjson = await readFile(messageFile, 'utf-8')
+      await rm(messageFile, { force: true })
+      for (const line of ndjson.split('\n')) {
+        if (line.trim().startsWith('{')) {
+          query.update(JSON.parse(line) as Envelope)
+        }
+      }
+    }
+
+    return [output, error]
   }
 }
 
