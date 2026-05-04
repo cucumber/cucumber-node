@@ -1,4 +1,4 @@
-import { WriteStream } from 'node:tty'
+import type { WriteStream } from 'node:tty'
 
 /**
  * Captures attempts to write to a stream, but otherwise passes through all accessors. Useful for

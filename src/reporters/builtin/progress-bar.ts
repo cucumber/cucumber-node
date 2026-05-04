@@ -1,6 +1,6 @@
-import { TestEvent } from 'node:test/reporters'
+import type { TestEvent } from 'node:test/reporters'
 
-import { ProgressBarOptions, ProgressBarPrinter } from '@cucumber/pretty-formatter'
+import { type ProgressBarOptions, ProgressBarPrinter } from '@cucumber/pretty-formatter'
 
 import { enrichMessages } from '../enrichMessages.js'
 

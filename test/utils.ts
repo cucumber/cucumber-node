@@ -1,10 +1,10 @@
+import { exec } from 'node:child_process'
 import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-
-import * as pty from 'node-pty'
 import type { Envelope } from '@cucumber/messages'
 import type { Query } from '@cucumber/query'
+import * as pty from 'node-pty'
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}

@@ -1,6 +1,6 @@
-import { TestEvent } from 'node:test/reporters'
+import type { TestEvent } from 'node:test/reporters'
 
-import { PrettyOptions, PrettyPrinter } from '@cucumber/pretty-formatter'
+import { type PrettyOptions, PrettyPrinter } from '@cucumber/pretty-formatter'
 
 import { enrichMessages } from '../enrichMessages.js'
 import { proxyStream } from '../proxyStream.js'
