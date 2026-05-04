@@ -5,8 +5,8 @@
 ```ts
 
 import { DataTable } from '@cucumber/core';
-import { Readable } from 'node:stream';
-import { TestContext } from 'node:test';
+import type { Readable } from 'node:stream';
+import type { TestContext } from 'node:test';
 
 // @public
 export function After(fn: HookFunction): void;

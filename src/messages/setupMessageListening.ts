@@ -1,8 +1,7 @@
 import { unlinkSync } from 'node:fs'
 import { createServer } from 'node:net'
-
 import { deriveSocketPath } from './deriveSocketPath.js'
-import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
+import type { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
 import { MessagesDeframer } from './MessagesDeframer.js'
 
 export async function setupMessageListening(subject: EnvelopesReplaySubject) {

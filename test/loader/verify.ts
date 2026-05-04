@@ -3,7 +3,7 @@
  * terminal. Includes syntax highlighting.
  */
 
-import { LoadFnOutput, LoadHookContext } from 'node:module'
+import type { LoadFnOutput, LoadHookContext } from 'node:module'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
@@ -18,4 +18,4 @@ const transpiled = await load(
   () => ({}) as LoadFnOutput
 )
 
-process.stdout.write('\n' + highlight(transpiled.source) + '\n')
+process.stdout.write(`\n${highlight(transpiled.source)}\n`)

@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["./node_modules/@cucumber/biome-config/base.json"],
+  "files": {
+    "includes": ["!test/cck/**/*.mjs"]
+  },
+  "overrides": [
+    {
+      "includes": ["src/**/*.spec.ts", "test/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
+    }
+  ]
+}

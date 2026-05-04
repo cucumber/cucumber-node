@@ -1,12 +1,12 @@
-import { AssembledTestCase, SupportCodeLibrary } from '@cucumber/core'
+import type { AssembledTestCase, SupportCodeLibrary } from '@cucumber/core'
 
 import { makeTimestamp } from '../makeTimestamp.js'
 import { newId } from '../newId.js'
-import { WorldFactory } from '../support/index.js'
-import { AttachmentsSupport, World } from '../types.js'
+import type { WorldFactory } from '../support/index.js'
+import type { AttachmentsSupport, World } from '../types.js'
 import { ExecutableTestStep } from './ExecutableTestStep.js'
+import type { MessagesCollector } from './MessagesCollector.js'
 import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
-import { MessagesCollector } from './MessagesCollector.js'
 
 export class ExecutableTestCase {
   readonly id = newId()

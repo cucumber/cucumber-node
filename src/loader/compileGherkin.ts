@@ -10,7 +10,7 @@ import {
 import { SourceMediaType } from '@cucumber/messages'
 
 import { newId } from '../newId.js'
-import { CompiledGherkin } from '../runner/index.js'
+import type { CompiledGherkin } from '../runner/index.js'
 
 export function compileGherkin(uri: string, data: string): CompiledGherkin {
   const mediaType =

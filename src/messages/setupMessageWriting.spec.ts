@@ -1,7 +1,6 @@
-import { createServer, Server, Socket } from 'node:net'
+import { createServer, type Server, type Socket } from 'node:net'
 
 import { SourceMediaType } from '@cucumber/messages'
-
 import { deriveSocketPath } from './deriveSocketPath.js'
 import { EnvelopesReplaySubject } from './EnvelopesReplaySubject.js'
 import { setupMessageWriting } from './setupMessageWriting.js'

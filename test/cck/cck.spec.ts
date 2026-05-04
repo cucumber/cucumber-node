@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
-import { Envelope } from '@cucumber/messages'
+import type { Envelope } from '@cucumber/messages'
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
 import { globby, globbySync } from 'globby'
@@ -97,7 +97,7 @@ describe('Cucumber Compatibility Kit', () => {
             '@cucumber/node/reporters/message',
             `${isolationOption}=${isolationMode}`
           )
-          const expectedOutput = await readFile(path.join(directory, suite + '.ndjson'), {
+          const expectedOutput = await readFile(path.join(directory, `${suite}.ndjson`), {
             encoding: 'utf-8',
           })
 

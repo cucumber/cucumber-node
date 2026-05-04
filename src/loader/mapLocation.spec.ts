@@ -1,4 +1,4 @@
-import { Location } from '@cucumber/messages'
+import type { Location } from '@cucumber/messages'
 import { expect } from 'chai'
 
 import { mapLocation } from './mapLocation.js'

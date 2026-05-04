@@ -1,9 +1,9 @@
-import { Readable } from 'node:stream'
+import type { Readable } from 'node:stream'
 
-import { Attachment, AttachmentContentEncoding } from '@cucumber/messages'
+import { type Attachment, AttachmentContentEncoding } from '@cucumber/messages'
 
 import { makeTimestamp } from '../makeTimestamp.js'
-import { AttachmentOptions } from '../types.js'
+import type { AttachmentOptions } from '../types.js'
 
 const LOG_MEDIA_TYPE = 'text/x.cucumber.log+plain'
 const LINK_MEDIA_TYPE = 'text/uri-list'

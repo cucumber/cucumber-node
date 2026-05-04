@@ -2,9 +2,9 @@ import { copyFile, cp, mkdir, mkdtemp, symlink, writeFile } from 'node:fs/promis
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 
-import { Envelope } from '@cucumber/messages'
-import { Query } from '@cucumber/query'
 import * as pty from 'node-pty'
+import type { Envelope } from '@cucumber/messages'
+import type { Query } from '@cucumber/query'
 
 class TestHarness {
   constructor(private readonly tempDir: string) {}
@@ -21,6 +21,20 @@ class TestHarness {
 
   async writeFile(target: string, content: string) {
     await writeFile(path.join(this.tempDir, target), content, { encoding: 'utf-8' })
+  }
+
+  async execFile(file: string): Promise<readonly [string, string, unknown]> {
+    return new Promise((resolve) => {
+      exec(
+        ['node', `--enable-source-maps`, file].join(' '),
+        {
+          cwd: this.tempDir,
+        },
+        (error, stdout, stderr) => {
+          resolve([stdout, stderr, error])
+        }
+      )
+    })
   }
 
   async run(
@@ -64,7 +78,9 @@ class TestHarness {
             .split('\n')
             .filter((line) => line.trim().startsWith('{'))
             .map((line) => JSON.parse(line) as Envelope)
-            .forEach((envelope) => query.update(envelope))
+            .forEach((envelope) => {
+              query.update(envelope)
+            })
         }
         const error = exitCode !== 0 ? { code: exitCode } : null
         resolve([normalizedOutput, error])

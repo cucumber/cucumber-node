@@ -1,4 +1,4 @@
-import { EventData } from 'node:test'
+import type { EventData } from 'node:test'
 
 import { TestStepResultStatus } from '@cucumber/messages'
 import { expect } from 'chai'

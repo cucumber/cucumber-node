@@ -1,4 +1,4 @@
-import { AttachmentsSupport, World } from '../types.js'
+import type { AttachmentsSupport, World } from '../types.js'
 import { WorldFactory } from './WorldFactory.js'
 
 export class ExtraSupportCodeBuilder {

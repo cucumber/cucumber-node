@@ -1,7 +1,7 @@
-import { TestEvent } from 'node:test/reporters'
+import type { TestEvent } from 'node:test/reporters'
 
 import plugin from '@cucumber/junit-xml-formatter'
-import { Envelope } from '@cucumber/messages'
+import type { Envelope } from '@cucumber/messages'
 
 import { enrichMessages } from '../enrichMessages.js'
 
