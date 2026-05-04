@@ -100,15 +100,17 @@ Given('a step', () => {})`
       const [output] = await harness.run('@cucumber/node/reporters/pretty')
       const sanitised = stripVTControlCharacters(output.trim())
 
-      expect(sanitised).to.include(`Feature: 
+      const featurePath = path.join('features', 'first.feature')
+      const stepsPath = path.join('features', 'steps.js')
+      expect(sanitised).to.include(`Feature: ${''}
 
-  Scenario:        # features/first.feature:2
-    ✔ Given a step # features/steps.js:2
-    ✔ And a step   # features/steps.js:2
+  Scenario:        # ${featurePath}:2
+    ✔ Given a step # ${stepsPath}:2
+    ✔ And a step   # ${stepsPath}:2
 
-  Scenario:        # features/first.feature:6
-    ✔ Given a step # features/steps.js:2
-    ✔ But a step   # features/steps.js:2
+  Scenario:        # ${featurePath}:6
+    ✔ Given a step # ${stepsPath}:2
+    ✔ But a step   # ${stepsPath}:2
 
 2 scenarios (2 passed)
 4 steps (4 passed)`)
