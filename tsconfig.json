@@ -8,7 +8,6 @@
     "moduleResolution": "NodeNext",
     "types": ["node", "mocha", "chai"],
     "declaration": true,
-    "outDir": "lib",
     "inlineSourceMap": true
   }
 }

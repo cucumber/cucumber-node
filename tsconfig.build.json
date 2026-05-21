@@ -3,6 +3,7 @@
   "include": ["src"],
   "exclude": ["src/**/*.spec.*"],
   "compilerOptions": {
-    "rootDir": "src"
+    "rootDir": "src",
+    "outDir": "dist"
   }
 }

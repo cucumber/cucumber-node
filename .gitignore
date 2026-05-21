@@ -1,6 +1,6 @@
 _site
 coverage
-lib
+dist
 node_modules
 tmp
 tsdoc-metadata.json

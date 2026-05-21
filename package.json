@@ -6,13 +6,13 @@
   "type": "module",
   "repository": "github:cucumber/cucumber-node",
   "exports": {
-    ".": "./lib/index.js",
-    "./bootstrap": "./lib/bootstrap/index.js",
-    "./reporters/*": "./lib/reporters/builtin/*.js",
-    "./runner": "./lib/runner/index.js"
+    ".": "./dist/index.js",
+    "./bootstrap": "./dist/bootstrap/index.js",
+    "./reporters/*": "./dist/reporters/builtin/*.js",
+    "./runner": "./dist/runner/index.js"
   },
   "files": [
-    "lib/"
+    "dist/"
   ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
