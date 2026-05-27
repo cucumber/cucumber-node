@@ -4,6 +4,6 @@
   "exclude": ["src/**/*.spec.*"],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "lib"
   }
 }
