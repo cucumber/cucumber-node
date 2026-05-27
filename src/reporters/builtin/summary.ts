@@ -1,0 +1,27 @@
+import type { TestEvent } from 'node:test/reporters'
+
+import { type SummaryOptions, SummaryPrinter } from '@cucumber/pretty-formatter'
+
+import { enrichMessages } from '../enrichMessages.js'
+import { formatCode } from '../formatCode.js'
+import { proxyStream } from '../proxyStream.js'
+
+const options: SummaryOptions = {
+  formatCode,
+}
+
+export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
+  const buffer: Array<string> = []
+  const stream = proxyStream(process.stdout, (content: string) => buffer.push(content))
+  const printer = new SummaryPrinter({ stream, options })
+  const envelopes = enrichMessages(events)
+  for await (const envelope of envelopes) {
+    printer.update(envelope)
+    if (buffer.length) {
+      const togo = buffer.splice(0)
+      for (const content of togo) {
+        yield content
+      }
+    }
+  }
+}

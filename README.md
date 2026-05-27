@@ -143,15 +143,24 @@ You might even be able to go without any extra dependencies and instead lean on 
 
 ## Reporters
 
-Some Cucumber formatters are included as Node.js test reporters:
+Some Cucumber formatters are included as Node.js test reporters.
+
+For terminal output, you can use the `--test-reporter` option without specifying a destination:
+
+- Pretty `--test-reporter=@cucumber/node/reporters/pretty`
+- Progress `--test-reporter=@cucumber/node/reporters/progress`
+- Progress Bar `--test-reporter=@cucumber/node/reporters/progress`
+- Summary `--test-reporter=@cucumber/node/reporters/summary`
+
+For file output, you can add the `--test-reporter-destination` option:
 
 - HTML `--test-reporter=@cucumber/node/reporters/html --test-reporter-destination=./report.html`
 - JUnit `--test-reporter=@cucumber/node/reporters/junit --test-reporter-destination=./TEST-cucumber.xml`
-- Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.ndjson`
+- Message `--test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./messages.jsonl`
 
 ## Running programmatically
 
-You can use [the `run` function](https://nodejs.org/api/test.html#runoptions) exposed by the `node:test` module to run your Cucumber tests programatically:
+You can use [the `run` function](https://nodejs.org/api/test.html#runoptions) exposed by the `node:test` module to run your Cucumber tests programmatically:
 
 ```javascript
 import { run } from 'node:test'
