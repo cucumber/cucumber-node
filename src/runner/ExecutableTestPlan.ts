@@ -1,6 +1,5 @@
 import type { AssembledTestCase, AssembledTestPlan, SupportCodeLibrary } from '@cucumber/core'
-import { ensure } from '@cucumber/junit-xml-formatter/dist/src/helpers.js'
-
+import { ensure } from '../ensure.js'
 import type { WorldFactory } from '../support/index.js'
 import { ExecutableTestCase } from './ExecutableTestCase.js'
 import type { MessagesCollector } from './MessagesCollector.js'
