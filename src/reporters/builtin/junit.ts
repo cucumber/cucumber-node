@@ -1,27 +1,20 @@
 import type { TestEvent } from 'node:test/reporters'
 
-import plugin from '@cucumber/junit-xml-formatter'
-import type { Envelope } from '@cucumber/messages'
+import { JUnitXmlPrinter } from '@cucumber/junit-xml-formatter'
 
 import { enrichMessages } from '../enrichMessages.js'
 
 export default async function* (events: AsyncIterable<TestEvent>): AsyncGenerator<string> {
-  const output: string[] = []
-  let handler: (envelope: Envelope) => void = () => {}
-  plugin.formatter({
-    on(_, newHandler) {
-      handler = newHandler
-    },
-    write: (chunk) => output.push(chunk),
-    options: {},
-  })
-
+  const buffer: Array<string> = []
+  const printer = new JUnitXmlPrinter({}, (chunk) => buffer.push(chunk))
   const envelopes = enrichMessages(events)
   for await (const envelope of envelopes) {
-    handler(envelope)
-  }
-
-  for (const chunk of output) {
-    yield chunk
+    printer.update(envelope)
+    if (buffer.length) {
+      const togo = buffer.splice(0)
+      for (const content of togo) {
+        yield content
+      }
+    }
   }
 }
