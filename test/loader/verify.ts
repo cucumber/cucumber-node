@@ -7,7 +7,6 @@ import type { LoadFnOutput, LoadHookContext } from 'node:module'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-// @ts-expect-error incomplete types
 import { highlight } from '@babel/code-frame'
 
 import { load } from '../../src/loader/index.js'
@@ -18,4 +17,4 @@ const transpiled = await load(
   () => ({}) as LoadFnOutput
 )
 
-process.stdout.write(`\n${highlight(transpiled.source)}\n`)
+process.stdout.write(`\n${highlight(transpiled.source as string)}\n`)

@@ -1,7 +1,6 @@
 import type { TestContext } from 'node:test'
 import { styleText } from 'node:util'
 
-// @ts-expect-error incomplete types
 import { highlight } from '@babel/code-frame'
 import {
   AmbiguousError,
