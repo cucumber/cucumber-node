@@ -123,7 +123,7 @@ describe('Cucumber Compatibility Kit', () => {
 function parseEnvelopes(raw: string): ReadonlyArray<Envelope> {
   return raw
     .split('\n')
-    .filter((line) => !!line)
+    .filter((line) => line.trim().startsWith('{'))
     .map((line) => JSON.parse(line))
 }
 
