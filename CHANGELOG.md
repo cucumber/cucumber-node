@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Adopt Cucumber terminal formatters ([#197](https://github.com/cucumber/cucumber-node/pull/197))
+- Add support for Node.js 26.x ([#242](https://github.com/cucumber/cucumber-node/pull/242))
 
 ### Changed
 - Avoid diagnostic hack for messages ([#177](https://github.com/cucumber/cucumber-node/pull/177))
@@ -15,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Adopt correct failed-ish continuation behaviour ([#241](https://github.com/cucumber/cucumber-node/pull/241))
+
+### Removed
+- BREAKING CHANGE: Drop support for Node.js 25.x ([#242](https://github.com/cucumber/cucumber-node/pull/242))
 
 ## [0.6.1] - 2025-12-14
 ### Fixed
