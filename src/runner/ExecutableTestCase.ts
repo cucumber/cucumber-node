@@ -10,7 +10,7 @@ import { makeAttachment, makeLink, makeLog } from './makeAttachment.js'
 
 export class ExecutableTestCase {
   readonly id = newId()
-  outcomeKnown = false
+  outcome: 'unknown' | 'failedish' | 'skipped' = 'unknown'
   private attachmentsSupport?: AttachmentsSupport
   private world?: World
   private currentTestStepId?: string
