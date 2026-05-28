@@ -45,8 +45,6 @@ const CCK_PATH = path.join(process.cwd(), 'node_modules', '@cucumber', 'compatib
 const UNSUPPORTED = [
   // not a test sample
   'all-statuses',
-  // TODO implement failed-ish step semantics
-  'failedish-combinations',
   // we don't support global hooks yet
   'global-hooks',
   'global-hooks-attachments',

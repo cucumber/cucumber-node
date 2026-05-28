@@ -4,10 +4,13 @@ import { styleText } from 'node:util'
 import { highlight } from '@babel/code-frame'
 import {
   AmbiguousError,
+  type AmbiguousStep,
   type AssembledTestStep,
   DataTable,
+  type PreparedStep,
   type SupportCodeLibrary,
   UndefinedError,
+  type UndefinedStep,
 } from '@cucumber/core'
 import type { TestStepResult } from '@cucumber/messages'
 
@@ -19,12 +22,16 @@ import type { MessagesCollector } from './MessagesCollector.js'
 import { makeSnippets } from './makeSnippets.js'
 
 export class ExecutableTestStep {
+  private readonly prepared: PreparedStep | UndefinedStep | AmbiguousStep
+
   constructor(
     private readonly messages: MessagesCollector,
     private readonly testCase: ExecutableTestCase,
     private readonly supportCodeLibrary: SupportCodeLibrary,
     private readonly assembledStep: AssembledTestStep
-  ) {}
+  ) {
+    this.prepared = assembledStep.prepare()
+  }
 
   get name(): string {
     return [styleText('bold', this.assembledStep.name.prefix), this.assembledStep.name.body]
@@ -33,7 +40,17 @@ export class ExecutableTestStep {
   }
 
   get options() {
-    return { skip: this.testCase.outcomeKnown && !this.assembledStep.always }
+    if (this.assembledStep.always) {
+      return { skip: false }
+    }
+    switch (this.testCase.outcome) {
+      case 'skipped':
+        return { skip: true }
+      case 'failedish':
+        return { skip: this.prepared.type === 'prepared' }
+      default:
+        return { skip: false }
+    }
   }
 
   async setup() {
@@ -49,7 +66,7 @@ export class ExecutableTestStep {
   async execute(nodeTestContext: TestContext) {
     let success = false
     try {
-      const prepared = this.assembledStep.prepare()
+      const prepared = this.prepared
 
       if (prepared.type === 'undefined') {
         const snippets = makeSnippets(prepared.pickleStep, this.supportCodeLibrary)
@@ -91,7 +108,7 @@ export class ExecutableTestStep {
       success = true
     } finally {
       if (!success) {
-        this.testCase.outcomeKnown = true
+        this.markFailedish()
       }
     }
   }
@@ -102,13 +119,19 @@ export class ExecutableTestStep {
       mock: nodeTestContext.mock,
       skip: () => {
         nodeTestContext.skip()
-        this.testCase.outcomeKnown = true
+        this.testCase.outcome = 'skipped'
       },
       todo: () => {
         nodeTestContext.todo()
-        this.testCase.outcomeKnown = true
+        this.markFailedish()
       },
       ...this.testCase.context,
+    }
+  }
+
+  private markFailedish() {
+    if (this.testCase.outcome === 'unknown') {
+      this.testCase.outcome = 'failedish'
     }
   }
 
