@@ -44,7 +44,6 @@
     "@cucumber/query": "15.0.1",
     "@cucumber/tag-expressions": "9.1.0",
     "@teppeis/multimaps": "3.0.0",
-    "globby": "16.2.0",
     "stack-utils": "2.0.6"
   },
   "devDependencies": {

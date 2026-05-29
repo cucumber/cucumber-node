@@ -1,10 +1,10 @@
+import { globSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import type { Envelope } from '@cucumber/messages'
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
-import { globby, globbySync } from 'globby'
 import { describe, it } from 'mocha'
 
 import { makeTestHarness } from '../utils.js'
@@ -75,9 +75,11 @@ describe('Cucumber Compatibility Kit', () => {
 
   for (const isolationMode of isolationModes) {
     describe(`isolation=${isolationMode}`, () => {
-      const directories = globbySync('node_modules/@cucumber/compatibility-kit/features/*', {
-        onlyDirectories: true,
+      const directories = globSync('node_modules/@cucumber/compatibility-kit/features/*', {
+        withFileTypes: true,
       })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => path.join(dirent.parentPath, dirent.name))
       for (const directory of directories) {
         const suite = path.basename(directory)
         it(suite, async function () {
@@ -88,7 +90,7 @@ describe('Cucumber Compatibility Kit', () => {
           const harness = await makeTestHarness()
 
           await harness.copyDir(path.join(process.cwd(), 'test', 'cck', suite), 'features')
-          const featurePaths = await globby(['*.feature', '*.feature.md'], { cwd: directory })
+          const featurePaths = globSync(['*.feature', '*.feature.md'], { cwd: directory })
           for (const featurePath of featurePaths) {
             await harness.copyFile(
               path.join(CCK_PATH, 'features', suite, featurePath),

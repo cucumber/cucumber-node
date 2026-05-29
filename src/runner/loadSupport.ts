@@ -1,7 +1,7 @@
+import { glob } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 
 import type { SupportCodeLibrary } from '@cucumber/core'
-import { globby } from 'globby'
 
 import { coreBuilder, extraBuilder, type WorldFactory } from '../support/index.js'
 
@@ -13,8 +13,7 @@ interface UsableSupport {
 let supportPromise: Promise<UsableSupport>
 
 async function loadSupportInternal() {
-  const paths = await globby('features/**/*.{cjs,js,mjs,cts,mts,ts}')
-  for (const path of paths) {
+  for await (const path of glob('features/**/*.{cjs,js,mjs,cts,mts,ts}')) {
     await import(pathToFileURL(path).toString())
   }
   return {
