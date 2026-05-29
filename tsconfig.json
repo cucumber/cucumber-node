@@ -8,6 +8,7 @@
     "moduleResolution": "NodeNext",
     "types": ["node", "mocha", "chai"],
     "declaration": true,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "inlineSources": true
   }
 }
