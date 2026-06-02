@@ -1,5 +1,6 @@
 {
   "entryPoints": ["src/index.ts"],
+  "includeVersion": true,
   "navigationLinks": {
     "GitHub": "https://github.com/cucumber/cucumber-node"
   },
