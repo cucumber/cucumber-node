@@ -1,5 +1,5 @@
 * text eol=auto
+*.jpeg binary
 *.pdf binary
 *.png binary
-*.jpeg binary
 *.svg eol=ln
