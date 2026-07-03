@@ -74,7 +74,7 @@ function mapParameter(language: string, name: string, tsType?: TSType | string |
     if (typeof tsType === 'string') {
       tsType = TYPE_MAPPINGS[tsType] ?? t.tsTypeReference(t.identifier(tsType))
     }
-    identifier.typeAnnotation = t.tSTypeAnnotation(tsType)
+    identifier.typeAnnotation = t.tsTypeAnnotation(tsType)
   }
   return identifier
 }
