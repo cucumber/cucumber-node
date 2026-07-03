@@ -30,9 +30,9 @@
     "test:unit": "mocha \"src/**/*.spec.ts\""
   },
   "dependencies": {
-    "@babel/code-frame": "^7.29.7",
-    "@babel/generator": "^7.29.7",
-    "@babel/types": "^7.29.7",
+    "@babel/code-frame": "^8.0.0",
+    "@babel/generator": "^8.0.0",
+    "@babel/types": "^8.0.0",
     "@cucumber/ci-environment": "14.0.0",
     "@cucumber/core": "0.9.0",
     "@cucumber/cucumber-expressions": "20.0.0",
