@@ -24,9 +24,9 @@
     "fix": "biome check --write --error-on-warnings",
     "lint": "biome check --error-on-warnings",
     "prepublishOnly": "npm run build",
-    "test": "npm run test:unit && npm run test:integration && npm run test:cck",
+    "test": "npm run test:unit && npm run test:acceptance && npm run test:cck",
+    "test:acceptance": "npm run build && mocha \"test/acceptance/*.spec.ts\"",
     "test:cck": "npm run build && mocha \"test/cck/*.spec.ts\"",
-    "test:integration": "npm run build && mocha \"test/integration/*.spec.ts\"",
     "test:unit": "mocha \"src/**/*.spec.ts\""
   },
   "dependencies": {
