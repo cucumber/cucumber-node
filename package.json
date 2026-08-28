@@ -33,7 +33,7 @@
     "@babel/code-frame": "^8.0.0",
     "@babel/generator": "^8.0.0",
     "@babel/types": "^8.0.0",
-    "@cucumber/ci-environment": "14.0.0",
+    "@cucumber/ci-environment": "15.0.0",
     "@cucumber/core": "0.9.0",
     "@cucumber/cucumber-expressions": "20.1.0",
     "@cucumber/gherkin": "42.0.1",
@@ -49,7 +49,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.10",
     "@cucumber/biome-config": "cucumber/biome-config#v0.6.0",
-    "@cucumber/compatibility-kit": "^29.0.0",
+    "@cucumber/compatibility-kit": "^30.0.0",
     "@microsoft/api-extractor": "7.59.0",
     "@tsconfig/recommended": "^1.0.13",
     "@types/babel__code-frame": "^7.27.0",
