@@ -47,7 +47,7 @@
     "stack-utils": "2.0.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.10",
+    "@biomejs/biome": "2.5.11",
     "@cucumber/biome-config": "cucumber/biome-config#v0.6.0",
     "@cucumber/compatibility-kit": "^30.0.0",
     "@microsoft/api-extractor": "7.59.0",
