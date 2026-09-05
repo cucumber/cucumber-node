@@ -1,6 +1,6 @@
 {
   "exit": true,
   "extension": ["ts", "js"],
-  "node-option": ["import=tsx/esm", "no-experimental-require-module"],
+  "node-option": ["import=tsx/esm"],
   "timeout": 10000
 }
