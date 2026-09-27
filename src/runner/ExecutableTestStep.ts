@@ -88,15 +88,13 @@ export class ExecutableTestStep {
         throw new AmbiguousError(prepared)
       }
 
-      const { fn, args, dataTable, docString } = prepared
+      const { fn, args, stepArguments } = prepared
       const context = this.makeContext(nodeTestContext)
       const fnArgs: Array<unknown> = [context]
       const values = await Promise.all(args.map((arg) => arg.getValue(context)))
       fnArgs.push(...values)
-      if (dataTable) {
-        fnArgs.push(DataTable.from(dataTable))
-      } else if (docString) {
-        fnArgs.push(docString.content)
+      for (const stepArgument of stepArguments) {
+        fnArgs.push('content' in stepArgument ? stepArgument.content : DataTable.from(stepArgument))
       }
 
       const returned = await fn.apply(context.world, fnArgs)

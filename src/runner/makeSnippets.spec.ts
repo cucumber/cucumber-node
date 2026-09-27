@@ -398,5 +398,87 @@ describe('makeSnippets', () => {
 });`
       )
     })
+
+    it('generates snippet with DataTable and docString parameters in source order', () => {
+      const pickleStep: PickleStep = {
+        id: 'step-11',
+        text: 'I have the following items and text',
+        type: PickleStepType.CONTEXT,
+        astNodeIds: [],
+        argument: {
+          dataTable: {
+            argumentIndex: 1,
+            rows: [{ cells: [{ value: 'apple' }] }],
+          },
+          docString: {
+            argumentIndex: 2,
+            content: 'Some text',
+          },
+        },
+      }
+
+      const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+      expect(snippets).to.have.lengthOf(1)
+      expect(snippets[0].code).to.eq(
+        `Given('I have the following items and text', (t, dataTable: DataTable, docString: string) => {
+  t.todo();
+});`
+      )
+    })
+
+    it('generates snippet with docString and DataTable parameters in source order', () => {
+      const pickleStep: PickleStep = {
+        id: 'step-12',
+        text: 'I have the following text and items',
+        type: PickleStepType.CONTEXT,
+        astNodeIds: [],
+        argument: {
+          dataTable: {
+            argumentIndex: 2,
+            rows: [{ cells: [{ value: 'apple' }] }],
+          },
+          docString: {
+            argumentIndex: 1,
+            content: 'Some text',
+          },
+        },
+      }
+
+      const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+      expect(snippets).to.have.lengthOf(1)
+      expect(snippets[0].code).to.eq(
+        `Given('I have the following text and items', (t, docString: string, dataTable: DataTable) => {
+  t.todo();
+});`
+      )
+    })
+
+    it('generates snippet with DataTable before docString when no argument index is present', () => {
+      const pickleStep: PickleStep = {
+        id: 'step-13',
+        text: 'I have the following items and text',
+        type: PickleStepType.CONTEXT,
+        astNodeIds: [],
+        argument: {
+          dataTable: {
+            rows: [{ cells: [{ value: 'apple' }] }],
+          },
+          docString: {
+            content: 'Some text',
+          },
+        },
+      }
+
+      const snippets = makeSnippets(pickleStep, supportCodeLibrary)
+
+      expect(snippets).to.have.lengthOf(1)
+      expect(snippets[0].code).to.eq(
+        `Given('I have the following items and text', (t, dataTable: DataTable, docString: string) => {
+  t.todo();
+});`
+      )
+    })
   })
 })
