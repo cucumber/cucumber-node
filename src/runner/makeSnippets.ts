@@ -4,7 +4,12 @@ import { generate } from '@babel/generator'
 import type { TSType } from '@babel/types'
 import * as t from '@babel/types'
 import type { SupportCodeLibrary } from '@cucumber/core'
-import { type PickleStep, PickleStepType, type Snippet } from '@cucumber/messages'
+import {
+  type PickleStep,
+  type PickleStepArgument,
+  PickleStepType,
+  type Snippet,
+} from '@cucumber/messages'
 
 const TYPESCRIPT_EXTENSIONS = ['.ts', '.cts', '.mts', '.tsx']
 
@@ -35,11 +40,7 @@ export function makeSnippets(
         const variableName = pi.name + (pi.count === 1 ? '' : pi.count.toString())
         params.push(mapParameter(language, variableName, pi.type))
       }
-      if (pickleStep.argument?.dataTable) {
-        params.push(mapParameter(language, 'dataTable', 'DataTable'))
-      } else if (pickleStep.argument?.docString) {
-        params.push(mapParameter(language, 'docString', t.tsStringKeyword()))
-      }
+      params.push(...mapStepArguments(language, pickleStep.argument))
 
       const statement = t.expressionStatement(
         t.callExpression(t.identifier(method), [
@@ -66,6 +67,25 @@ export function makeSnippets(
         code: output.code,
       }
     })
+}
+
+function mapStepArguments(language: string, argument: PickleStepArgument | undefined) {
+  const stepArguments: Array<{ index?: number; param: t.Identifier }> = []
+  if (argument?.dataTable) {
+    stepArguments.push({
+      index: argument.dataTable.argumentIndex,
+      param: mapParameter(language, 'dataTable', 'DataTable'),
+    })
+  }
+  if (argument?.docString) {
+    stepArguments.push({
+      index: argument.docString.argumentIndex,
+      param: mapParameter(language, 'docString', t.tsStringKeyword()),
+    })
+  }
+  return stepArguments
+    .sort((a, b) => (a.index ?? Number.MAX_SAFE_INTEGER) - (b.index ?? Number.MAX_SAFE_INTEGER))
+    .map(({ param }) => param)
 }
 
 function mapParameter(language: string, name: string, tsType?: TSType | string | null) {
