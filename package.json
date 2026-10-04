@@ -65,6 +65,6 @@
     "tsx": "^4.22.3",
     "type-fest": "^5.3.1",
     "typedoc": "^0.28.19",
-    "typescript": "^6.0.0"
+    "typescript": "^7.0.0"
   }
 }
