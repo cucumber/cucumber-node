@@ -8,34 +8,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.8.0] - 2026-09-28
+
 ### Added
+
 - Support steps with both a data table and a doc string ([#332](https://github.com/cucumber/cucumber-node/pull/332))
 
 ## [0.7.1] - 2026-06-12
+
 ### Changed
+
 - Dependency updates
 
 ## [0.7.0] - 2026-05-29
+
 ### Added
+
 - Adopt Cucumber terminal formatters ([#197](https://github.com/cucumber/cucumber-node/pull/197))
 - Add support for Node.js 26.x ([#242](https://github.com/cucumber/cucumber-node/pull/242))
 
 ### Changed
+
 - Avoid diagnostic hack for messages ([#177](https://github.com/cucumber/cucumber-node/pull/177))
 - Use retainLines option when generating code ([#182](https://github.com/cucumber/cucumber-node/pull/182))
 
 ### Fixed
+
 - Adopt correct failed-ish continuation behaviour ([#241](https://github.com/cucumber/cucumber-node/pull/241))
 
 ### Removed
+
 - BREAKING CHANGE: Drop support for Node.js 25.x ([#242](https://github.com/cucumber/cucumber-node/pull/242))
 
 ## [0.6.1] - 2025-12-14
+
 ### Fixed
+
 - Handle async parameter type transformers ([#169](https://github.com/cucumber/cucumber-node/pull/169))
 
 ## [0.6.0] - 2025-12-01
+
 ### Added
+
 - Add support for Node.js 25.x ([#161](https://github.com/cucumber/cucumber-node/pull/161))
 - Provide source maps for pickles ([#149](https://github.com/cucumber/cucumber-node/pull/149))
 - Support returning "skipped" or "pending" from user code ([#155](https://github.com/cucumber/cucumber-node/pull/155))
@@ -43,38 +56,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Surface code snippets for undefined steps ([#165](https://github.com/cucumber/cucumber-node/pull/165))
 
 ### Changed
+
 - BREAKING CHANGE: Prepend context to parameter transformers ([#160](https://github.com/cucumber/cucumber-node/pull/160))
 
 ## [0.5.0] - 2025-11-17
+
 ### Added
+
 - Support Node.js 24 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
 - Add `rows` and `rowsHash` methods to `DataTable` ([#83](https://github.com/cucumber/cucumber-node/pull/83))
 - Add support for regular expression steps ([#83](https://github.com/cucumber/cucumber-node/pull/83))
 
 ### Changed
+
 - BREAKING CHANGE: Rename `tagFilter` to `tags` in `HookOptions` for continuity with cucumber-js ([#83](https://github.com/cucumber/cucumber-node/pull/83))
 
 ### Fixed
+
 - Fully isolate Cucumber tests from other tests for accurate reporting ([#80](https://github.com/cucumber/cucumber-node/pull/80))
 - Load support code once per process ([#103](https://github.com/cucumber/cucumber-node/pull/103))
 
 ### Removed
+
 - Drop support for Node.js 23 ([#67](https://github.com/cucumber/cucumber-node/pull/67))
 
 ## [0.4.0] - 2025-03-25
+
 ### Added
+
 - Add World customisation and injection as `this` ([#47](https://github.com/cucumber/cucumber-node/pull/47))
 
 ## [0.3.0] - 2025-02-28
+
 ### Added
+
 - Add JUnit XML reporter ([#38](https://github.com/cucumber/cucumber-node/pull/38))
 
 ## [0.2.0] - 2025-02-20
+
 ### Added
+
 - Support TypeScript user code ([#24](https://github.com/cucumber/cucumber-node/pull/24))
 
 ## [0.1.0] - 2025-02-18
+
 ### Added
+
 - Initial release
 
 [Unreleased]: https://github.com/cucumber/cucumber-node/compare/v0.8.0...HEAD

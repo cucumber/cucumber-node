@@ -167,11 +167,7 @@ import { run } from 'node:test'
 import { spec } from 'node:test/reporters'
 
 run({
-  execArgv: [
-    '--enable-source-maps',
-    '--import',
-    '@cucumber/node/bootstrap'
-  ],
+  execArgv: ['--enable-source-maps', '--import', '@cucumber/node/bootstrap'],
   globPatterns: ['features/**/*.feature'],
 })
   .compose(spec)
@@ -200,5 +196,3 @@ Some behaviour of cucumber-node is different - and better - than in cucumber-js:
 ### Arrow functions
 
 There's no reliance on `this` in your step and hook functions to access state, since we pass a context object as the first argument to those functions. This means you're free to use arrow functions as you normally would in JavaScript.
-
-
