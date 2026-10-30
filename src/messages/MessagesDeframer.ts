@@ -11,7 +11,7 @@ export class MessagesDeframer {
 
   constructor(private readonly subject: EnvelopesReplaySubject) {}
 
-  handle(data: Buffer<ArrayBuffer>) {
+  handle(data: string | Buffer) {
     this.buffer += data.toString()
 
     const lines = this.buffer.split('\n')
