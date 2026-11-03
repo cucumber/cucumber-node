@@ -17,15 +17,15 @@ export function mapTestStepResult(
   } else if (testEvent.todo) {
     status = TestStepResultStatus.PENDING
   } else if ('error' in testEvent.details) {
-    const error = testEvent.details.error
-    if (error.cause.message.startsWith('No matching step definitions found')) {
+    const cause = testEvent.details.error.cause as Error
+    if (cause.message.startsWith('No matching step definitions found')) {
       status = TestStepResultStatus.UNDEFINED
-    } else if (error.cause.message.startsWith('Multiple matching step definitions found')) {
+    } else if (cause.message.startsWith('Multiple matching step definitions found')) {
       status = TestStepResultStatus.AMBIGUOUS
     } else {
       status = TestStepResultStatus.FAILED
       exception = {
-        type: error.cause.name,
+        type: cause.name,
       }
     }
   }
